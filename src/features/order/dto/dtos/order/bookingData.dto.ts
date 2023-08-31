@@ -18,7 +18,7 @@ export class BookingDataDto {
   @IsNotEmpty()
   @IsString()
   @Matches('^\\d{4}-\\d{2}-\\d{2}$')
-  DATE_RAB: string;
+  DATE_RAB: string = null;
 
   @ApiProperty({
     description: 'Customer ID',
@@ -50,11 +50,10 @@ export class BookingDataDto {
 
   @ApiProperty({
     description: 'Single application',
-    default: true,
   })
   @IsOptional()
-  @Transform(({ value }) => booleanToNumber(value))
-  RAZOV = 1;
+  @IsNumber()
+  RAZOV: number = null;
 
   @ApiProperty({
     description: 'Attracted transport ID',

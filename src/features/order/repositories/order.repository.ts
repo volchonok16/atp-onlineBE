@@ -431,19 +431,22 @@ export class OrderRepository {
     return BookingViewModel.toView(result[0]);
   }
 
-  async updateBooking(dto: WithId<UpdateBookingDataDto>): Promise<number> {
-    const data = getDataAccumulater(dto);
-
-    const result = await this.firebird.query(
-      `
+  async updateBooking(dto: WithId<UpdateBookingDataDto>): Promise<boolean> {
+    try {
+      const data = getDataAccumulater(dto);
+      const result = await this.rawFirebird.query(
+          `
       UPDATE RAZNAR2
          SET ${data}
        WHERE RAZNAR2_KEY = ?;
     `,
-      [dto.id],
-    );
+          [dto.id],
+      );
 
-    return result['count'];
+      return true;
+    } catch (e) {
+      return false
+    }
   }
 
   async deleteBookingData(RAZNAR2_KEY: number): Promise<number> {
