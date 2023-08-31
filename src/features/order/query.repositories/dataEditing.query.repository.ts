@@ -107,6 +107,7 @@ export class DataEditingQueryRepository {
     queryDto: OrganizationsInputDto,
   ): Promise<OrganizationsViewModel[]> {
     const organizationsFilter = this.getOrganizationsFilter(queryDto);
+    console.log(organizationsFilter);
     const organizations = await this.firebird.query<OrganizationsViewModel[]>(`
         SELECT DATA_KEY, ZAK_, LNAME, KAT, N_KAT, METOD
         FROM W_DATA
@@ -394,7 +395,9 @@ export class DataEditingQueryRepository {
       organizationsFilter += ` AND UPPER(LNAME) LIKE UPPER('%${queryDto.shortName}%')`;
     }
     if (queryDto instanceof OrganizationsInputDto) {
-      organizationsFilter += ` AND ARHIV = '${queryDto.archive}'`;
+      organizationsFilter += ` AND ARHIV = '${booleanToShortString(
+        queryDto.archive,
+      )}'`;
     }
     return organizationsFilter;
   }
