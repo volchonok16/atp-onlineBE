@@ -107,4 +107,10 @@ export class EquipmentListViewModel {
   GPS_PROBEG: number;
   @ApiProperty()
   DATE_P_TAHOGRAFA: Date;
+
+  static toView(data) {
+    const result = { ...data };
+    //result.DEL = shortStringToBoolean(data.DEL);
+    return result;
+  }
 }
