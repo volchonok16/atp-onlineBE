@@ -15,9 +15,6 @@ export class UpdateBookingUseCase
   constructor(public orderRepository: OrderRepository) {}
 
   async execute({ dto }: UpdateBookingCommand): Promise<boolean> {
-    const result = await this.orderRepository.updateBooking(dto);
-
-    if (result === 0) throw new NotFoundException();
-    return result === 1;
+    return await this.orderRepository.updateBooking(dto);
   }
 }

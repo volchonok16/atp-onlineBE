@@ -2,6 +2,8 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsString, Matches } from 'class-validator';
 import { BookingDataDto } from './bookingData.dto';
 import { objectFieldFilter } from '../../../../../common/helpers/objectFieldFilter';
+import { timeStampToTimeTransformHelper } from '../../../../../common/helpers/timeStampToTimeTransform.helper';
+import { timeToTimestampTransformHelper } from '../../../../../common/helpers/timeToTimestampTransform.helper';
 
 export class UpdateBookingDataDto extends BookingDataDto {
   @ApiProperty({
@@ -11,10 +13,16 @@ export class UpdateBookingDataDto extends BookingDataDto {
   @IsOptional()
   @IsString()
   @Matches('^\\d{4}-\\d{2}-\\d{2}$')
-  DATE_RAB: string;
+  DATE_RAB: string = null;
 
   static dto(data: any): UpdateBookingDataDto {
     const updateBookingDataDto = new UpdateBookingDataDto();
-    return objectFieldFilter<UpdateBookingDataDto>(data, updateBookingDataDto);
+    const result = objectFieldFilter<UpdateBookingDataDto>(
+      data,
+      updateBookingDataDto,
+    );
+    result.VR_V = timeToTimestampTransformHelper(data.VR_V);
+    result.VR_Z = timeToTimestampTransformHelper(data.VR_Z);
+    return result;
   }
 }

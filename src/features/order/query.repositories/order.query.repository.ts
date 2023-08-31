@@ -40,7 +40,7 @@ export class OrderQueryRepository {
   }
 
   async getOrderData(
-    dto: Partial<OrderDataQueryDtoType>, // Переиспользовал
+    dto: Partial<OrderDataQueryDtoType>,
   ): Promise<OrderDataViewModel[]> {
     const date = format(dto.date, 'yyyy-MM-dd');
 
@@ -79,7 +79,14 @@ export class OrderQueryRepository {
           break;
       }
     }
-
+    console.log(
+      'order-query-repo: 82',
+      query,
+      date,
+      date,
+      dto.tab,
+      dto.motorcadeName,
+    );
     const data = await this.firebird.query<OrderDataViewModel>(query, [
       date,
       date,

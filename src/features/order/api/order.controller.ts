@@ -10,7 +10,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { OrderQueryRepository } from '../query.repositories/order.query.repository';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CommandBus } from '@nestjs/cqrs';
 import { BillOfLadingCreateDto } from '../dto/dtos/billOfLadingCreate.dto';
 import { CreateBillOfLadingCommand } from '../use-cases/order/createBillOfLanding.useCase';
@@ -46,6 +46,10 @@ import { DeleteBookingDataCommand } from '../use-cases/order/deleteBookingData.u
 import { CreateOrderCommand } from '../use-cases/order/createOrder.useCase';
 import * as fs from 'fs';
 import { AddWayBillNumberCommand } from '../use-cases/order/createOutputData.useCase';
+import { UpdateRequestCommand } from '../use-cases/order/updateRequest.useCase';
+import { CreateReportDataType } from '../types/createReportDataType';
+import { CreateBillOfLandingReportDto } from '../dto/dtos/createBillOfLandingReport.dto';
+import { GetBookingViewModel } from '../models/order.views/getBookingView.model';
 
 @ApiTags('Order')
 @Controller('api/order')
@@ -59,6 +63,7 @@ export class OrderController {
 
   @Put('/order/:RAZNAR2_KEY')
   @ApiOperation({ summary: 'Разнарядка -> Заказы' })
+  @ApiBody({ type: UpdateBookingDataDto })
   async updateBookingData(
     @Param('RAZNAR2_KEY') id: number,
     @Body() data: any,
@@ -119,23 +124,24 @@ export class OrderController {
   @ApiOperation({
     summary: 'Разнарядка -> ТТН -> Печать ТНН',
   })
-  async createBillOfLandingReport(): //@Body() dto: CreateBillOfLandingReportDto,
-  Promise<any> {
+  async createBillOfLandingReport(
+    @Body() dto: CreateBillOfLandingReportDto,
+  ): Promise<any> {
     return fs.readFileSync(
       `src/common/helpers/report-generator/mok-pdf-reports/TTN_mok.pdf`,
     );
 
-    /*    const dataForReport: CreateReportDataType[] =
-                                                                                                              await this.orderQueryRepository.getDataForGoodsInvoiceANDBillOfLanding(
-                                                                                                                dto.billOfLandingId,
-                                                                                                              );
-                                                    
-                                                                                                            const dataForBillOfLandingReport = dataForReport[1];
-                                                    
-                                                                                                            return await this.reportGenerator.createReport(
-                                                                                                              dataForBillOfLandingReport,
-                                                                                                              dto.documentType,
-                                                                                                            );*/
+    // const dataForReport: CreateReportDataType[] =
+    //   await this.orderQueryRepository.getDataForGoodsInvoiceANDBillOfLanding(
+    //     dto.billOfLandingId
+    //   );
+    //
+    // const dataForBillOfLandingReport = dataForReport[1];
+    //
+    // return await this.reportGenerator.createReport(
+    //   dataForBillOfLandingReport,
+    //   dto.documentType
+    // );
   }
 
   @Delete('bill-of-landing-and-waybill')
@@ -155,8 +161,9 @@ export class OrderController {
   async prepareOutputData(
     @Body() dto: OutputDataDto,
   ): Promise<OutputDataViewModel | any> {
-    return 'эндпоинт не готов';
-
+    // ___________________
+    // TODO Vrode rabotaet
+    // -------------------
     if (dto.usersWayBillNumber !== null) {
       const isUpdated = await this.commandBus.execute(
         new AddWayBillNumberCommand(dto),
@@ -214,11 +221,12 @@ export class OrderController {
   @ApiOperation({
     summary: 'Разнарядка -> Разнарядка',
   })
+  @ApiBody({ type: UpdateCarForOrderDto })
   async updateCarForOrder(
     @Param('RAZN_KEY') id: number,
     @Body() data: any,
   ): Promise<boolean | any> {
-    return 'эндпоинт не работает';
+    //return "эндпоинт не работает";
 
     const dto = UpdateCarForOrderDto.dto(data);
     return this.commandBus.execute(new UpdateOrderCommand({ id, ...dto }));
@@ -257,10 +265,10 @@ export class OrderController {
     @Param('REQ_RAZN_KEY') id: number,
     @Body() dto: UpdateRequestDto,
   ) {
-    return 'эндпоинт не готов';
-    /*  return await this.commandBus.execute(
-                                            new UpdateRequestCommand({ id, ...dto }),
-                                          );*/
+    return 'эндпоинт не готов бд пустое';
+    // return await this.commandBus.execute(
+    //   new UpdateRequestCommand({ id, ...dto }),
+    // );
   }
 
   @Post('data-preparation/add-request-to-car/:REQ_RAZN_KEY/:RAZN_KEY')
@@ -280,13 +288,13 @@ export class OrderController {
   @ApiOperation({ summary: 'Разнарядка -> Заказы' })
   async getBooking(
     @Query() dto: GetCarForOrderDto,
-  ): Promise<BookingViewModel[]> {
+  ): Promise<GetBookingViewModel[]> {
     const data = await this.orderQueryRepository.getOrderData({
       ...dto,
       tab: 1,
     });
 
-    return data.map((d) => BookingViewModel.toView(d));
+    return data.map((d) => GetBookingViewModel.toView(d));
   }
 
   @Post('/order')
@@ -302,7 +310,6 @@ export class OrderController {
   async deleteBookingData(
     @Param('RAZNAR2_KEY') RAZNAR2_KEY: number,
   ): Promise<boolean> {
-    console.log('tude raz');
     return this.commandBus.execute(new DeleteBookingDataCommand(RAZNAR2_KEY));
   }
 }
