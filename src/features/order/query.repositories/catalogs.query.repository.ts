@@ -1,6 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { dbConnect_const } from '../../../common/constants/global.constants';
-import { Connection } from 'odbc';
+import { Injectable } from '@nestjs/common';
 import { EquipmentListDto } from '../dto/query.dtos/equipmentList.dto';
 import { EquipmentListEnum } from '../types/equipmentList.enum';
 import { EquipmentListViewModel } from '../models/catalogs.views/equipmentListView.model';
@@ -23,38 +21,35 @@ import { PassesViewModel } from '../models/catalogs.views/passesView.model';
 import { DriverHoldingViewModel } from '../models/catalogs.views/driverHoldingView.model';
 import { CarEquipmentViewModel } from '../models/catalogs.views/carEquipmentView.model';
 import { AcquisitionActViewModel } from '../models/catalogs.views/acquisitionActView.model';
+import { FirebirdService } from '../../../common/helpers/firebird-orm/firebird';
 
 @Injectable()
 export class CatalogsQueryRepository {
-  constructor(@Inject(dbConnect_const) private firebird: Connection) {}
+  constructor(private firebird: FirebirdService) {}
 
   async getEquipmentList(
     queryDto: EquipmentListDto,
   ): Promise<EquipmentListViewModel[]> {
-    if (queryDto.motorcadeNumber === 'all') {
-      return await this.firebird.query<EquipmentListViewModel>(
-        `SELECT * FROM RAZN_OD_SEL(1, null)`,
-      );
-    } else {
-      const listFilter = await this.getEquipmentListFilter(queryDto);
+    const listFilter =
+      queryDto.motorcadeNumber === EquipmentListEnum.all
+        ? ''
+        : `WHERE NAME_AK LIKE ${this.getEquipmentListFilter(queryDto)}`;
 
-      return await this.firebird.query<EquipmentListViewModel>(
-        `SELECT * FROM RAZN_OD_SEL(1, null) WHERE NAME_AK LIKE ?`,
-        [listFilter],
-      );
-    }
+    const result = await this.firebird.query<EquipmentListViewModel[]>(
+      `SELECT * FROM RAZN_OD_SEL(1, null) ${listFilter};`,
+    );
+
+    return result.map((r) => EquipmentListViewModel.toView(r));
   }
 
   async getExtendedInfo(
     queryDto: ExtendedInfoDto,
   ): Promise<ExtendedInformationViewModel[]> {
     const extendedInfoFilter = await this.getExtendedInfoFilter(queryDto);
-    const extendedInfo = await this.firebird
-      .query<ExtendedInformationViewModel>(`
+    return await this.firebird.query<ExtendedInformationViewModel[]>(`
     SELECT RAZN_OD_KEY, MAM, NOMER
     FROM  RAZN_OD_SEL(1, null) 
-    WHERE ${extendedInfoFilter}`);
-    return extendedInfo;
+    WHERE ${extendedInfoFilter};`);
   }
 
   async getRelatedDataById(
@@ -81,7 +76,7 @@ export class CatalogsQueryRepository {
 	       PERIOD_TO2_H,
 	       AGR_TO2
 FROM RAZN_OD_EXT 
-WHERE RAZN_OD_ID = ?`,
+WHERE RAZN_OD_ID = ?;`,
       [extendedInfoId],
     );
 
@@ -131,7 +126,7 @@ WHERE RAZN_OD_ID = ?`,
            S_ZIMA,
            S_LETO
 FROM RAZN_OD_EXT 
-WHERE RAZN_OD_ID = ?`,
+WHERE RAZN_OD_ID = ?;`,
         [extendedInfoId],
       );
     return technicalCharacteristic[0];
@@ -169,7 +164,7 @@ WHERE RAZN_OD_ID = ?`,
            REG_N_GPM, 
            DATE_P_TAHOGRAFA
 FROM RAZN_OD_EXT 
-WHERE RAZN_OD_ID = ?`,
+WHERE RAZN_OD_ID = ?;`,
       [extendedInfoId],
     );
     return documentation[0];
@@ -178,79 +173,72 @@ WHERE RAZN_OD_ID = ?`,
   async getTimingById(
     extendedInfoId: number,
   ): Promise<DocumentationTimingControlViewModel[]> {
-    const timing =
-      await this.firebird.query<DocumentationTimingControlViewModel>(
-        `
+    return this.firebird.query<DocumentationTimingControlViewModel[]>(
+      `
     SELECT * 
     FROM RAZN_OD_DOCS
-    WHERE RAZN_OD_ID = ?
+    WHERE RAZN_OD_ID = ?;
     `,
-        [extendedInfoId],
-      );
-    return timing;
+      [extendedInfoId],
+    );
   }
 
   async getRefuelingCardsById(
     extendedInfoId: number,
   ): Promise<DocumentationRefuelingCardsByIdViewModel[]> {
-    const extendedInfoById =
-      await this.firebird.query<DocumentationRefuelingCardsByIdViewModel>(
-        `
+    const extendedInfoById = await this.firebird.query<
+      DocumentationRefuelingCardsByIdViewModel[]
+    >(
+      `
     SELECT * 
     FROM RAZN_OD_ZAPR_CARDS 
-    WHERE RAZN_OD_ID = ?`,
-        [extendedInfoId],
-      );
+    WHERE RAZN_OD_ID = ?;`,
+      [extendedInfoId],
+    );
     return extendedInfoById;
   }
 
   async getNotInDemandInfo(
     extendedInfoId: number,
   ): Promise<AdditionalInfoNotInDemandViewModel[]> {
-    const notInDemandInfo =
-      await this.firebird.query<AdditionalInfoNotInDemandViewModel>(
-        `
+    return this.firebird.query<AdditionalInfoNotInDemandViewModel[]>(
+      `
     SELECT *
     FROM RAZN_OD_NE_VOSTR RAZ
     WHERE  RAZN_OD_ID = ?
     ORDER BY DATE_OT DESC`,
-        [extendedInfoId],
-      );
-    return notInDemandInfo;
+      [extendedInfoId],
+    );
   }
 
   async getConservation(
     extendedInfoId: number,
   ): Promise<AdditionalInfoConservationViewModel[]> {
-    const conservation =
-      await this.firebird.query<AdditionalInfoConservationViewModel>(
-        `
+    return this.firebird.query<AdditionalInfoConservationViewModel[]>(
+      `
     SELECT *
     FROM RAZN_OD_KONSERV RAZ
     WHERE RAZN_OD_ID = ?
-    ORDER BY DATE_OT DESC`,
-        [extendedInfoId],
-      );
-
-    return conservation;
+    ORDER BY DATE_OT DESC;`,
+      [extendedInfoId],
+    );
   }
 
   async getPasses(extendedInfoId: number): Promise<PassesViewModel[]> {
-    const passes = await this.firebird.query<PassesViewModel>(
+    return this.firebird.query<PassesViewModel[]>(
       `
     SELECT *
     FROM PROPUSK
-    WHERE RAZN_OD_ID = ?
+    WHERE RAZN_OD_ID = ?;
     `,
       [extendedInfoId],
     );
-    return passes;
   }
 
   async getDriverHolding(
     extendedInfoId: number,
   ): Promise<DriverHoldingViewModel[]> {
-    const driverHolding = await this.firebird.query<DriverHoldingViewModel>(
+    return this.firebird.query<DriverHoldingViewModel[]>(
       `
     SELECT *
     FROM  RAZN_OD_ZAKR
@@ -258,37 +246,34 @@ WHERE RAZN_OD_ID = ?`,
     ORDER BY DATES DESC`,
       [extendedInfoId],
     );
-    return driverHolding;
   }
 
   async getCarEquipment(
     extendedInfoId: number,
   ): Promise<CarEquipmentViewModel[]> {
-    const carEquipment = await this.firebird.query<CarEquipmentViewModel>(
+    return this.firebird.query<CarEquipmentViewModel[]>(
       `
     SELECT *
     FROM RAZN_OD_KOMPL 
     WHERE RAZN_OD_ID = ?`,
       [extendedInfoId],
     );
-    return carEquipment;
   }
 
   async getAcquisitionActs(
     extendedInfoId: number,
   ): Promise<AcquisitionActViewModel[]> {
-    const acts = await this.firebird.query<AcquisitionActViewModel>(
+    return this.firebird.query<AcquisitionActViewModel[]>(
       `
     SELECT  * 
     FROM RAZN_AKT_KOMPL(?) 
     ORDER BY NAIM`,
       [extendedInfoId],
     );
-    return acts;
   }
 
   async getMechanismTypes(): Promise<DirectoriesMechanismTypesViewModel[]> {
-    return this.firebird.query<DirectoriesMechanismTypesViewModel>(`
+    return this.firebird.query<DirectoriesMechanismTypesViewModel[]>(`
 SELECT * 
 FROM W_RAZN_T_T 
 WHERE RAZN_T_T_KEY <> -3 
@@ -296,21 +281,21 @@ ORDER BY T_T`);
   }
 
   async getNotes(): Promise<DirectoriesNotesViewModel[]> {
-    return this.firebird.query<DirectoriesNotesViewModel>(`
+    return this.firebird.query<DirectoriesNotesViewModel[]>(`
     SELECT *  
     FROM W_RAZN_STAND_PRIM  
     ORDER BY STAND_PRIM`);
   }
 
   async getAddresses(): Promise<DirectoriesAddressesViewModel[]> {
-    return this.firebird.query<DirectoriesAddressesViewModel>(`
+    return this.firebird.query<DirectoriesAddressesViewModel[]>(`
     SELECT * 
     FROM W_RAZN_ADRESS 
     ORDER BY ADRESS`);
   }
 
   async getGoodsType(): Promise<DirectoriesGoodsTypeViewModel[]> {
-    return this.firebird.query<DirectoriesGoodsTypeViewModel>(`
+    return this.firebird.query<DirectoriesGoodsTypeViewModel[]>(`
     SELECT * 
     FROM W_RAZN_TIP_GRUZ 
     ORDER BY TIP_GRUZ
@@ -320,7 +305,7 @@ ORDER BY T_T`);
   async getTransportationType(): Promise<
     DirectoriesTransportationTypeViewModel[]
   > {
-    return this.firebird.query<DirectoriesTransportationTypeViewModel>(`
+    return this.firebird.query<DirectoriesTransportationTypeViewModel[]>(`
     SELECT * 
     FROM W_RAZN_VID_PEREV 
     ORDER BY RAZN_VID_PEREV_KEY
@@ -330,14 +315,14 @@ ORDER BY T_T`);
   async getCommunicationType(): Promise<
     DirectoriesCommunicationTypeViewModel[]
   > {
-    return this.firebird.query<DirectoriesCommunicationTypeViewModel>(`
+    return this.firebird.query<DirectoriesCommunicationTypeViewModel[]>(`
     SELECT * 
     FROM W_RAZN_VID_SOOBSH 
     ORDER BY RAZN_VID_SOOBSH_KEY
     `);
   }
 
-  private async getExtendedInfoFilter(queryDto: ExtendedInfoDto) {
+  private getExtendedInfoFilter(queryDto: ExtendedInfoDto) {
     let filter = `NOMER IS NOT NULL`;
     if (queryDto.brand)
       filter += ` AND UPPER(MAM) LIKE UPPER('%${queryDto.brand}%')`;
@@ -350,16 +335,14 @@ ORDER BY T_T`);
     return filter;
   }
 
-  private async getEquipmentListFilter(
-    queryDto: EquipmentListDto,
-  ): Promise<string> {
+  private getEquipmentListFilter(queryDto: EquipmentListDto): string {
     let filter;
     switch (queryDto.motorcadeNumber) {
       case EquipmentListEnum.first:
-        filter = `Автоколонна №1`;
+        filter = `'Автоколонна №1'`;
         break;
       case EquipmentListEnum.second:
-        filter = `Автоколонна №2`;
+        filter = `'Автоколонна №2'`;
         break;
       //default: filter = `(NAME_AK = 'Автоколонна №1' OR NAME_AK = 'Автоколонна №2')`;
     }
