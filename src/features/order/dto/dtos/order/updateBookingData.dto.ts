@@ -2,8 +2,8 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsString, Matches } from 'class-validator';
 import { BookingDataDto } from './bookingData.dto';
 import { objectFieldFilter } from '../../../../../common/helpers/objectFieldFilter';
-import { timeStampToTimeTransformHelper } from '../../../../../common/helpers/timeStampToTimeTransform.helper';
-import { timeToTimestampTransformHelper } from '../../../../../common/helpers/timeToTimestampTransform.helper';
+import {timeStampToTimeTransformHelper} from "../../../../../common/helpers/timeStampToTimeTransform.helper";
+import {timeToTimestampTransformHelper} from "../../../../../common/helpers/timeToTimestampTransform.helper";
 
 export class UpdateBookingDataDto extends BookingDataDto {
   @ApiProperty({
@@ -17,12 +17,9 @@ export class UpdateBookingDataDto extends BookingDataDto {
 
   static dto(data: any): UpdateBookingDataDto {
     const updateBookingDataDto = new UpdateBookingDataDto();
-    const result = objectFieldFilter<UpdateBookingDataDto>(
-      data,
-      updateBookingDataDto,
-    );
-    result.VR_V = timeToTimestampTransformHelper(data.VR_V);
-    result.VR_Z = timeToTimestampTransformHelper(data.VR_Z);
-    return result;
+    const result = objectFieldFilter<UpdateBookingDataDto>(data, updateBookingDataDto);
+    result.VR_V = timeToTimestampTransformHelper(data.VR_V)
+    result.VR_Z = timeToTimestampTransformHelper(data.VR_Z)
+    return result
   }
 }

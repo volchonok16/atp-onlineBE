@@ -15,6 +15,6 @@ export class UpdateBookingUseCase
   constructor(public orderRepository: OrderRepository) {}
 
   async execute({ dto }: UpdateBookingCommand): Promise<boolean> {
-    return await this.orderRepository.updateBooking(dto);
+    return  await this.orderRepository.updateBooking(dto);
   }
 }
