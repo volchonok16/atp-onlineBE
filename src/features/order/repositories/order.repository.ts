@@ -435,17 +435,17 @@ export class OrderRepository {
     try {
       const data = getDataAccumulater(dto);
       const result = await this.rawFirebird.query(
-          `
+        `
       UPDATE RAZNAR2
          SET ${data}
        WHERE RAZNAR2_KEY = ?;
     `,
-          [dto.id],
+        [dto.id],
       );
 
       return true;
     } catch (e) {
-      return false
+      return false;
     }
   }
 
