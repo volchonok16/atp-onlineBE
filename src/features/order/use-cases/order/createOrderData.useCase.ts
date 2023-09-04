@@ -15,17 +15,16 @@ export class CreateOrderDataCommand {
 
 @CommandHandler(CreateOrderDataCommand)
 export class CreateOrderDataUseCase
-  implements ICommandHandler<CreateOrderDataCommand, OrderDataViewModel[]>
+  implements ICommandHandler<CreateOrderDataCommand, OrderDataViewModel>
 {
   constructor(
     private readonly orderRepository: OrderRepository,
-    private readonly orderQueryRepository: OrderQueryRepository
   ) {}
 
   async execute({
     inputDto,
     motorcadeName,
-  }: CreateOrderDataCommand): Promise<OrderDataViewModel[]> {
+  }: CreateOrderDataCommand): Promise<OrderDataViewModel> {
     //check does order data exist for this date
     const orderDataExists = await this.orderRepository.checkDoesOrderDataExist(
       inputDto.date
@@ -35,8 +34,6 @@ export class CreateOrderDataUseCase
       throw new BadRequestException(ErrorsMessages.orderDataExists);
 
     //create order data
-    await this.orderRepository.createOrderData(inputDto.date, motorcadeName);
-
-    return this.orderQueryRepository.getOrderData({ ...inputDto, tab: 1 });
+    return await this.orderRepository.createOrderData(inputDto.date, motorcadeName);
   }
 }

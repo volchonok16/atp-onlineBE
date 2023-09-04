@@ -2,7 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { IsOptional, IsString, Matches } from "class-validator";
 import { BookingDataDto } from "./bookingData.dto";
 import { objectFieldFilter } from "../../../../../common/helpers/objectFieldFilter";
-import { timeStampToTimeTransformHelper } from "../../../../../common/helpers/timeStampToTimeTransform.helper";
+import { timeStampToTimeTransform } from "../../../../../common/helpers/timeStampToTimeTransform";
 import { timeToTimestampTransformHelper } from "../../../../../common/helpers/timeToTimestampTransform.helper";
 
 export class UpdateBookingDataDto extends BookingDataDto {

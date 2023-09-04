@@ -1,20 +1,21 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { ReferralForRepairsCreateDto } from "../dto/dtos/referralForRepairsCreate.dto";
-import { BillOfLadingViewModel } from "../models/order.views/billOfLadingViewModel";
-import { ReferralForRepairsViewModel } from "../models/order.views/referralforrepairsView.Model";
-import { format } from "date-fns";
-import { CountType } from "../types/countType";
-import { UpdateCarForOrderDto } from "../dto/dtos/updateCarForOrderDto";
-import { WithId } from "../../../common/./types/withId.type";
-import { UpdateBookingDataDto } from "../dto/dtos/order/updateBookingData.dto";
-import { CreateOrderDto } from "../dto/dtos/order/createOrder.dto";
-import { OrderViewModel } from "../models/order.views/orderView.model";
-import { UpdateRequestDto } from "../dto/dtos/updateRequest.dto";
-import { getDataAccumulater } from "../../../common/helpers/getData.accumulater";
-import { FirebirdService } from "../../../common/helpers/firebird-orm/firebird";
-import { BookingViewModel } from "../models/order.views/bookingView.model";
-import { CreateBookingDataDto } from "../dto/dtos/order/createBookingDataDto";
-import { createQuery } from "../../../common/helpers/firebird-orm/create";
+import {Injectable, Logger, NotFoundException} from "@nestjs/common";
+import {ReferralForRepairsCreateDto} from "../dto/dtos/referralForRepairsCreate.dto";
+import {BillOfLadingViewModel} from "../models/order.views/billOfLadingViewModel";
+import {ReferralForRepairsViewModel} from "../models/order.views/referralforrepairsView.Model";
+import {format} from "date-fns";
+import {CountType} from "../types/countType";
+import {UpdateCarForOrderDto} from "../dto/dtos/updateCarForOrderDto";
+import {WithId} from "../../../common/./types/withId.type";
+import {UpdateBookingDataDto} from "../dto/dtos/order/updateBookingData.dto";
+import {CreateOrderDto} from "../dto/dtos/order/createOrder.dto";
+import {OrderViewModel} from "../models/order.views/orderView.model";
+import {UpdateRequestDto} from "../dto/dtos/updateRequest.dto";
+import {getDataAccumulater} from "../../../common/helpers/getData.accumulater";
+import {FirebirdService} from "../../../common/helpers/firebird-orm/firebird";
+import {BookingViewModel} from "../models/order.views/bookingView.model";
+import {CreateBookingDataDto} from "../dto/dtos/order/createBookingDataDto";
+import {createQuery} from "../../../common/helpers/firebird-orm/create";
+import {OrderDataViewModel} from "../models/order.views/orderDataView.model";
 
 @Injectable()
 export class OrderRepository {
@@ -25,35 +26,40 @@ export class OrderRepository {
     TTN_EXTData,
     TTN_TRANSPData
   ): Promise<BillOfLadingViewModel> {
-    const result = await this.firebird.executeInTransaction(async () => {
-      const createTTN = createQuery("TTN", TTNData, TTNData);
-      const createdTTN = await this.firebird.transactionQuery(
-        createTTN.query,
-        createTTN.parameters
-      );
+    try {
+      const result = await this.firebird.executeInTransaction(async () => {
+        const createTTN = createQuery("TTN", TTNData, TTNData);
+        const createdTTN = await this.firebird.transactionQuery(
+            createTTN.query,
+            createTTN.parameters
+        );
 
-      TTN_EXTData.TTN_ID = createdTTN.TTN_KEY;
-      const createTTN_EXT = createQuery("TTN_EXT", TTN_EXTData, TTN_EXTData);
-      const createdTTN_EXT = await this.firebird.transactionQuery(
-        createTTN_EXT.query,
-        createTTN_EXT.parameters
-      );
+        TTN_EXTData.TTN_ID = createdTTN.TTN_KEY;
+        const createTTN_EXT = createQuery("TTN_EXT", TTN_EXTData, TTN_EXTData);
+        const createdTTN_EXT = await this.firebird.transactionQuery(
+            createTTN_EXT.query,
+            createTTN_EXT.parameters
+        );
 
-      TTN_TRANSPData.TTN_ID = createdTTN.TTN_KEY;
-      const createTTN_TRANSP = createQuery(
-        "TTN_TRANSP",
-        TTN_TRANSPData,
-        TTN_TRANSPData
-      );
-      const createdTTN_TRANSP = await this.firebird.transactionQuery(
-        createTTN_TRANSP.query,
-        createTTN_TRANSP.parameters
-      );
+        TTN_TRANSPData.TTN_ID = createdTTN.TTN_KEY;
+        const createTTN_TRANSP = createQuery(
+            "TTN_TRANSP",
+            TTN_TRANSPData,
+            TTN_TRANSPData
+        );
+        const createdTTN_TRANSP = await this.firebird.transactionQuery(
+            createTTN_TRANSP.query,
+            createTTN_TRANSP.parameters
+        );
 
-      return { ...createdTTN, ...createdTTN_EXT, ...createdTTN_TRANSP };
-    });
+        return {...createdTTN, ...createdTTN_EXT, ...createdTTN_TRANSP};
+      });
 
-    return new BillOfLadingViewModel(result);
+      return new BillOfLadingViewModel(result);
+    } catch (e) {
+      Logger.error(e)
+      return null
+    }
   }
 
   async addWayBillNumber(
@@ -77,16 +83,17 @@ export class OrderRepository {
 
   async deleteBillOfLanding(TTN_ID: number): Promise<boolean> {
     try {
-      await this.firebird.executeInTransaction(async () => {
-        await this.firebird.query(`DELETE FROM TTN WHERE TTN_KEY = ?;`, [
+      return await this.firebird.executeInTransaction(async () => {
+        await this.firebird.transactionQuery(`DELETE FROM TTN WHERE TTN_KEY = ?;`, [
           TTN_ID,
         ]);
-        await this.firebird.query(`DELETE FROM TTN_TRANSP WHERE TTN_ID = ?;`, [
+        await this.firebird.transactionQuery(`DELETE FROM TTN_TRANSP WHERE TTN_ID = ?;`, [
           TTN_ID,
         ]);
+        return true
       }); // TODO каскадное удаление работает нре полностью
-      return true;
     } catch (e) {
+      console.log(e)
       return false;
     }
   }
@@ -106,20 +113,33 @@ export class OrderRepository {
   async createOrderData(
     currentDate: Date,
     motorcadeName: number
-  ): Promise<void> {
-    const date = format(currentDate, "yyyy-MM-dd");
-    await this.firebird.query(
-      `
-    execute procedure razn_new_day(?, null, ?)
-    `,
-      [date, motorcadeName === 0 ? null : motorcadeName]
-    );
-    return;
+  ) {
+    try {
+      const date = format(currentDate, "yyyy-MM-dd");
+      const [result] = await this.firebird.executeInTransaction(async () => {
+        await this.firebird.transactionQuery(
+          `
+            execute procedure razn_new_day(?, null, ?)
+          `,
+            [date, motorcadeName === 0 ? null : motorcadeName]
+        );
+
+        return await this.firebird.transactionQuery(`
+        SELECT * FROM W_DATA ORDER BY DATA_KEY DESC ROWS 1;
+      `)
+        return OrderDataViewModel.toView(result);
+      })
+
+      return result
+    } catch (e) {
+      console.log(e)
+      return null
+    }
   }
 
   async checkDoesOrderDataExist(currentDate: Date): Promise<boolean> {
     const date = format(currentDate, "yyyy-MM-dd");
-    const orderCount = await this.firebird.query<CountType>(
+    const [orderCount] = await this.firebird.query<CountType>(
       `
     SELECT COUNT(*) 
     FROM W_RAZNAR 
@@ -127,7 +147,8 @@ export class OrderRepository {
     `,
       [date]
     );
-    return orderCount[0].COUNT > 0;
+
+    return orderCount.COUNT > 0;
   }
 
   async updateOrder(dto: WithId<UpdateCarForOrderDto>): Promise<boolean> {
@@ -231,66 +252,15 @@ export class OrderRepository {
   }
 
   async createBooking(dto: CreateBookingDataDto): Promise<BookingViewModel> {
-    const query = `
-                    INSERT INTO RAZNAR2(
-                      DATE_RAB,
-                      DATA_ID,
-                      ORG_ID,
-                      FIO_ID,
-                      FIO2_ID,
-                      RAZOV,
-                      PRIVL_TRANSPORT,
-                      ROUTE_ID,
-                      RAZN_T_T_ID,
-                      RAZN_OD_ID,
-                      VR_V,
-                      VR_Z,
-                      VR_I,
-                      SUMM_VREM,
-                      CENA,
-                      SUMM,
-                      CENA_PODR,
-                      VREM_I_PODR,
-                      SUMM_PODR,
-                      PROFIT_PODR,
-                      COMMENTAR
-                    )
-                    VALUES(
-                      ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                  `;
+    try {
+      const {query, parameters} = createQuery('RAZNAR2', dto, new BookingViewModel())
+      const result = await this.firebird.query(query, parameters)
+      console.log(result)
 
-    await this.firebird.query(query, [
-      dto.DATE_RAB,
-      dto.DATA_ID,
-      dto.ORG_ID,
-      dto.FIO_ID,
-      dto.FIO2_ID,
-      dto.RAZOV,
-      dto.PRIVL_TRANSPORT,
-      dto.ROUTE_ID,
-      dto.RAZN_T_T_ID,
-      dto.RAZN_OD_ID,
-      dto.VR_V,
-      dto.VR_Z,
-      dto.VR_I,
-      dto.SUMM_VREM,
-      dto.CENA,
-      dto.SUMM,
-      dto.CENA_PODR,
-      dto.VREM_I_PODR,
-      dto.SUMM_PODR,
-      dto.PROFIT_PODR,
-      dto.COMMENTAR,
-    ]);
-
-    // +
-    const result = await this.firebird.query(`
-                      SELECT * FROM RAZNAR2
-                       ORDER BY SSORT DESC
-                        ROWS 1
-                    `);
-
-    return BookingViewModel.toView(result[0]);
+      return BookingViewModel.toView(result);
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   async updateBooking(dto: WithId<UpdateBookingDataDto>): Promise<boolean> {
@@ -312,15 +282,19 @@ export class OrderRepository {
     }
   }
 
-  async deleteBookingData(RAZNAR2_KEY: number): Promise<number> {
-    const result = await this.firebird.query(
-      `
+  async deleteBookingData(RAZNAR2_KEY: number): Promise<boolean> {
+    try {
+      const result = await this.firebird.query(
+          `
       DELETE FROM RAZNAR2
        WHERE RAZNAR2_KEY = ?;
     `,
-      [RAZNAR2_KEY]
-    );
+          [RAZNAR2_KEY]
+      );
 
-    return result["count"];
+      return true;
+    } catch (e) {
+      return false
+    }
   }
 }
