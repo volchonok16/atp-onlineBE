@@ -1,46 +1,46 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { dbConnect_const } from '../../../common/constants/global.constants';
-import { Connection } from 'odbc';
-import { CarInfoDto } from '../dto/dtos/carInfo.dto';
-import { UpdateStaffInfoDto } from '../dto/dtos/updateStaffInfo.dto';
-import { UpdateInternshipDto } from '../dto/dtos/updateInternship.dto';
-import { UpdateStaffCardDto } from '../dto/dtos/updateStaffCard.dto';
-import { CreateRefuelingCardDto } from '../dto/dtos/createRefuelingCard.dto';
-import { UpdateRefuelingCardDto } from '../dto/dtos/updateRefuelingCard.dto';
-import { CreateAdditionalInformationDto } from '../dto/dtos/createAdditionalInformation.dto';
-import { UpdateAdditionalInformationDto } from '../dto/dtos/updateAdditionalInformation.dto';
-import { UpdateImageDto } from '../dto/dtos/updateImage.dto';
-import { UploadImagesArrayDto } from '../dto/dtos/uploadImagesArray.dto';
-import { getDataAccumulater } from '../../../common/helpers/getData.accumulater';
+import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { dbConnect_const } from "../../../common/constants/global.constants";
+import { Connection } from "odbc";
+import { CarInfoDto } from "../dto/dtos/carInfo.dto";
+import { UpdateStaffInfoDto } from "../dto/dtos/updateStaffInfo.dto";
+import { UpdateInternshipDto } from "../dto/dtos/updateInternship.dto";
+import { UpdateStaffCardDto } from "../dto/dtos/updateStaffCard.dto";
+import { CreateRefuelingCardDto } from "../dto/dtos/createRefuelingCard.dto";
+import { UpdateRefuelingCardDto } from "../dto/dtos/updateRefuelingCard.dto";
+import { CreateAdditionalInformationDto } from "../dto/dtos/createAdditionalInformation.dto";
+import { UpdateAdditionalInformationDto } from "../dto/dtos/updateAdditionalInformation.dto";
+import { UpdateImageDto } from "../dto/dtos/updateImage.dto";
+import { UploadImagesArrayDto } from "../dto/dtos/uploadImagesArray.dto";
+import { getDataAccumulater } from "../../../common/helpers/getData.accumulater";
 import {
   upsert,
   upsertQuery,
-} from '../../../common/helpers/firebird-orm/upsert';
-import { NoteDto } from '../dto/dtos/data-editing/note.dto';
-import { NoteViewModel } from '../models/dataEditing.views/noteView.model';
-import { PriceDto } from '../dto/dtos/data-editing/price.dto';
-import { PriceViewModel } from '../models/dataEditing.views/priceViewModel';
-import { OrganizationDto } from '../dto/dtos/data-editing/organizationDto';
-import { OrganizationViewModel } from '../models/dataEditing.views/organizationView.model';
-import { WithId } from '../../../common/types/withId.type';
-import { SubunitDto } from '../dto/dtos/data-editing/subunit.dto';
-import { SubunitViewModel } from '../models/dataEditing.views/subunitView.model';
-import { FirebirdService } from '../../../common/helpers/firebird-orm/firebird';
-import { createQuery } from '../../../common/helpers/firebird-orm/create';
-import { ca, tr } from 'date-fns/locale';
-import { booleanToNumber } from '../../../common/helpers/booleanToNumberTransform.helper';
+} from "../../../common/helpers/firebird-orm/upsert";
+import { NoteDto } from "../dto/dtos/data-editing/note.dto";
+import { NoteViewModel } from "../models/dataEditing.views/noteView.model";
+import { PriceDto } from "../dto/dtos/data-editing/price.dto";
+import { PriceViewModel } from "../models/dataEditing.views/priceViewModel";
+import { OrganizationDto } from "../dto/dtos/data-editing/organizationDto";
+import { OrganizationViewModel } from "../models/dataEditing.views/organizationView.model";
+import { WithId } from "../../../common/types/withId.type";
+import { SubunitDto } from "../dto/dtos/data-editing/subunit.dto";
+import { SubunitViewModel } from "../models/dataEditing.views/subunitView.model";
+import { FirebirdService } from "../../../common/helpers/firebird-orm/firebird";
+import { createQuery } from "../../../common/helpers/firebird-orm/create";
+import { ca, tr } from "date-fns/locale";
+import { booleanToNumber } from "../../../common/helpers/booleanToNumberTransform.helper";
 
 @Injectable()
 export class DataEditingRepository {
   constructor(private firebird: FirebirdService) {}
 
   async createOrUpdateOrganization(
-    dto: OrganizationDto,
+    dto: OrganizationDto
   ): Promise<OrganizationViewModel> {
     const { query, parameters } = upsertQuery<
       OrganizationDto,
       OrganizationViewModel
-    >('DATA', 'DATA_KEY', dto, new OrganizationViewModel());
+    >("DATA", "DATA_KEY", dto, new OrganizationViewModel());
     const result = await this.firebird.query(query, parameters);
 
     return OrganizationViewModel.toView(result);
@@ -57,7 +57,7 @@ export class DataEditingRepository {
     `;
     const result = await this.firebird.query(query, [dto.id]);
 
-    return result['count'];
+    return result["count"];
   }
 
   async deleteOrganization(id: number): Promise<boolean> {
@@ -66,7 +66,7 @@ export class DataEditingRepository {
         `
           DELETE FROM DATA WHERE DATA_KEY = ?
         `,
-        [id],
+        [id]
       );
       return true;
     } catch (e) {
@@ -76,10 +76,10 @@ export class DataEditingRepository {
 
   async createOrUpdateSubunit(dto: SubunitDto): Promise<SubunitViewModel> {
     const { query, parameters } = upsertQuery<SubunitDto, SubunitViewModel>(
-      'DATA_PODR',
-      'DATA_PODR_KEY',
+      "DATA_PODR",
+      "DATA_PODR_KEY",
       dto,
-      new SubunitViewModel(),
+      new SubunitViewModel()
     );
     const result = await this.firebird.query(query, parameters);
 
@@ -96,10 +96,10 @@ export class DataEditingRepository {
          SET ${data} 
        WHERE  DATA_PODR_KEY = ?;
     `,
-      [dto.id],
+      [dto.id]
     );
 
-    return result['count'];
+    return result["count"];
   }
 
   async deleteSubunit(id: number): Promise<boolean> {
@@ -108,7 +108,7 @@ export class DataEditingRepository {
         `
           DELETE FROM DATA_PODR WHERE DATA_PODR_KEY = ?;
         `,
-        [id],
+        [id]
       );
 
       return true;
@@ -119,10 +119,10 @@ export class DataEditingRepository {
 
   async createOrUpdateNote(dto: NoteDto): Promise<NoteViewModel> {
     const { query, parameters } = upsertQuery<NoteDto, NoteViewModel>(
-      'DATA_PRIM',
-      'DATA_PRIM_KEY',
+      "DATA_PRIM",
+      "DATA_PRIM_KEY",
       dto,
-      new NoteViewModel(),
+      new NoteViewModel()
     );
     const result = await this.firebird.query(query, parameters);
 
@@ -135,7 +135,7 @@ export class DataEditingRepository {
         `
           DELETE FROM DATA_PRIM WHERE DATA_PRIM_KEY = ?;
     `,
-        [id],
+        [id]
       );
 
       return true;
@@ -147,10 +147,10 @@ export class DataEditingRepository {
 
   async createOrUpdatePrice(dto: PriceDto): Promise<PriceViewModel> {
     const { query, parameters } = upsertQuery<PriceDto, PriceViewModel>(
-      'DATA_CENA',
-      'DATA_CENA_KEY',
+      "DATA_CENA",
+      "DATA_CENA_KEY",
       dto,
-      new PriceViewModel(),
+      new PriceViewModel()
     );
     const result = await this.firebird.query(query, parameters);
 
@@ -163,7 +163,7 @@ export class DataEditingRepository {
         `
           DELETE FROM DATA_CENA WHERE DATA_CENA_KEY = ? 
         `,
-        [id],
+        [id]
       );
 
       return true;
@@ -179,7 +179,7 @@ export class DataEditingRepository {
         DELETE FROM FILES
         WHERE FILES_KEY = ?
     `,
-        [id],
+        [id]
       );
 
       return true;
@@ -190,9 +190,9 @@ export class DataEditingRepository {
 
   async createCarInfo(dto: CarInfoDto) {
     const { query, parameters } = createQuery<CarInfoDto, string>(
-      'OD',
+      "OD",
       dto,
-      'OD_KEY',
+      "OD_KEY"
     );
     const resultId = await this.firebird.query(query, parameters);
 
@@ -200,7 +200,7 @@ export class DataEditingRepository {
       `
         SELECT * FROM OD WHERE OD_KEY = ?
       `,
-      [resultId.OD_KEY],
+      [resultId.OD_KEY]
     );
 
     return result;
@@ -216,7 +216,7 @@ export class DataEditingRepository {
          SET ${data}
        WHERE OD_KEY = ? 
     `,
-        [dto.id],
+        [dto.id]
       );
 
       return true;
@@ -231,7 +231,7 @@ export class DataEditingRepository {
         `
           DELETE FROM OD WHERE OD_KEY = ?
         `,
-        [OD_KEY],
+        [OD_KEY]
       );
 
       return true;
@@ -250,7 +250,7 @@ export class DataEditingRepository {
          SET ${data}
         WHERE FIO_KEY = ? 
     `,
-        [dto.id],
+        [dto.id]
       );
 
       return true;
@@ -269,7 +269,7 @@ export class DataEditingRepository {
     SET ${data}
     WHERE FIO_ID = ?
     `,
-        [dto.id],
+        [dto.id]
       );
 
       return true;
@@ -286,7 +286,7 @@ export class DataEditingRepository {
         `
           UPDATE FIO_EXT SET ${data} WHERE FIO_ID = ? 
         `,
-        [dto.id],
+        [dto.id]
       );
       return true;
     } catch (e) {
@@ -315,7 +315,7 @@ export class DataEditingRepository {
   }
 
   async updateRefuelCard(
-    dto: WithId<UpdateRefuelingCardDto>,
+    dto: WithId<UpdateRefuelingCardDto>
   ): Promise<boolean> {
     try {
       const data = getDataAccumulater(dto);
@@ -324,7 +324,7 @@ export class DataEditingRepository {
         `
           UPDATE FIO_ZAPR_CARDS SET ${data} WHERE FIO_ID = ?;
         `,
-        [dto.id],
+        [dto.id]
       );
       return true;
     } catch (e) {
@@ -333,7 +333,7 @@ export class DataEditingRepository {
   }
 
   async updateRefuelCardById(
-    dto: WithId<UpdateRefuelingCardDto>,
+    dto: WithId<UpdateRefuelingCardDto>
   ): Promise<boolean> {
     try {
       const data = getDataAccumulater(dto);
@@ -342,7 +342,7 @@ export class DataEditingRepository {
         `
           UPDATE FIO_ZAPR_CARDS SET ${data} WHERE FIO_ID = ?;
         `,
-        [dto.id],
+        [dto.id]
       );
       return true;
     } catch (e) {
@@ -356,7 +356,7 @@ export class DataEditingRepository {
         `
           DELETE FROM FIO_ZAPR_CARDS WHERE FIO_ZAPR_CARDS_KEY = ?
         `,
-        [id],
+        [id]
       );
       return true;
     } catch (e) {
@@ -365,7 +365,7 @@ export class DataEditingRepository {
   }
 
   async createAdditionalInformationById(
-    dto: WithId<CreateAdditionalInformationDto>,
+    dto: WithId<CreateAdditionalInformationDto>
   ) {
     const responseForCreate = await this.firebird.query(`
     INSERT INTO FIO_DOCS (
@@ -389,17 +389,17 @@ export class DataEditingRepository {
     ) RETURNING FIO_DOCS_KEY, FIO_ID, NAIM, NOMER, KEM_VID, DATE_OT, DATE_DO, D_PREDUPR, ARHIV
     `);
     if (!responseForCreate) {
-      throw new NotFoundException('данные не сохранились');
+      throw new NotFoundException("данные не сохранились");
     }
 
     return responseForCreate;
   }
 
   async updateAdditionalInformation(
-    dto: WithId<UpdateAdditionalInformationDto>,
+    dto: WithId<UpdateAdditionalInformationDto>
   ) {
     try {
-      const data = getDataAccumulater(dto, 'number');
+      const data = getDataAccumulater(dto, "number");
 
       await this.firebird.query(
         `
@@ -407,7 +407,7 @@ export class DataEditingRepository {
          SET ${data}
        WHERE FIO_DOCS_KEY = ?;
     `,
-        [dto.id],
+        [dto.id]
       );
 
       return true;
@@ -423,7 +423,7 @@ export class DataEditingRepository {
       DELETE FROM FIO_DOCS
        WHERE FIO_DOCS_KEY = ?;
     `,
-        [id],
+        [id]
       );
 
       return true;
@@ -442,7 +442,7 @@ export class DataEditingRepository {
          SET ${data}
        WHERE FILES_KEY = ?;
     `,
-        [dto.id],
+        [dto.id]
       );
 
       return true;
@@ -453,7 +453,7 @@ export class DataEditingRepository {
 
   async uploadImages(
     dtoArr: UploadImagesArrayDto,
-    date: string,
+    date: string
   ): Promise<boolean> {
     let allSuccessful = true;
 

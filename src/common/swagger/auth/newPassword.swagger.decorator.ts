@@ -1,13 +1,13 @@
-import { applyDecorators } from '@nestjs/common';
+import { applyDecorators } from "@nestjs/common";
 import {
   ApiBadRequestResponse,
   ApiBody,
   ApiCookieAuth,
   ApiNoContentResponse,
   ApiOperation,
-} from '@nestjs/swagger';
-import { SwaggerConstants } from '../swagger.constants';
-import { NewPasswordInputDto } from '../../../features/authorization/dto/newPasswordInputDto';
+} from "@nestjs/swagger";
+import { SwaggerConstants } from "../swagger.constants";
+import { NewPasswordInputDto } from "../../../features/authorization/dto/newPasswordInputDto";
 
 export function NewPasswordSwaggerDecorator() {
   return applyDecorators(
@@ -23,6 +23,6 @@ export function NewPasswordSwaggerDecorator() {
     }),
     ApiBadRequestResponse({
       description: SwaggerConstants.badReq,
-    }),
+    })
   );
 }

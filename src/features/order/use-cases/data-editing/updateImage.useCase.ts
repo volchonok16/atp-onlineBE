@@ -1,9 +1,9 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { UpdateImageDto } from '../../dto/dtos/updateImage.dto';
-import { DataEditingRepository } from '../../repositories/dataEditing.repository';
-import { WithId } from '../../../../common/types/withId.type';
-import { NotFoundException } from '@nestjs/common';
-import { DataEditingQueryRepository } from '../../query.repositories/dataEditing.query.repository';
+import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
+import { UpdateImageDto } from "../../dto/dtos/updateImage.dto";
+import { DataEditingRepository } from "../../repositories/dataEditing.repository";
+import { WithId } from "../../../../common/types/withId.type";
+import { NotFoundException } from "@nestjs/common";
+import { DataEditingQueryRepository } from "../../query.repositories/dataEditing.query.repository";
 
 export class UpdateImageCommand {
   constructor(public dto: WithId<UpdateImageDto>) {}
@@ -15,7 +15,7 @@ export class UpdateImageUseCase
 {
   constructor(
     public dataEditingRepository: DataEditingRepository,
-    private readonly dataEditingQueryRepository: DataEditingQueryRepository,
+    private readonly dataEditingQueryRepository: DataEditingQueryRepository
   ) {}
 
   async execute({ dto }: UpdateImageCommand): Promise<boolean> {

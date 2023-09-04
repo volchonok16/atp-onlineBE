@@ -1,5 +1,5 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { OrderRepository } from '../../repositories/order.repository';
+import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
+import { OrderRepository } from "../../repositories/order.repository";
 
 export class deleteOrderCommand {
   constructor(public RAZN_KEY: number) {}

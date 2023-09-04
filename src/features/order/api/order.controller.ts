@@ -46,8 +46,6 @@ import { DeleteBookingDataCommand } from "../use-cases/order/deleteBookingData.u
 import { CreateOrderCommand } from "../use-cases/order/createOrder.useCase";
 import * as fs from "fs";
 import { AddWayBillNumberCommand } from "../use-cases/order/createOutputData.useCase";
-import { UpdateRequestCommand } from "../use-cases/order/updateRequest.useCase";
-import { CreateReportDataType } from "../types/createReportDataType";
 import { CreateBillOfLandingReportDto } from "../dto/dtos/createBillOfLandingReport.dto";
 
 @ApiTags("Order")
@@ -61,7 +59,7 @@ export class OrderController {
   ) {}
 
   @Put("/order/:RAZNAR2_KEY")
-  @ApiOperation({ summary: "Разнарядка -> Заказы" })
+  @ApiOperation({ summary: "Разнарядка -> Заказы +" })
   @ApiBody({ type: UpdateBookingDataDto })
   async updateBookingData(
     @Param("RAZNAR2_KEY") id: number,
@@ -73,22 +71,23 @@ export class OrderController {
 
   @Get("prepare-a-table-for")
   @ApiOperation({
-    summary: "Разнарядка -> Подготовить таблицу на",
+    summary: "Разнарядка -> Подготовить таблицу на ?",
   })
   async getOrderDataForDataPreparation(
     @Query() dto: GetCarForOrderDto
   ): Promise<OrderFoDataPreparationViewModel[]> {
-    const data = await this.orderQueryRepository.getOrderData({
-      ...dto,
-      tab: 1,
-    });
-
-    return data.map((d) => new OrderFoDataPreparationViewModel(d));
+    // @ts-ignore
+    return 'Не работает'
+    // const data = await this.orderQueryRepository.getBookingData(
+    //   dto,
+    // );
+    //
+    // return data.map((d) => new OrderFoDataPreparationViewModel(d));
   }
 
   @Post("bill-of-landing-and-waybill")
   @ApiOperation({
-    summary: "Разнарядка -> ТТН -> Создать ТТН на указанный рейс",
+    summary: "Разнарядка -> ТТН -> Создать ТТН на указанный рейс +",
   })
   async createBillOfLading(
     @Body() dto: BillOfLadingCreateDto
@@ -98,30 +97,31 @@ export class OrderController {
 
   @Post("create-goods-invoice-report/:id")
   @ApiOperation({
-    summary: "Разнарядка -> ТТН -> Печать ТН",
+    summary: "Разнарядка -> ТТН -> Печать ТНН +",
   })
-  async createGoodsInvoiceReport(): //@Body() dto: CreateGoodsInvoiceReportDto,
-  Promise<any> {
+  async createGoodsInvoiceReport(
+    // @Body() dto: CreateGoodsInvoiceReportDto
+  ): Promise<any> {
     return fs.readFileSync(
       `src/common/helpers/report-generator/mok-pdf-reports/TN_mok.pdf`
     );
 
-    /* const dataForReport: CreateReportDataType[] =
-                                                                                                               await this.orderQueryRepository.getDataForGoodsInvoiceANDBillOfLanding(
-                                                                                                                 dto.billOfLandingId,
-                                                                                                               );
-                                                    
-                                                                                                             const goodsInvoice = dataForReport[0];
-                                                    
-                                                                                                             return  await this.reportGenerator.createReport(
-                                                                                                               goodsInvoice,
-                                                                                                               dto.documentType,
-                                                                                                             );*/
+    // const dataForReport: CreateReportDataType[] =
+    //   await this.orderQueryRepository.getDataForGoodsInvoiceANDBillOfLanding(
+    //     dto.billOfLandingId
+    //   );
+    //
+    // const goodsInvoice = dataForReport[0];
+    //
+    // return await this.reportGenerator.createReport(
+    //   goodsInvoice,
+    //   dto.documentType
+    // );
   }
 
   @Post("create-bill-of-landing-report/:id")
   @ApiOperation({
-    summary: "Разнарядка -> ТТН -> Печать ТНН",
+    summary: "Разнарядка -> ТТН -> Печать ТНН +",
   })
   async createBillOfLandingReport(
     @Body() dto: CreateBillOfLandingReportDto
@@ -145,7 +145,7 @@ export class OrderController {
 
   @Delete("bill-of-landing-and-waybill")
   @ApiOperation({
-    summary: "Разнарядка -> ТТН -> Удалить выбранную ТТН",
+    summary: "Разнарядка -> ТТН -> Удалить выбранную ТТН +",
   })
   async deleteBillOfLanding(@Body() dto: BillOfLandingDeleteDto) {
     return await this.commandBus.execute(
@@ -155,30 +155,17 @@ export class OrderController {
 
   @Post("output-data")
   @ApiOperation({
-    summary: "Разнарядка -> Выходная информация",
+    summary: "Разнарядка -> Выходная информация +",
   })
   async prepareOutputData(
     @Body() dto: OutputDataDto
   ): Promise<OutputDataViewModel | any> {
-    // ___________________
-    // TODO Vrode rabotaet
-    // -------------------
-    if (dto.usersWayBillNumber !== null) {
-      const isUpdated = await this.commandBus.execute(
-        new AddWayBillNumberCommand(dto)
-      );
-      if (!isUpdated) {
-        throw new NotFoundException("разнарядки с таким номером не существует");
-      }
-      return await this.orderQueryRepository.getOutputData(dto.RAZN_ID);
-    } else {
-      return await this.orderQueryRepository.getOutputData(dto.RAZN_ID);
-    }
+    return this.commandBus.execute(new AddWayBillNumberCommand(dto));
   }
 
   @Post("referral-for-repairs")
   @ApiOperation({
-    summary: "Разнарядка -> Направление на ремонт -> ✔",
+    summary: "Разнарядка -> Направление на ремонт +",
   })
   async createReferral(
     @Body() dto: ReferralForRepairsCreateDto
@@ -188,35 +175,32 @@ export class OrderController {
     );
   }
 
-  @Post("order-data")
+  @Post("order")
   @ApiOperation({
-    summary: "Разнарядка -> Разнарядка -> ✔",
+    summary: "Разнарядка -> Разнарядка +",
   })
   async createOrderData(
     @Body() inputDto: OrderDataInputDto
-  ): Promise<OrderDataViewModel[]> {
-    await this.commandBus.execute(
-      new CreateOrderDataCommand(inputDto.date, inputDto.motorcadeName)
+  ): Promise<OrderDataViewModel> {
+    return await this.commandBus.execute(
+      new CreateOrderDataCommand(inputDto, inputDto.motorcadeName)
     );
-    return this.orderQueryRepository.getOrderData({ ...inputDto, tab: 1 });
   }
 
   @Get("/order")
   @ApiOperation({
-    summary: "Разнарядка -> Разнарядка",
+    summary: "Разнарядка -> Разнарядка ?",
   })
   async getCarForOrderData(
     @Query() dto: GetCarForOrderDto
-  ): Promise<CarForOrderViewModel[]> {
-    const data = await this.orderQueryRepository.getOrderData({
-      ...dto,
-      tab: 1,
-    });
-
-    return data.map((d) => CarForOrderViewModel.toView(d));
+  ): Promise<CarForOrderViewModel[] | string> {
+    return 'Не верный скл запрос в конфлюенсе'
+    // return await this.orderQueryRepository.getOrderData(
+    //   dto,
+    // );
   }
 
-  @Put("/order/update-order/:RAZN_KEY")
+  @Put("/order/:RAZN_KEY")
   @ApiOperation({
     summary: "Разнарядка -> Разнарядка",
   })
@@ -283,29 +267,28 @@ export class OrderController {
     );
   }
 
-  @Get("/order")
-  @ApiOperation({ summary: "Разнарядка -> Заказы" })
+  @Get("/booking")
+  @ApiOperation({ summary: "Разнарядка -> Заказы +/-" })
   async getBooking(
     @Query() dto: GetCarForOrderDto
   ): Promise<BookingViewModel[]> {
-    const data = await this.orderQueryRepository.getOrderData({
-      ...dto,
-      tab: 1,
-    });
+    const data = await this.orderQueryRepository.getBookingData(
+      dto,
+    );
 
     return data.map((d) => BookingViewModel.toView(d));
   }
 
-  @Post("/order")
-  @ApiOperation({ summary: "Разнарядка -> Заказы" })
+  @Post("/booking")
+  @ApiOperation({ summary: "Разнарядка -> Заказы +"})
   async createBookingData(
     @Body() dto: CreateBookingDataDto
   ): Promise<BookingViewModel> {
     return this.commandBus.execute(new CreateBookingCommand(dto));
   }
 
-  @Delete("/order/:RAZNAR2_KEY")
-  @ApiOperation({ summary: "Разнарядка -> Заказы -> c" })
+  @Delete("/booking/:RAZNAR2_KEY")
+  @ApiOperation({ summary: "Разнарядка -> Заказы +" })
   async deleteBookingData(
     @Param("RAZNAR2_KEY") RAZNAR2_KEY: number
   ): Promise<boolean> {

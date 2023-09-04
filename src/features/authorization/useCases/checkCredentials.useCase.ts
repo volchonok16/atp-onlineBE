@@ -1,5 +1,5 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { AuthRepository } from '../repositories/authRepository';
+import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
+import { AuthRepository } from "../repositories/authRepository";
 
 export class CheckCredentialsCommand {
   constructor(public username: string, public password: string) {}
@@ -15,7 +15,7 @@ export class CheckCredentialsUseCase
     // find user by username and pass
     const user = await this.authRepository.findUserByUsernameAndPass(
       command.username,
-      command.password,
+      command.password
     );
     if (!user) return null;
 

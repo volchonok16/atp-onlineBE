@@ -1,12 +1,12 @@
-import { applyDecorators } from '@nestjs/common';
+import { applyDecorators } from "@nestjs/common";
 import {
   ApiCookieAuth,
   ApiOkResponse,
   ApiOperation,
   ApiUnauthorizedResponse,
-} from '@nestjs/swagger';
-import { SwaggerConstants } from '../swagger.constants';
-import { DirectoriesAddressesViewModel } from '../../../features/order/models/catalogs.views/directoriesAddressesView.model';
+} from "@nestjs/swagger";
+import { SwaggerConstants } from "../swagger.constants";
+import { DirectoriesAddressesViewModel } from "../../../features/order/models/catalogs.views/directoriesAddressesView.model";
 
 export function GetDirectoriesAddressesSwaggerDecorator() {
   return applyDecorators(
@@ -21,6 +21,6 @@ export function GetDirectoriesAddressesSwaggerDecorator() {
     }),
     ApiUnauthorizedResponse({
       description: SwaggerConstants.unauthorized,
-    }),
+    })
   );
 }

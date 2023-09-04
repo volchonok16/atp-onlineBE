@@ -1,4 +1,4 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import {
   IsDate,
   IsNotEmpty,
@@ -6,15 +6,16 @@ import {
   IsOptional,
   IsString,
   MaxLength,
-} from 'class-validator';
-import { Transform, Type } from 'class-transformer';
-import { MotorcadeNameEnum } from '../../types/motorcadeName.enum';
-import { sortingMotorcadeName } from './orderData.query.dto';
+} from "class-validator";
+import { Transform, Type } from "class-transformer";
+import { MotorcadeNameEnum } from "../../types/motorcadeName.enum";
+import { sortingMotorcadeName } from "./orderData.query.dto";
+import {format} from "date-fns";
 
 export class GetCarForOrderDto {
   @ApiProperty({
-    example: '2023-07-10',
-    description: 'Date in the yyyy-MM-dd format or yyyy.MM.dd format',
+    example: `${format(new Date(), "yyyy-MM-dd")}`,
+    description: "Date in the yyyy-MM-dd",
   })
   @IsNotEmpty()
   @IsDate()

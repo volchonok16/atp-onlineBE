@@ -1,4 +1,4 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import {
   IsBoolean,
   IsEnum,
@@ -7,10 +7,10 @@ import {
   IsOptional,
   IsString,
   MaxLength,
-} from 'class-validator';
-import { Archive } from '../../types/archive.enum';
-import { objectFieldFilter } from '../../../../common/helpers/objectFieldFilter';
-import { Transform } from 'class-transformer';
+} from "class-validator";
+import { Archive } from "../../types/archive.enum";
+import { objectFieldFilter } from "../../../../common/helpers/objectFieldFilter";
+import { Transform } from "class-transformer";
 
 export class CarInfoDto {
   @ApiProperty()

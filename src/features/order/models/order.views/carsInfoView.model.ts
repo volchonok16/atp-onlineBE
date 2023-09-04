@@ -1,6 +1,6 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { Archive } from '../../types/archive.enum';
-import { shortStringToBoolean } from '../../../../common/helpers/shortStringToBooleanTransform.helper';
+import { ApiProperty } from "@nestjs/swagger";
+import { Archive } from "../../types/archive.enum";
+import { shortStringToBoolean } from "../../../../common/helpers/shortStringToBooleanTransform.helper";
 
 export class CarsInfoViewModel {
   @ApiProperty()

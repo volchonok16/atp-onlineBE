@@ -1,4 +1,4 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import {
   IsNotEmpty,
   IsNumber,
@@ -6,7 +6,7 @@ import {
   IsString,
   Max,
   MaxLength,
-} from 'class-validator';
+} from "class-validator";
 
 export class CreateOrderDto {
   @ApiProperty()
@@ -73,12 +73,12 @@ export class CreateOrderDto {
   @IsString()
   @MaxLength(19)
   @IsOptional()
-  VR_OT: string | null = '2023-08-08 14:30:00';
+  VR_OT: string | null = "2023-08-08 14:30:00";
   @ApiPropertyOptional()
   @IsString()
   @MaxLength(19)
   @IsOptional()
-  VR_DO: string | null = '2023-08-08 14:30:00';
+  VR_DO: string | null = "2023-08-08 14:30:00";
   @ApiPropertyOptional()
   @IsNumber()
   @Max(99999999)

@@ -1,7 +1,7 @@
-import { OrganizationDto } from '../../dto/dtos/data-editing/organizationDto';
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { DataEditingRepository } from '../../repositories/dataEditing.repository';
-import { OrganizationViewModel } from '../../models/dataEditing.views/organizationView.model';
+import { OrganizationDto } from "../../dto/dtos/data-editing/organizationDto";
+import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
+import { DataEditingRepository } from "../../repositories/dataEditing.repository";
+import { OrganizationViewModel } from "../../models/dataEditing.views/organizationView.model";
 
 export class CreateOrganizationCommand {
   constructor(public dto: OrganizationDto) {}

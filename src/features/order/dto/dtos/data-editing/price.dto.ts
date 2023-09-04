@@ -1,5 +1,5 @@
-import { PriceViewModel } from '../../../models/dataEditing.views/priceViewModel';
-import { objectFieldFilter } from '../../../../../common/helpers/objectFieldFilter';
+import { PriceViewModel } from "../../../models/dataEditing.views/priceViewModel";
+import { objectFieldFilter } from "../../../../../common/helpers/objectFieldFilter";
 
 export class PriceDto extends PriceViewModel {
   static dto(data: any): PriceDto {

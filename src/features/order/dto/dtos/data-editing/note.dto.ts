@@ -1,22 +1,22 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { objectFieldFilter } from '../../../../../common/helpers/objectFieldFilter';
-import { IsNotEmpty, IsOptional } from 'class-validator';
+import { ApiProperty } from "@nestjs/swagger";
+import { objectFieldFilter } from "../../../../../common/helpers/objectFieldFilter";
+import { IsNotEmpty, IsOptional } from "class-validator";
 
 export class NoteDto {
   @ApiProperty({
-    description: 'Note ID',
+    description: "Note ID",
   })
   @IsOptional()
   DATA_PRIM_KEY: number = null;
 
   @ApiProperty({
-    description: 'Organization ID',
+    description: "Organization ID",
   })
   @IsNotEmpty()
   DATA_ID: number = null;
 
   @ApiProperty({
-    description: 'Note',
+    description: "Note",
   })
   @IsOptional()
   PRIM: string = null;

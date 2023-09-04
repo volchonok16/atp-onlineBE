@@ -1,6 +1,6 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Archive } from '../../types/archive.enum';
-import { objectFieldFilter } from '../../../../common/helpers/objectFieldFilter';
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { Archive } from "../../types/archive.enum";
+import { objectFieldFilter } from "../../../../common/helpers/objectFieldFilter";
 
 export class UpdateStaffInfoDto {
   @ApiProperty()

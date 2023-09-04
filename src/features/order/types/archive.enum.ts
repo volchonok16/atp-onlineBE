@@ -1,4 +1,4 @@
 export enum Archive {
-  true = 'F',
-  false = 'T',
+  true = "F",
+  false = "T",
 }

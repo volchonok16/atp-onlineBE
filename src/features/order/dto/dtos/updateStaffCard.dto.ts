@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { objectFieldFilter } from '../../../../common/helpers/objectFieldFilter';
+import { ApiProperty } from "@nestjs/swagger";
+import { objectFieldFilter } from "../../../../common/helpers/objectFieldFilter";
 
 export class UpdateStaffCardDto {
   @ApiProperty()
@@ -37,7 +37,7 @@ export class UpdateStaffCardDto {
   @ApiProperty()
   UDOST_SPEC: string = null;
   @ApiProperty()
-  DATE_UDOST_SPEC = '2023-08-14';
+  DATE_UDOST_SPEC = "2023-08-14";
   @ApiProperty()
   KAT_S_AI: number;
   @ApiProperty()
@@ -59,9 +59,9 @@ export class UpdateStaffCardDto {
   @ApiProperty()
   KARTA_TAHO: string = null;
   @ApiProperty()
-  DATE_KARTA_TAHO = '2023-08-14';
+  DATE_KARTA_TAHO = "2023-08-14";
   @ApiProperty()
-  DATE_SPRAV = '2023-08-14';
+  DATE_SPRAV = "2023-08-14";
   @ApiProperty()
   TEL: string = null;
   @ApiProperty()

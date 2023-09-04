@@ -1,44 +1,44 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from "@nestjs/swagger";
 import {
   IsBoolean,
   IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
-} from 'class-validator';
-import { objectFieldFilter } from '../../../../../common/helpers/objectFieldFilter';
+} from "class-validator";
+import { objectFieldFilter } from "../../../../../common/helpers/objectFieldFilter";
 
 export class SubunitDto {
   @ApiProperty({
-    description: 'Subunit ID',
+    description: "Subunit ID",
   })
   @IsOptional()
   @IsNumber()
   DATA_PODR_KEY: number = null;
 
   @ApiProperty({
-    description: 'Subunit name',
+    description: "Subunit name",
   })
   @IsNotEmpty()
   @IsString()
-  PODR = '';
+  PODR = "";
 
   @ApiProperty({
-    description: 'Norm of time|weekdays',
+    description: "Norm of time|weekdays",
   })
   @IsOptional()
   @IsString()
   NORMA: string = null;
 
   @ApiProperty({
-    description: 'Norm of time|day off',
+    description: "Norm of time|day off",
   })
   @IsOptional()
   @IsString()
   NORMA_VIH: string = null;
 
   @ApiProperty({
-    description: 'Archive',
+    description: "Archive",
   })
   @IsOptional()
   @IsBoolean()

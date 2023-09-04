@@ -1,5 +1,5 @@
 export enum MotorcadeNameEnum {
-  all = 'all',
-  first = 'first',
-  upp = 'upp',
+  all = "all",
+  first = "first",
+  upp = "upp",
 }

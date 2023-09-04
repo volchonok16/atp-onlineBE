@@ -1,6 +1,6 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { CommoditySectionViewModel } from './commoditySectionView.model';
-import { TransportSectionViewModel } from './transportSectionView.model';
+import { ApiProperty } from "@nestjs/swagger";
+import { CommoditySectionViewModel } from "./commoditySectionView.model";
+import { TransportSectionViewModel } from "./transportSectionView.model";
 
 export class CreateBillOfLandingReportViewModel {
   @ApiProperty()
