@@ -1,13 +1,13 @@
-import { applyDecorators } from '@nestjs/common';
+import { applyDecorators } from "@nestjs/common";
 import {
   ApiBadRequestResponse,
   ApiCookieAuth,
   ApiOkResponse,
   ApiOperation,
   ApiUnauthorizedResponse,
-} from '@nestjs/swagger';
-import { SwaggerConstants } from '../swagger.constants';
-import { TechnicalCharacteristicViewModel } from '../../../features/order/models/catalogs.views/technicalCharacteristicView.model';
+} from "@nestjs/swagger";
+import { SwaggerConstants } from "../swagger.constants";
+import { TechnicalCharacteristicViewModel } from "../../../features/order/models/catalogs.views/technicalCharacteristicView.model";
 
 export function GetTechnicalCharacteristicByIdSwaggerDecorator() {
   return applyDecorators(
@@ -24,6 +24,6 @@ export function GetTechnicalCharacteristicByIdSwaggerDecorator() {
     }),
     ApiUnauthorizedResponse({
       description: SwaggerConstants.unauthorized,
-    }),
+    })
   );
 }

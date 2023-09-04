@@ -4,10 +4,10 @@ import {
   ValidationOptions,
   ValidatorConstraint,
   ValidatorConstraintInterface,
-} from 'class-validator';
-import { Injectable } from '@nestjs/common';
+} from "class-validator";
+import { Injectable } from "@nestjs/common";
 
-@ValidatorConstraint({ name: 'IsValidDate', async: false })
+@ValidatorConstraint({ name: "IsValidDate", async: false })
 @Injectable()
 export class IsValidDateConstraint implements ValidatorConstraintInterface {
   validate(value: Date, args: ValidationArguments) {

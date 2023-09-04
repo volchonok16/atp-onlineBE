@@ -1,6 +1,6 @@
-import { Connection } from 'odbc';
-import { booleanToShortString } from '../booleanToShortStringTransform';
-import { rawDbResponseTransform } from '../rawDbResponseTransform.helper';
+import { Connection } from "odbc";
+import { booleanToShortString } from "../booleanToShortStringTransform";
+import { rawDbResponseTransform } from "../rawDbResponseTransform.helper";
 
 /**
  * Creates or updates an entry in the database and returns the created/updated entry
@@ -13,16 +13,16 @@ export async function upsert<T>(
   firebird: Connection,
   tableName: string,
   idFieldName: string,
-  dto: T,
+  dto: T
 ) {
-  const fieldNames = Object.keys(dto).join(', ');
+  const fieldNames = Object.keys(dto).join(", ");
   const fieldValues = Object.values(dto).map((value) => {
-    if (typeof value === 'boolean') {
+    if (typeof value === "boolean") {
       return booleanToShortString(value);
     }
     return value;
   });
-  const placeholders = fieldValues.map(() => '?').join(', ');
+  const placeholders = fieldValues.map(() => "?").join(", ");
 
   const query = `
         UPDATE OR INSERT INTO ${tableName}(${fieldNames}) 
@@ -59,17 +59,17 @@ export function upsertQuery<T, P>(
   tableName: string,
   idFieldName: string,
   dto: T,
-  view: P,
+  view: P
 ): { query: string; parameters: string[] } {
-  const fieldNames = Object.keys(dto).join(', ');
+  const fieldNames = Object.keys(dto).join(", ");
   const fieldValues = Object.values(dto).map((value) => {
-    if (typeof value === 'boolean') {
+    if (typeof value === "boolean") {
       return booleanToShortString(value);
     }
     return value;
   });
-  const viewField = Object.keys(view).join(', ');
-  const placeholders = fieldValues.map(() => '?').join(', ');
+  const viewField = Object.keys(view).join(", ");
+  const placeholders = fieldValues.map(() => "?").join(", ");
 
   const query = `
         UPDATE OR INSERT INTO ${tableName}(${fieldNames}) 

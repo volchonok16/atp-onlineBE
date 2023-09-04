@@ -1,28 +1,28 @@
-import { Injectable } from '@nestjs/common';
-import { CarsInfoInputDto } from '../dto/query.dtos/carInfoInput.dto';
-import { CarsInfoViewModel } from '../models/order.views/carsInfoView.model';
-import { StaffInfoDto } from '../dto/query.dtos/staffInfo.dto';
-import { StaffInfoViewModel } from '../models/order.views/staffInfoViewModel';
-import { StaffRefuelingCardsViewModel } from '../models/order.views/staffRefuelingCardsView.model';
-import { StaffAdditionalInfoViewModel } from '../models/order.views/staffAdditionalInfoView.model';
-import { OrganizationsInputDto } from '../dto/query.dtos/organizationsInput.dto';
-import { OrganizationsViewModel } from '../models/order.views/organizationsView.model';
-import { OrganizationViewModel } from '../models/dataEditing.views/organizationView.model';
-import { OrganizationsListInputDto } from '../dto/query.dtos/organizationListInput.dto';
-import { OrganizationsListViewModel } from '../models/order.views/organizationsListView.model';
-import { OrganizationSubunitViewModel } from '../models/order.views/organizationSubunitView.model';
-import { OrganizationExecuteViewModel } from '../models/order.views/organizationExecuteView.model';
-import { OtherEquipmentViewModel } from '../models/order.views/otherEquipmentView.model';
-import { EquipmentsDocViewModel } from '../models/order.views/equipmentsDocView.model';
-import { FlightsDto } from '../dto/query.dtos/flights.dto';
-import { FlightsViewModel } from '../models/order.views/flightsView.model';
-import { NoteViewModel } from '../models/dataEditing.views/noteView.model';
-import { rawDbResponseTransform } from '../../../common/helpers/rawDbResponseTransform.helper';
-import { PriceViewModel } from '../models/dataEditing.views/priceViewModel';
-import { WithId } from '../../../common/types/withId.type';
-import { ArchiveOrNotArchiveQuery } from '../dto/query.dtos/noteQuery.dto';
-import { booleanToShortString } from '../../../common/helpers/booleanToShortStringTransform';
-import { FirebirdService } from '../../../common/helpers/firebird-orm/firebird';
+import { Injectable } from "@nestjs/common";
+import { CarsInfoInputDto } from "../dto/query.dtos/carInfoInput.dto";
+import { CarsInfoViewModel } from "../models/order.views/carsInfoView.model";
+import { StaffInfoDto } from "../dto/query.dtos/staffInfo.dto";
+import { StaffInfoViewModel } from "../models/order.views/staffInfoViewModel";
+import { StaffRefuelingCardsViewModel } from "../models/order.views/staffRefuelingCardsView.model";
+import { StaffAdditionalInfoViewModel } from "../models/order.views/staffAdditionalInfoView.model";
+import { OrganizationsInputDto } from "../dto/query.dtos/organizationsInput.dto";
+import { OrganizationsViewModel } from "../models/order.views/organizationsView.model";
+import { OrganizationViewModel } from "../models/dataEditing.views/organizationView.model";
+import { OrganizationsListInputDto } from "../dto/query.dtos/organizationListInput.dto";
+import { OrganizationsListViewModel } from "../models/order.views/organizationsListView.model";
+import { OrganizationSubunitViewModel } from "../models/order.views/organizationSubunitView.model";
+import { OrganizationExecuteViewModel } from "../models/order.views/organizationExecuteView.model";
+import { OtherEquipmentViewModel } from "../models/order.views/otherEquipmentView.model";
+import { EquipmentsDocViewModel } from "../models/order.views/equipmentsDocView.model";
+import { FlightsDto } from "../dto/query.dtos/flights.dto";
+import { FlightsViewModel } from "../models/order.views/flightsView.model";
+import { NoteViewModel } from "../models/dataEditing.views/noteView.model";
+import { rawDbResponseTransform } from "../../../common/helpers/rawDbResponseTransform.helper";
+import { PriceViewModel } from "../models/dataEditing.views/priceViewModel";
+import { WithId } from "../../../common/types/withId.type";
+import { ArchiveOrNotArchiveQuery } from "../dto/query.dtos/noteQuery.dto";
+import { booleanToShortString } from "../../../common/helpers/booleanToShortStringTransform";
+import { FirebirdService } from "../../../common/helpers/firebird-orm/firebird";
 
 @Injectable()
 export class DataEditingQueryRepository {
@@ -36,7 +36,7 @@ export class DataEditingQueryRepository {
       `
         SELECT * 
         FROM OD_sel 
-        WHERE  ${carsInfoFilter}`,
+        WHERE  ${carsInfoFilter}`
     );
     return carsInfo.map((e) => new CarsInfoViewModel(e));
   }
@@ -64,14 +64,14 @@ export class DataEditingQueryRepository {
         FROM FIO_SEL fs
         LEFT JOIN FIO_EXT fe 
         ON fs.FIO_KEY = fe.FIO_ID
-        WHERE ${staffInfoFilter}`,
+        WHERE ${staffInfoFilter}`
     );
 
     return staffInfo.map((si) => StaffInfoViewModel.toView(si));
   }
 
   async getRefuelingCardsById(
-    staffInfoId: number,
+    staffInfoId: number
   ): Promise<StaffRefuelingCardsViewModel | null> {
     const [staffInfoById] = await this.firebird.query<
       StaffRefuelingCardsViewModel[]
@@ -80,14 +80,14 @@ export class DataEditingQueryRepository {
         SELECT *
         FROM FIO_ZAPR_CARDS  
         WHERE FIO_ID = ?`,
-      [staffInfoId],
+      [staffInfoId]
     );
 
     return staffInfoById;
   }
 
   async getAdditionalInformationById(
-    staffInfoId: number,
+    staffInfoId: number
   ): Promise<StaffAdditionalInfoViewModel | null> {
     const [staffInfoById] = await this.firebird.query<
       StaffAdditionalInfoViewModel[]
@@ -97,14 +97,14 @@ export class DataEditingQueryRepository {
             FROM FIO_DOCS 
             WHERE FIO_ID = ?
             ORDER BY DATE_DO DESC `,
-      [staffInfoId],
+      [staffInfoId]
     );
 
     return StaffAdditionalInfoViewModel.toView(staffInfoById);
   }
 
   async getOrganizations(
-    queryDto: OrganizationsInputDto,
+    queryDto: OrganizationsInputDto
   ): Promise<OrganizationsViewModel[]> {
     const organizationsFilter = this.getOrganizationsFilter(queryDto);
     console.log(organizationsFilter);
@@ -118,21 +118,21 @@ export class DataEditingQueryRepository {
   }
 
   async getOrganizationById(
-    organizationId: number,
+    organizationId: number
   ): Promise<OrganizationViewModel> {
     const organization = await this.firebird.query<OrganizationViewModel>(
       `
     SELECT * 
     FROM DATA_EXT 
     WHERE DATA_ID = ?`,
-      [organizationId],
+      [organizationId]
     );
 
     return organization[0];
   }
 
   async getOrganizationList(
-    dto: OrganizationsListInputDto,
+    dto: OrganizationsListInputDto
   ): Promise<OrganizationsListViewModel[]> {
     const organizationsFilter = this.getOrganizationsFilter(dto);
     const organizations = await this.firebird
@@ -146,7 +146,7 @@ export class DataEditingQueryRepository {
   }
 
   async getOrganizationSubunits(
-    organizationId: number,
+    organizationId: number
   ): Promise<OrganizationSubunitViewModel[]> {
     const subunits = await this.firebird.query<OrganizationSubunitViewModel[]>(
       `
@@ -154,13 +154,13 @@ export class DataEditingQueryRepository {
         FROM DATA_PODR
         WHERE DATA_ID = ?
         ORDER BY PODR`,
-      [organizationId],
+      [organizationId]
     );
     return subunits.map((s) => OrganizationSubunitViewModel.toView(s));
   }
 
   async getOrganizationExecutive(
-    organizationId: number,
+    organizationId: number
   ): Promise<OrganizationExecuteViewModel[]> {
     const executive = await this.firebird.query<OrganizationExecuteViewModel[]>(
       `
@@ -171,7 +171,7 @@ export class DataEditingQueryRepository {
            DOLGN  
         FROM DATA_FIO
         WHERE DATA_ID = ?`,
-      [organizationId],
+      [organizationId]
     );
     return executive;
   }
@@ -184,27 +184,27 @@ export class DataEditingQueryRepository {
   }
 
   async getEquipmentById(
-    equipmentId: number,
+    equipmentId: number
   ): Promise<OtherEquipmentViewModel | null> {
     const [equipment] = await this.firebird.query<OtherEquipmentViewModel[]>(
       `
                     SELECT * 
                     FROM SKLAD_OBJ_SPIS_SEL
                     WHERE SKLAD_OBJ_SPIS_KEY = ?`,
-      [equipmentId],
+      [equipmentId]
     );
     return equipment;
   }
 
   async getEquipmentDocs(
-    equipmentId: number,
+    equipmentId: number
   ): Promise<EquipmentsDocViewModel[]> {
     const equipmentDocs = await this.firebird.query<EquipmentsDocViewModel[]>(
       `
                 SELECT * 
                 FROM RAZN_OD_DOCS
                 WHERE RAZN_OD_ID = ?`,
-      [equipmentId],
+      [equipmentId]
     );
     return equipmentDocs;
   }
@@ -223,7 +223,7 @@ export class DataEditingQueryRepository {
       `
       SELECT * FROM DATA WHERE DATA_KEY = ?;
     `,
-      [id],
+      [id]
     );
 
     return !!result;
@@ -234,7 +234,7 @@ export class DataEditingQueryRepository {
       `
       SELECT * FROM DATA_PRIM WHERE DATA_PRIM_KEY = ?;
     `,
-      [id],
+      [id]
     );
 
     return !!result;
@@ -243,7 +243,7 @@ export class DataEditingQueryRepository {
   async subunitExists(id: number): Promise<boolean> {
     const [result] = await this.firebird.query(
       `SELECT * FROM DATA_PODR WHERE DATA_PODR_KEY = ?;`,
-      [id],
+      [id]
     );
 
     return !!result;
@@ -252,7 +252,7 @@ export class DataEditingQueryRepository {
   async priceExists(id: number): Promise<boolean> {
     const [result] = await this.firebird.query(
       `SELECT * FROM DATA_CENA WHERE DATA_CENA_KEY = ?;`,
-      [id],
+      [id]
     );
 
     return !!result;
@@ -261,7 +261,7 @@ export class DataEditingQueryRepository {
   async imageExists(id: number): Promise<boolean> {
     const [result] = await this.firebird.query(
       `SELECT * FROM FILES WHERE FILES_KEY = ?;`,
-      [id],
+      [id]
     );
 
     return !!result;
@@ -270,7 +270,7 @@ export class DataEditingQueryRepository {
   async carInfoExists(id: number): Promise<boolean> {
     const [result] = await this.firebird.query(
       `SELECT * FROM OD WHERE OD_KEY = ?;`,
-      [id],
+      [id]
     );
 
     return !!result;
@@ -279,7 +279,7 @@ export class DataEditingQueryRepository {
   async staffExists(id: number): Promise<boolean> {
     const [result] = await this.firebird.query(
       `SELECT * FROM FIO WHERE FIO_KEY = ?;`,
-      [id],
+      [id]
     );
 
     return !!result;
@@ -288,7 +288,7 @@ export class DataEditingQueryRepository {
   async internshipExists(id: number): Promise<boolean> {
     const [result] = await this.firebird.query(
       `SELECT * FROM FIO_STAGIROVKA WHERE FIO_ID = ?;`,
-      [id],
+      [id]
     );
 
     return !!result;
@@ -297,7 +297,7 @@ export class DataEditingQueryRepository {
   async staffCardExists(id: number): Promise<boolean> {
     const [result] = await this.firebird.query(
       `SELECT * FROM FIO_EXT WHERE FIO_ID = ?;`,
-      [id],
+      [id]
     );
 
     return !!result;
@@ -306,7 +306,7 @@ export class DataEditingQueryRepository {
   async refuelingCardExists(id: number): Promise<boolean> {
     const [result] = await this.firebird.query(
       `SELECT * FROM FIO_ZAPR_CARDS WHERE FIO_ID = ?;`,
-      [id],
+      [id]
     );
 
     return !!result;
@@ -315,7 +315,7 @@ export class DataEditingQueryRepository {
   async refuelingCardExistsById(id: number): Promise<boolean> {
     const [result] = await this.firebird.query(
       `SELECT * FROM FIO_ZAPR_CARDS WHERE FIO_ZAPR_CARDS_KEY = ?;`,
-      [id],
+      [id]
     );
 
     return !!result;
@@ -324,7 +324,7 @@ export class DataEditingQueryRepository {
   async additionalInformationExists(id: number): Promise<boolean> {
     const [result] = await this.firebird.query(
       `SELECT * FROM FIO_DOCS WHERE FIO_DOCS_KEY = ?;`,
-      [id],
+      [id]
     );
 
     return !!result;
@@ -335,7 +335,7 @@ export class DataEditingQueryRepository {
       `
         SELECT * FROM FILES WHERE FILES_KEY = ?;
       `,
-      [id],
+      [id]
     );
 
     return result[0];
@@ -350,7 +350,7 @@ export class DataEditingQueryRepository {
       SELECT * FROM DATA_PRIM WHERE DATA_ID = ? AND (SELECT ARHIV FROM DATA WHERE DATA_KEY = ?) = ?
       ; 
     `,
-      [id, id, booleanToShortString(ARHIV)],
+      [id, id, booleanToShortString(ARHIV)]
     );
 
     const result = rawDbResponseTransform(rawResponse);
@@ -363,7 +363,7 @@ export class DataEditingQueryRepository {
       SELECT * FROM DATA_CENA WHERE DATA_ID = ? 
        ORDER BY DATE_D DESC; 
     `,
-      [id],
+      [id]
     );
 
     const result = rawDbResponseTransform(rawResponse);
@@ -388,7 +388,7 @@ export class DataEditingQueryRepository {
   }
 
   private getOrganizationsFilter(
-    queryDto: OrganizationsInputDto | OrganizationsListInputDto,
+    queryDto: OrganizationsInputDto | OrganizationsListInputDto
   ) {
     let organizationsFilter = `DEL = '0'`;
     if (queryDto.shortName) {
@@ -396,7 +396,7 @@ export class DataEditingQueryRepository {
     }
     if (queryDto instanceof OrganizationsInputDto) {
       organizationsFilter += ` AND ARHIV = '${booleanToShortString(
-        queryDto.archive,
+        queryDto.archive
       )}'`;
     }
     return organizationsFilter;

@@ -1,6 +1,6 @@
-import { UserType } from '../types/user.type';
-import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsString } from 'class-validator';
+import { UserType } from "../types/user.type";
+import { ApiProperty } from "@nestjs/swagger";
+import { IsNumber, IsString } from "class-validator";
 
 export class UserDto {
   @ApiProperty()

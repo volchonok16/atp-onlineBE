@@ -1,4 +1,4 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import {
   IsNotEmpty,
   IsNumber,
@@ -6,7 +6,7 @@ import {
   IsString,
   Max,
   MaxLength,
-} from 'class-validator';
+} from "class-validator";
 
 export class OutputDataDto {
   @ApiProperty()

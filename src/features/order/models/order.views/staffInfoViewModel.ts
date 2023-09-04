@@ -1,6 +1,6 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { shortStringToBoolean } from '../../../../common/helpers/shortStringToBooleanTransform.helper';
-import { numberToBoolean } from '../../../../common/helpers/numberToBooleanTransform.helper';
+import { ApiProperty } from "@nestjs/swagger";
+import { shortStringToBoolean } from "../../../../common/helpers/shortStringToBooleanTransform.helper";
+import { numberToBoolean } from "../../../../common/helpers/numberToBooleanTransform.helper";
 
 export class StaffInfoViewModel {
   @ApiProperty()

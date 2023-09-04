@@ -1,5 +1,5 @@
-import { da } from 'date-fns/locale';
-import { shortStringToBoolean } from '../../../../common/helpers/shortStringToBooleanTransform.helper';
+import { da } from "date-fns/locale";
+import { shortStringToBoolean } from "../../../../common/helpers/shortStringToBooleanTransform.helper";
 
 export class OrderDataViewModel {
   // RAZN_KEY: number;

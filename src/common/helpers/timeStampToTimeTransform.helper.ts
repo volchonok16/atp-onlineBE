@@ -5,6 +5,6 @@
  * @param timestamp in string format
  */
 export const timeStampToTimeTransformHelper = (timestamp: string): string => {
-  const [_, time] = timestamp.split(' ');
+  const [_, time] = timestamp.split(" ");
   return time.slice(0, -3);
 };

@@ -1,7 +1,7 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { dbConnect_const } from '../../../common/constants/global.constants';
-import { Connection } from 'odbc';
-import { EmployeeQueryDto } from '../dto/query.dtos/employe.query.dto';
+import { Inject, Injectable } from "@nestjs/common";
+import { dbConnect_const } from "../../../common/constants/global.constants";
+import { Connection } from "odbc";
+import { EmployeeQueryDto } from "../dto/query.dtos/employe.query.dto";
 
 @Injectable()
 export class PopUpWindowQueryRepository {
@@ -9,14 +9,14 @@ export class PopUpWindowQueryRepository {
 
   async getEquipments() {
     return await this.firebird.query(
-      `SELECT MAM, NOMER FROM  RAZN_OD_SEL(1, null);`,
+      `SELECT MAM, NOMER FROM  RAZN_OD_SEL(1, null);`
     );
   }
 
   async getEmployeesSecondNames(dto: EmployeeQueryDto) {
     return await this.firebird.query(
       `SELECT FIO, FIO_KEY FROM fio_sel(?) where del=0;`,
-      [dto.typeOfEmployee],
+      [dto.typeOfEmployee]
     );
   }
 
@@ -37,7 +37,7 @@ export class PopUpWindowQueryRepository {
       `
     select PODR from data_podr where data_id = ? and arhiv = 'F' order by podr;
         `,
-      [+DATA_ID],
+      [+DATA_ID]
     );
   }
 
@@ -45,7 +45,7 @@ export class PopUpWindowQueryRepository {
     return await this.firebird.query(
       `
   SELECT PODR_KEY, PODR FROM W_PODR order by podr;
-        `,
+        `
     );
   }
 }

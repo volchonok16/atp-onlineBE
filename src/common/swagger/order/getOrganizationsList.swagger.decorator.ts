@@ -1,12 +1,12 @@
-import { applyDecorators } from '@nestjs/common';
+import { applyDecorators } from "@nestjs/common";
 import {
   ApiCookieAuth,
   ApiOkResponse,
   ApiOperation,
   ApiUnauthorizedResponse,
-} from '@nestjs/swagger';
-import { SwaggerConstants } from '../swagger.constants';
-import { OrganizationsViewModel } from '../../../features/order/models/order.views/organizationsView.model';
+} from "@nestjs/swagger";
+import { SwaggerConstants } from "../swagger.constants";
+import { OrganizationsViewModel } from "../../../features/order/models/order.views/organizationsView.model";
 
 export function GetOrganizationsListSwaggerDecorator() {
   return applyDecorators(
@@ -21,6 +21,6 @@ export function GetOrganizationsListSwaggerDecorator() {
     }),
     ApiUnauthorizedResponse({
       description: SwaggerConstants.unauthorized,
-    }),
+    })
   );
 }

@@ -1,26 +1,26 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { OrderDataViewModel } from './orderDataView.model';
+import { ApiProperty } from "@nestjs/swagger";
+import { OrderDataViewModel } from "./orderDataView.model";
 
 export class CarForOrderViewModel {
-  @ApiProperty({ description: 'Сar model' })
+  @ApiProperty({ description: "Сar model" })
   MAM: string;
-  @ApiProperty({ description: 'Government number' })
+  @ApiProperty({ description: "Government number" })
   NOMER: string;
-  @ApiProperty({ description: 'Departure time' })
+  @ApiProperty({ description: "Departure time" })
   VR_V: Date;
-  @ApiProperty({ description: 'Check-in time' })
+  @ApiProperty({ description: "Check-in time" })
   VR_Z: Date;
-  @ApiProperty({ description: 'Driver FIO' })
+  @ApiProperty({ description: "Driver FIO" })
   FIO: string;
-  @ApiProperty({ description: 'Tech map' })
+  @ApiProperty({ description: "Tech map" })
   KARTA: string;
   @ApiProperty()
   COMMENTAR: string;
-  @ApiProperty({ description: 'Customer' })
+  @ApiProperty({ description: "Customer" })
   ZAKS: string;
-  @ApiProperty({ description: 'Note' })
+  @ApiProperty({ description: "Note" })
   PRIM: string;
-  @ApiProperty({ description: 'Ticket expiration date' })
+  @ApiProperty({ description: "Ticket expiration date" })
   END_DATE: Date;
 
   static toView(data: OrderDataViewModel) {

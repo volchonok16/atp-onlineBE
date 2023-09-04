@@ -1,14 +1,14 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsEnum, IsOptional, IsString } from 'class-validator';
-import { EquipmentListEnum } from '../../types/equipmentList.enum';
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { IsEnum, IsOptional, IsString } from "class-validator";
+import { EquipmentListEnum } from "../../types/equipmentList.enum";
 
 export class EquipmentListDto {
-  @ApiPropertyOptional({ description: 'State car number' })
+  @ApiPropertyOptional({ description: "State car number" })
   @IsOptional()
   @IsString()
   number: string;
 
-  @ApiPropertyOptional({ description: 'The car model' })
+  @ApiPropertyOptional({ description: "The car model" })
   @IsOptional()
   @IsString()
   brand: string;

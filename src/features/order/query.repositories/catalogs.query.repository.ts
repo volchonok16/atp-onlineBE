@@ -1,49 +1,49 @@
-import { Injectable } from '@nestjs/common';
-import { EquipmentListDto } from '../dto/query.dtos/equipmentList.dto';
-import { EquipmentListEnum } from '../types/equipmentList.enum';
-import { EquipmentListViewModel } from '../models/catalogs.views/equipmentListView.model';
-import { ExtendedInfoDto } from '../dto/query.dtos/extendedInfo.dto';
-import { ExtendedInformationViewModel } from '../models/catalogs.views/extendedInformationView.model';
-import { DirectoriesMechanismTypesViewModel } from '../models/catalogs.views/directoriesMechanismTypesView.model';
-import { DirectoriesNotesViewModel } from '../models/catalogs.views/directoriesNotesView.model';
-import { DirectoriesAddressesViewModel } from '../models/catalogs.views/directoriesAddressesView.model';
-import { DirectoriesGoodsTypeViewModel } from '../models/catalogs.views/directoriesGoodsTypeView.model';
-import { DirectoriesTransportationTypeViewModel } from '../models/catalogs.views/directoriesTransportationTypeView.model';
-import { DirectoriesCommunicationTypeViewModel } from '../models/catalogs.views/directoriesCommunicationTypeView.model';
-import { RelatedDataViewModel } from '../models/catalogs.views/relatedDataView.model';
-import { TechnicalCharacteristicViewModel } from '../models/catalogs.views/technicalCharacteristicView.model';
-import { DocumentationByIdViewModel } from '../models/catalogs.views/documentationByIdView.model';
-import { DocumentationTimingControlViewModel } from '../models/catalogs.views/documentationTimingControlView.model';
-import { DocumentationRefuelingCardsByIdViewModel } from '../models/catalogs.views/documentationRefuelingCardsByIdView.model';
-import { AdditionalInfoNotInDemandViewModel } from '../models/catalogs.views/additionalInfoNotInDemandView.model';
-import { AdditionalInfoConservationViewModel } from '../models/catalogs.views/additionalInfoConservationView.model';
-import { PassesViewModel } from '../models/catalogs.views/passesView.model';
-import { DriverHoldingViewModel } from '../models/catalogs.views/driverHoldingView.model';
-import { CarEquipmentViewModel } from '../models/catalogs.views/carEquipmentView.model';
-import { AcquisitionActViewModel } from '../models/catalogs.views/acquisitionActView.model';
-import { FirebirdService } from '../../../common/helpers/firebird-orm/firebird';
+import { Injectable } from "@nestjs/common";
+import { EquipmentListDto } from "../dto/query.dtos/equipmentList.dto";
+import { EquipmentListEnum } from "../types/equipmentList.enum";
+import { EquipmentListViewModel } from "../models/catalogs.views/equipmentListView.model";
+import { ExtendedInfoDto } from "../dto/query.dtos/extendedInfo.dto";
+import { ExtendedInformationViewModel } from "../models/catalogs.views/extendedInformationView.model";
+import { DirectoriesMechanismTypesViewModel } from "../models/catalogs.views/directoriesMechanismTypesView.model";
+import { DirectoriesNotesViewModel } from "../models/catalogs.views/directoriesNotesView.model";
+import { DirectoriesAddressesViewModel } from "../models/catalogs.views/directoriesAddressesView.model";
+import { DirectoriesGoodsTypeViewModel } from "../models/catalogs.views/directoriesGoodsTypeView.model";
+import { DirectoriesTransportationTypeViewModel } from "../models/catalogs.views/directoriesTransportationTypeView.model";
+import { DirectoriesCommunicationTypeViewModel } from "../models/catalogs.views/directoriesCommunicationTypeView.model";
+import { RelatedDataViewModel } from "../models/catalogs.views/relatedDataView.model";
+import { TechnicalCharacteristicViewModel } from "../models/catalogs.views/technicalCharacteristicView.model";
+import { DocumentationByIdViewModel } from "../models/catalogs.views/documentationByIdView.model";
+import { DocumentationTimingControlViewModel } from "../models/catalogs.views/documentationTimingControlView.model";
+import { DocumentationRefuelingCardsByIdViewModel } from "../models/catalogs.views/documentationRefuelingCardsByIdView.model";
+import { AdditionalInfoNotInDemandViewModel } from "../models/catalogs.views/additionalInfoNotInDemandView.model";
+import { AdditionalInfoConservationViewModel } from "../models/catalogs.views/additionalInfoConservationView.model";
+import { PassesViewModel } from "../models/catalogs.views/passesView.model";
+import { DriverHoldingViewModel } from "../models/catalogs.views/driverHoldingView.model";
+import { CarEquipmentViewModel } from "../models/catalogs.views/carEquipmentView.model";
+import { AcquisitionActViewModel } from "../models/catalogs.views/acquisitionActView.model";
+import { FirebirdService } from "../../../common/helpers/firebird-orm/firebird";
 
 @Injectable()
 export class CatalogsQueryRepository {
   constructor(private firebird: FirebirdService) {}
 
   async getEquipmentList(
-    queryDto: EquipmentListDto,
+    queryDto: EquipmentListDto
   ): Promise<EquipmentListViewModel[]> {
     const listFilter =
       queryDto.motorcadeNumber === EquipmentListEnum.all
-        ? ''
+        ? ""
         : `WHERE NAME_AK LIKE ${this.getEquipmentListFilter(queryDto)}`;
 
     const result = await this.firebird.query<EquipmentListViewModel[]>(
-      `SELECT * FROM RAZN_OD_SEL(1, null) ${listFilter};`,
+      `SELECT * FROM RAZN_OD_SEL(1, null) ${listFilter};`
     );
 
     return result.map((r) => EquipmentListViewModel.toView(r));
   }
 
   async getExtendedInfo(
-    queryDto: ExtendedInfoDto,
+    queryDto: ExtendedInfoDto
   ): Promise<ExtendedInformationViewModel[]> {
     const extendedInfoFilter = await this.getExtendedInfoFilter(queryDto);
     return await this.firebird.query<ExtendedInformationViewModel[]>(`
@@ -53,7 +53,7 @@ export class CatalogsQueryRepository {
   }
 
   async getRelatedDataById(
-    extendedInfoId: number,
+    extendedInfoId: number
   ): Promise<RelatedDataViewModel> {
     const relatedData = await this.firebird.query<RelatedDataViewModel>(
       `
@@ -77,14 +77,14 @@ export class CatalogsQueryRepository {
 	       AGR_TO2
 FROM RAZN_OD_EXT 
 WHERE RAZN_OD_ID = ?;`,
-      [extendedInfoId],
+      [extendedInfoId]
     );
 
     return relatedData[0];
   }
 
   async getTechnicalCharacteristicById(
-    extendedInfoId: number,
+    extendedInfoId: number
   ): Promise<TechnicalCharacteristicViewModel> {
     const technicalCharacteristic =
       await this.firebird.query<TechnicalCharacteristicViewModel>(
@@ -127,13 +127,13 @@ WHERE RAZN_OD_ID = ?;`,
            S_LETO
 FROM RAZN_OD_EXT 
 WHERE RAZN_OD_ID = ?;`,
-        [extendedInfoId],
+        [extendedInfoId]
       );
     return technicalCharacteristic[0];
   }
 
   async getDocumentationById(
-    extendedInfoId: number,
+    extendedInfoId: number
   ): Promise<DocumentationByIdViewModel> {
     const documentation = await this.firebird.query<DocumentationByIdViewModel>(
       `
@@ -165,13 +165,13 @@ WHERE RAZN_OD_ID = ?;`,
            DATE_P_TAHOGRAFA
 FROM RAZN_OD_EXT 
 WHERE RAZN_OD_ID = ?;`,
-      [extendedInfoId],
+      [extendedInfoId]
     );
     return documentation[0];
   }
 
   async getTimingById(
-    extendedInfoId: number,
+    extendedInfoId: number
   ): Promise<DocumentationTimingControlViewModel[]> {
     return this.firebird.query<DocumentationTimingControlViewModel[]>(
       `
@@ -179,12 +179,12 @@ WHERE RAZN_OD_ID = ?;`,
     FROM RAZN_OD_DOCS
     WHERE RAZN_OD_ID = ?;
     `,
-      [extendedInfoId],
+      [extendedInfoId]
     );
   }
 
   async getRefuelingCardsById(
-    extendedInfoId: number,
+    extendedInfoId: number
   ): Promise<DocumentationRefuelingCardsByIdViewModel[]> {
     const extendedInfoById = await this.firebird.query<
       DocumentationRefuelingCardsByIdViewModel[]
@@ -193,13 +193,13 @@ WHERE RAZN_OD_ID = ?;`,
     SELECT * 
     FROM RAZN_OD_ZAPR_CARDS 
     WHERE RAZN_OD_ID = ?;`,
-      [extendedInfoId],
+      [extendedInfoId]
     );
     return extendedInfoById;
   }
 
   async getNotInDemandInfo(
-    extendedInfoId: number,
+    extendedInfoId: number
   ): Promise<AdditionalInfoNotInDemandViewModel[]> {
     return this.firebird.query<AdditionalInfoNotInDemandViewModel[]>(
       `
@@ -207,12 +207,12 @@ WHERE RAZN_OD_ID = ?;`,
     FROM RAZN_OD_NE_VOSTR RAZ
     WHERE  RAZN_OD_ID = ?
     ORDER BY DATE_OT DESC`,
-      [extendedInfoId],
+      [extendedInfoId]
     );
   }
 
   async getConservation(
-    extendedInfoId: number,
+    extendedInfoId: number
   ): Promise<AdditionalInfoConservationViewModel[]> {
     return this.firebird.query<AdditionalInfoConservationViewModel[]>(
       `
@@ -220,7 +220,7 @@ WHERE RAZN_OD_ID = ?;`,
     FROM RAZN_OD_KONSERV RAZ
     WHERE RAZN_OD_ID = ?
     ORDER BY DATE_OT DESC;`,
-      [extendedInfoId],
+      [extendedInfoId]
     );
   }
 
@@ -231,12 +231,12 @@ WHERE RAZN_OD_ID = ?;`,
     FROM PROPUSK
     WHERE RAZN_OD_ID = ?;
     `,
-      [extendedInfoId],
+      [extendedInfoId]
     );
   }
 
   async getDriverHolding(
-    extendedInfoId: number,
+    extendedInfoId: number
   ): Promise<DriverHoldingViewModel[]> {
     return this.firebird.query<DriverHoldingViewModel[]>(
       `
@@ -244,31 +244,31 @@ WHERE RAZN_OD_ID = ?;`,
     FROM  RAZN_OD_ZAKR
     WHERE RAZN_OD_ID = ?
     ORDER BY DATES DESC`,
-      [extendedInfoId],
+      [extendedInfoId]
     );
   }
 
   async getCarEquipment(
-    extendedInfoId: number,
+    extendedInfoId: number
   ): Promise<CarEquipmentViewModel[]> {
     return this.firebird.query<CarEquipmentViewModel[]>(
       `
     SELECT *
     FROM RAZN_OD_KOMPL 
     WHERE RAZN_OD_ID = ?`,
-      [extendedInfoId],
+      [extendedInfoId]
     );
   }
 
   async getAcquisitionActs(
-    extendedInfoId: number,
+    extendedInfoId: number
   ): Promise<AcquisitionActViewModel[]> {
     return this.firebird.query<AcquisitionActViewModel[]>(
       `
     SELECT  * 
     FROM RAZN_AKT_KOMPL(?) 
     ORDER BY NAIM`,
-      [extendedInfoId],
+      [extendedInfoId]
     );
   }
 

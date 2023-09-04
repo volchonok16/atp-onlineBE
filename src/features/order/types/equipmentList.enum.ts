@@ -1,5 +1,5 @@
 export enum EquipmentListEnum {
-  all = 'all',
-  first = 'first',
-  second = 'second',
+  all = "all",
+  first = "first",
+  second = "second",
 }

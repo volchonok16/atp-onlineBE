@@ -1,4 +1,4 @@
-import { OrderDataViewModel } from './orderDataView.model';
+import { OrderDataViewModel } from "./orderDataView.model";
 
 export class OrderFoDataPreparationViewModel {
   REMONT: boolean;

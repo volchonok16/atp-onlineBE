@@ -1,4 +1,4 @@
 export enum PrintDocumentEnum {
-  pdf = 'pdf',
-  excel = 'excel',
+  pdf = "pdf",
+  excel = "excel",
 }

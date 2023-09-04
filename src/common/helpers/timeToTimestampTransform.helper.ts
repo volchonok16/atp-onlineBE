@@ -1,4 +1,4 @@
-import { format } from 'date-fns';
+import { format } from "date-fns";
 
 /**
  * Returns a string that matches the types of data stored in the database
@@ -7,7 +7,7 @@ import { format } from 'date-fns';
 export const timeToTimestampTransformHelper = (time: string): string => {
   const currentDate = new Date();
 
-  const [hours, minutes] = time.split(':');
+  const [hours, minutes] = time.split(":");
 
   const combinedDate = new Date(
     currentDate.getFullYear(),
@@ -15,8 +15,8 @@ export const timeToTimestampTransformHelper = (time: string): string => {
     currentDate.getDate(),
     Number(hours),
     Number(minutes),
-    0,
+    0
   );
 
-  return format(combinedDate, 'yyyy-MM-dd HH:mm:ss');
+  return format(combinedDate, "yyyy-MM-dd HH:mm:ss");
 };

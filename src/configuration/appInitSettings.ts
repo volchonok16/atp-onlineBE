@@ -6,8 +6,7 @@ import { useContainer } from "class-validator";
 
 export const appInitSettings = (app: INestApplication) => {
   const options = {
-    origin: ["http://localhost:3000" , "adjnatech.ru:3000"],
-    //origin: '*', // Для локального запуска
+    origin: ["http://localhost:3000", "adjnatech.ru:3000"],
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     preflightContinue: false,
     credentials: true,

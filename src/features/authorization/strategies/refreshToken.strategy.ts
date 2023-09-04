@@ -1,14 +1,14 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { ExtractJwt, Strategy } from 'passport-jwt';
-import { PassportStrategy } from '@nestjs/passport';
-import { Request } from 'express';
-import { PayloadType } from '../types/payload.type';
-import { AuthRepository } from '../repositories/authRepository';
+import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { ExtractJwt, Strategy } from "passport-jwt";
+import { PassportStrategy } from "@nestjs/passport";
+import { Request } from "express";
+import { PayloadType } from "../types/payload.type";
+import { AuthRepository } from "../repositories/authRepository";
 
 @Injectable()
 export class RefreshTokenStrategy extends PassportStrategy(
   Strategy,
-  'jwt-refresh',
+  "jwt-refresh"
 ) {
   constructor(private readonly authRepository: AuthRepository) {
     super({
@@ -20,7 +20,7 @@ export class RefreshTokenStrategy extends PassportStrategy(
         },
       ]),
       ignoreExpiration: true,
-      secretOrKey: 'secret',
+      secretOrKey: "secret",
     });
   }
 

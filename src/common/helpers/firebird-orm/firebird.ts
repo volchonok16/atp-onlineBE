@@ -1,83 +1,53 @@
-import { Injectable } from '@nestjs/common';
-import { nodeFirebirdOptions } from '../../../../firebird.config';
+import { Injectable } from "@nestjs/common";
+import { nodeFirebirdOptions } from "../../../../firebird.config";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const Firebird = require('node-firebird');
+const Firebird = require("node-firebird");
 
 @Injectable()
 export class FirebirdService {
   db;
+  transaction;
 
   async query<T>(query: string, parameters: any[] = []): Promise<any> {
+    await this.connect();
+
     try {
-      const db = await new Promise<any>((resolve, reject) => {
-        Firebird.attach(nodeFirebirdOptions, (err, db) => {
+      const result = await new Promise<any>((resolve, reject) => {
+        this.db.query(query, parameters, (err, result) => {
           if (err) {
-            console.error('Error attaching to database:', err);
             reject(err);
           } else {
-            resolve(db);
+            resolve(result);
           }
         });
       });
 
-      try {
-        const result = await new Promise<any>((resolve, reject) => {
-          db.query(query, parameters, (err, result) => {
-            if (err) {
-              reject(err);
-            } else {
-              resolve(result);
-            }
-          });
-        });
-
-        db.detach();
-        return result;
-      } catch (error) {
-        throw error;
-      }
+      this.db.detach();
+      return result;
     } catch (error) {
-      console.error('Error:', error);
       throw error;
     }
   }
 
-  async runInTransaction(query) {
-    const isolationLevel = Firebird.ISOLATION_READ_COMMITTED;
+  async executeInTransaction(callback) {
+    this.transaction = await this.beginTransaction();
     try {
-      const db = await this.startTransaction();
+      const result = await callback(this.transaction);
+      await this.commitTransaction(this.transaction);
+      delete result.query;
+      delete result.parameters;
 
-      db.transaction(isolationLevel, async (err, transaction) => {
-        if (err) {
-          console.error(err);
-          return;
-        }
-
-        try {
-          await query(transaction);
-          transaction.commit(async (err) => {
-            if (err) {
-              await this.rollbackTransaction(transaction);
-            }
-            this.db.detach();
-          });
-        } catch (error) {
-          await this.rollbackTransaction(transaction);
-          console.error(error);
-        }
-      });
-    } catch (error) {
-      console.error(error);
+      return result;
+    } catch (err) {
+      console.log(`Transaction failed: ${err}`);
+    } finally {
+      this.db.detach();
     }
   }
 
-  async executeQuery(
-    transaction,
-    query: string,
-    parameters: any[] = [],
-  ): Promise<any> {
+  async transactionQuery<T>(sql, parameters: any[] = []): Promise<T | any> {
     return new Promise((resolve, reject) => {
-      transaction.query(query, parameters, (err, result) => {
+      this.transaction.query(sql, parameters, (err, result) => {
         if (err) {
           reject(err);
         } else {
@@ -87,42 +57,47 @@ export class FirebirdService {
     });
   }
 
-  //firebird.runInTransaction(async (transaction) => {
-  //     try {
-  //         await firebird.executeQuery(transaction, query1, [param1]);
-  //         await firebird.executeQuery(transaction, query2, [param2]);
-  //     } catch (error) {
-  //         console.error(error);
-  //     }
-  // });
-
-  private async startTransaction() {
-    try {
-      this.db = await new Promise((resolve, reject) => {
-        Firebird.attach(nodeFirebirdOptions, (err, db) => {
-          if (err) {
-            reject(err);
-            return;
-          }
-          resolve(db);
-        });
-      });
-
-      return this.db;
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  private async rollbackTransaction(transaction) {
-    try {
-      transaction.rollback((err) => {
+  private async connect() {
+    return new Promise((resolve, reject) => {
+      Firebird.attach(nodeFirebirdOptions, (err, db) => {
         if (err) {
-          console.error(err);
+          reject(err);
+        } else {
+          this.db = db;
+          resolve(db);
         }
       });
-    } catch (error) {
-      console.error(error);
+    });
+  }
+
+  private async beginTransaction() {
+    const isolationLevel = Firebird.ISOLATION_READ_COMMITTED;
+    if (!this.db) {
+      await this.connect();
     }
+
+    return new Promise((resolve, reject) => {
+      this.db.transaction(isolationLevel, (err, transaction) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(transaction);
+        }
+      });
+    });
+  }
+
+  private async commitTransaction(transaction) {
+    return new Promise((resolve, reject) => {
+      transaction.commit((err) => {
+        if (err) {
+          transaction.rollback(() => {
+            reject(err);
+          });
+        } else {
+          resolve(err);
+        }
+      });
+    });
   }
 }

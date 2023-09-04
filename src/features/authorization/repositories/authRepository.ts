@@ -1,8 +1,8 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { dbConnect_const } from '../../../common/constants/global.constants';
-import { Connection } from 'odbc';
-import { UserDto } from '../dto/user.dto';
-import { UserType } from '../types/user.type';
+import { Inject, Injectable } from "@nestjs/common";
+import { dbConnect_const } from "../../../common/constants/global.constants";
+import { Connection } from "odbc";
+import { UserDto } from "../dto/user.dto";
+import { UserType } from "../types/user.type";
 
 @Injectable()
 export class AuthRepository {
@@ -10,7 +10,7 @@ export class AuthRepository {
 
   async findUserByUsernameAndPass(
     username: string,
-    password: string,
+    password: string
   ): Promise<UserDto | null> {
     const user = await this.firebird.query<UserType>(
       `
@@ -18,7 +18,7 @@ SELECT PASS, USERS_KEY, USER_NAME
 FROM USERS  
 WHERE USER_NAME = ? 
 AND PASS = ?`,
-      [username, password],
+      [username, password]
     );
     if (!user[0]) return null;
     return new UserDto(user[0]);
@@ -30,7 +30,7 @@ AND PASS = ?`,
 SELECT *
 FROM USERS  
 WHERE USERS_KEY = ?`,
-      [userId],
+      [userId]
     );
     return user[0] ? true : false;
   }
@@ -41,7 +41,7 @@ WHERE USERS_KEY = ?`,
 UPDATE USERS 
 SET PASS = ?
 WHERE USERS_KEY = ?`,
-      [newPassword, userId],
+      [newPassword, userId]
     );
     return;
   }

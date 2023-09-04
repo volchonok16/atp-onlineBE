@@ -4,11 +4,11 @@ import {
   ValidationOptions,
   ValidatorConstraint,
   ValidatorConstraintInterface,
-} from 'class-validator';
-import { Injectable } from '@nestjs/common';
-import { timeToTimestampTransformHelper } from '../helpers/timeToTimestampTransform.helper';
+} from "class-validator";
+import { Injectable } from "@nestjs/common";
+import { timeToTimestampTransformHelper } from "../helpers/timeToTimestampTransform.helper";
 
-@ValidatorConstraint({ name: 'IsValidTime', async: false })
+@ValidatorConstraint({ name: "IsValidTime", async: false })
 @Injectable()
 export class IsValidTimeConstraint implements ValidatorConstraintInterface {
   validate(value: string, args: ValidationArguments) {

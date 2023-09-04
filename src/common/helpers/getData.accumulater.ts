@@ -1,22 +1,22 @@
-import * as tls from 'tls';
-import { booleanToShortString } from './booleanToShortStringTransform';
-import { booleanToNumber } from './booleanToNumberTransform.helper';
+import * as tls from "tls";
+import { booleanToShortString } from "./booleanToShortStringTransform";
+import { booleanToNumber } from "./booleanToNumberTransform.helper";
 
 export const getDataAccumulater = (
   data,
-  type: 'string' | 'number' = 'string',
+  type: "string" | "number" = "string"
 ): string => {
-  let dataAccumulater = '';
+  let dataAccumulater = "";
   for (const param in data) {
-    if (typeof data[param] === 'boolean') {
-      if (type === 'string') {
+    if (typeof data[param] === "boolean") {
+      if (type === "string") {
         dataAccumulater += `${param} = '${booleanToShortString(
-          data[param],
+          data[param]
         )}', `;
       } else {
         dataAccumulater += `${param} = '${booleanToNumber(data[param])}', `;
       }
-    } else if (data[param] && param !== 'id') {
+    } else if (data[param] && param !== "id") {
       dataAccumulater += `${param} = '${data[param]}', `;
     }
   }

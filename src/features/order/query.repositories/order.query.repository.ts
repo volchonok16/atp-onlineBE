@@ -1,37 +1,35 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { dbConnect_const } from '../../../common/constants/global.constants';
-import { Connection } from 'odbc';
-import { OutputDataViewModel } from '../models/order.views/outputdataView.model';
-import { format } from 'date-fns';
-import { OrderDataQueryDtoType } from '../types/orderDataQueryDtoType';
-import { OrderDataViewModel } from '../models/order.views/orderDataView.model';
-import { OrderDataSortByEnum } from '../types/orderDataSortBy.enum';
-import { GoodsInvoiceViewModel } from '../models/order.views/goodsInvoiceView.model.dto';
-import { CreateBillOfLandingReportViewModel } from '../models/order.views/billOfLandingView2.model';
-import { CreateReportDataType } from '../types/createReportDataType';
-import { CommoditySectionViewModel } from '../models/order.views/commoditySectionView.model';
-import { TransportSectionViewModel } from '../models/order.views/transportSectionView.model';
-import { OneOrderDataViewModel } from '../models/order.views/oneOrderDataView.model';
-import { RequestLogDto } from '../dto/query.dtos/requestLog.dto';
-import { RequestViewModel } from '../models/order.views/requestView.model';
-import { FirebirdService } from '../../../common/helpers/firebird-orm/firebird';
+import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { dbConnect_const } from "../../../common/constants/global.constants";
+import { Connection } from "odbc";
+import { OutputDataViewModel } from "../models/order.views/outputdataView.model";
+import { format } from "date-fns";
+import { OrderDataQueryDtoType } from "../types/orderDataQueryDtoType";
+import { OrderDataViewModel } from "../models/order.views/orderDataView.model";
+import { OrderDataSortByEnum } from "../types/orderDataSortBy.enum";
+import { GoodsInvoiceViewModel } from "../models/order.views/goodsInvoiceView.model.dto";
+import { CreateBillOfLandingReportViewModel } from "../models/order.views/billOfLandingView2.model";
+import { CreateReportDataType } from "../types/createReportDataType";
+import { CommoditySectionViewModel } from "../models/order.views/commoditySectionView.model";
+import { TransportSectionViewModel } from "../models/order.views/transportSectionView.model";
+import { OneOrderDataViewModel } from "../models/order.views/oneOrderDataView.model";
+import { RequestLogDto } from "../dto/query.dtos/requestLog.dto";
+import { RequestViewModel } from "../models/order.views/requestView.model";
+import { FirebirdService } from "../../../common/helpers/firebird-orm/firebird";
+import { rawDbResponseTransform } from "../../../common/helpers/rawDbResponseTransform.helper";
 
 @Injectable()
 export class OrderQueryRepository {
-  constructor(
-    @Inject(dbConnect_const) private firebird: Connection,
-    private rawFirebird: FirebirdService,
-  ) {}
+  constructor(private firebird: FirebirdService) {}
 
   async getOutputData(RAZN_ID: number): Promise<OutputDataViewModel> {
     try {
-      const result = await this.rawFirebird.query<OutputDataViewModel>(
+      const result = await this.firebird.query<OutputDataViewModel>( //+
         `
     SELECT *
     FROM  RAZNAR
     WHERE RAZN_KEY = ?
     `,
-        [RAZN_ID],
+        [RAZN_ID]
       );
       return result[0];
     } catch (e) {
@@ -40,9 +38,9 @@ export class OrderQueryRepository {
   }
 
   async getOrderData(
-    dto: Partial<OrderDataQueryDtoType>, // Переиспользовал
+    dto: Partial<OrderDataQueryDtoType> // Переиспользовал
   ): Promise<OrderDataViewModel[]> {
-    const date = format(dto.date, 'yyyy-MM-dd');
+    const date = format(dto.date, "yyyy-MM-dd");
 
     //query to get data from db
     let query = `SELECT * FROM RAZNAR_S(?, ?, ?, ?, null)`;
@@ -87,44 +85,40 @@ export class OrderQueryRepository {
       dto.motorcadeName,
     ]);
 
-    delete data.statement;
-    delete data.parameters;
-    delete data.return;
-    delete data.count;
-    delete data.columns;
+    const result = rawDbResponseTransform(data);
 
-    return data.map((d) => OrderDataViewModel.toView(d));
+    return result.map((r) => OrderDataViewModel.toView(r));
   }
 
   async getDataForGoodsInvoiceANDBillOfLanding(
-    TTN_KEY: number,
+    TTN_KEY: number
   ): Promise<CreateReportDataType[]> {
-    const resultFromTTN_SEL = await this.rawFirebird.query<any>(
+    const resultFromTTN_SEL = await this.firebird.query<any>( // +
       ` SELECT * FROM TTN_SEL(?)`,
-      [TTN_KEY],
+      [TTN_KEY]
     );
 
     const RAZN_ZAK_KEY = resultFromTTN_SEL[0].RAZN_ZAK_ID;
 
-    const resultFromTTN_TRANSP = await this.rawFirebird.query<any>(
+    const resultFromTTN_TRANSP = await this.firebird.query<any>( // +
       ` SELECT * FROM TTN_TRANSP WHERE TTN_ID = ?`,
-      [TTN_KEY],
+      [TTN_KEY]
     );
 
     const TTN_TRANSP = resultFromTTN_TRANSP.map(
-      (e) => new TransportSectionViewModel(e),
+      (e) => new TransportSectionViewModel(e)
     );
 
-    const resultFromTTN_EXT = await this.rawFirebird.query<any>(
+    const resultFromTTN_EXT = await this.firebird.query<any>( // +
       ` SELECT * FROM TTN_EXT WHERE TTN_ID = ?`,
-      [TTN_KEY],
+      [TTN_KEY]
     );
 
     const TTN_EXT = resultFromTTN_EXT.map(
-      (e) => new CommoditySectionViewModel(e),
+      (e) => new CommoditySectionViewModel(e)
     );
 
-    const resultForFULL_FIO = await this.rawFirebird.query<any>(
+    const resultForFULL_FIO = await this.firebird.query<any>( // +
       `
     SELECT *
 FROM TTN
@@ -133,14 +127,14 @@ INNER JOIN RAZNAR ON RAZN_ZAK.RAZN_ID = RAZNAR.RAZN_KEY
 INNER JOIN FIO ON RAZNAR.FIO_ID = FIO.FIO_KEY
 WHERE TTN.TTN_KEY = ?;
     `,
-      [TTN_KEY],
+      [TTN_KEY]
     );
 
-    const resultForPRICEP_MAM = await this.rawFirebird.query<any>(
+    const resultForPRICEP_MAM = await this.firebird.query<any>( // +
       `
     SELECT * FROM RAZNAR_S(null, null, null, null, ?);
     `,
-      [RAZN_ZAK_KEY],
+      [RAZN_ZAK_KEY]
     );
 
     let PRICEP_MAM;
@@ -152,7 +146,7 @@ WHERE TTN.TTN_KEY = ?;
     const goodsInvoice = new GoodsInvoiceViewModel(
       resultFromTTN_SEL[0],
       TTN_TRANSP,
-      TTN_EXT,
+      TTN_EXT
     );
 
     const billOfLanding = new CreateBillOfLandingReportViewModel(
@@ -160,7 +154,7 @@ WHERE TTN.TTN_KEY = ?;
       TTN_TRANSP,
       TTN_EXT,
       resultForFULL_FIO[0].FULL_FIO,
-      PRICEP_MAM,
+      PRICEP_MAM
     );
 
     const totalResult = [goodsInvoice, billOfLanding];
@@ -170,7 +164,7 @@ WHERE TTN.TTN_KEY = ?;
   async getOneOrderData(RAZN_ID: number): Promise<OneOrderDataViewModel> {
     const car = await this.firebird.query<OneOrderDataViewModel>(
       `SELECT * FROM RAZNAR WHERE RAZN_KEY = ?`,
-      [RAZN_ID],
+      [RAZN_ID]
     );
     return car[0];
   }
@@ -186,7 +180,8 @@ WHERE TTN.TTN_KEY = ?;
       WHERE UPPER(LNAME) LIKE UPPER('%${filter}%') OR REQ_RAZN_KEY LIKE '%${filter}%' `;
     }
 
-    return this.rawFirebird.query(query, [
+    return this.firebird.query(query, [
+      // +
       dto.DATE_RAB,
       dto.RAZN_ID !== null ? +dto.RAZN_ID : null,
     ]);
@@ -200,8 +195,41 @@ FROM REQ_RAZN
 INNER JOIN REQ_USER ON REQ_RAZN.REQ_USER_ID = REQ_USER.REQ_USER_KEY
 WHERE REQ_RAZN.REQ_RAZN_KEY = ?;
     `,
-      [REQ_RAZN_KEY],
+      [REQ_RAZN_KEY]
     );
     return result[0];
+  }
+
+  async orderExists(id: number): Promise<boolean> {
+    const [result] = await this.firebird.query(
+      `
+      SELECT COUNT(*) FROM RAZNAR2 WHERE RAZNAR2_KEY = ?;
+    `,
+      [id]
+    );
+
+    return result.COUNT === 1;
+  }
+
+  async billOfLandingExist(id: number): Promise<boolean> {
+    const [result] = await this.firebird.query(
+      `
+          SELECT COUNT(*) FROM TTN WHERE TTN_KEY = ?;
+        `,
+      [id]
+    );
+
+    return result.COUNT === 1;
+  }
+
+  async wayBillExist(id: number): Promise<boolean> {
+    const [result] = await this.firebird.query(
+      `
+          SELECT COUNT(*) FROM RAZNAR WHERE RAZN_KEY = ?;
+        `,
+      [id]
+    );
+
+    return result.COUNT === 1;
   }
 }

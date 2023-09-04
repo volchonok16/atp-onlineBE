@@ -1,6 +1,6 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { OrderRepository } from '../../repositories/order.repository';
-import { NotFoundException } from '@nestjs/common';
+import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
+import { OrderRepository } from "../../repositories/order.repository";
+import { NotFoundException } from "@nestjs/common";
 
 export class DeleteBookingDataCommand {
   constructor(public RAZNAR2_KEY: number) {}
