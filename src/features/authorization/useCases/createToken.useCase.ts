@@ -1,5 +1,5 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { JwtAdapter } from '../../../common/adapters/jwt/jwtAdapter';
+import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
+import { JwtAdapter } from "../../../common/adapters/jwt/jwtAdapter";
 
 export class CreateTokenCommand {
   constructor(public userId: number) {}

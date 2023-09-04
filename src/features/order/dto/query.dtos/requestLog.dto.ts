@@ -1,11 +1,11 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { IsNumber, IsOptional, IsString } from "class-validator";
 
 export class RequestLogDto {
   @ApiProperty()
   @IsString()
   @IsOptional()
-  DATE_RAB = '2022-08-11';
+  DATE_RAB = "2022-08-11";
   @ApiPropertyOptional()
   @IsString()
   @IsOptional()

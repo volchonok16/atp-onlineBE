@@ -1,11 +1,11 @@
-import { applyDecorators } from '@nestjs/common';
+import { applyDecorators } from "@nestjs/common";
 import {
   ApiCookieAuth,
   ApiOkResponse,
   ApiOperation,
   ApiUnauthorizedResponse,
-} from '@nestjs/swagger';
-import { SwaggerConstants } from '../swagger.constants';
+} from "@nestjs/swagger";
+import { SwaggerConstants } from "../swagger.constants";
 
 export function LogoutSwaggerDecorator() {
   return applyDecorators(
@@ -18,6 +18,6 @@ export function LogoutSwaggerDecorator() {
     }),
     ApiUnauthorizedResponse({
       description: SwaggerConstants.unauthorized,
-    }),
+    })
   );
 }

@@ -1,5 +1,5 @@
-import { booleanToShortString } from '../booleanToShortStringTransform';
-import { vi } from 'date-fns/locale';
+import { booleanToShortString } from "../booleanToShortStringTransform";
+import { vi } from "date-fns/locale";
 
 /**
  * Creates or updates an entry in the database and returns the created/updated entry
@@ -10,24 +10,24 @@ import { vi } from 'date-fns/locale';
 export function createQuery<T, P>(
   tableName: string,
   dto: T,
-  view: P,
+  view: P
 ): { query: string; parameters: string[] } {
-  const fieldNames = Object.keys(dto).join(', ');
+  const fieldNames = Object.keys(dto).join(", ");
 
   const fieldValues = Object.values(dto).map((value) => {
-    if (typeof value === 'boolean') {
+    if (typeof value === "boolean") {
       return booleanToShortString(value);
     }
     return value;
   });
 
   let viewField;
-  if (typeof view === 'string') {
+  if (typeof view === "string") {
     viewField = view;
   } else {
-    viewField = Object.keys(view).join(', ');
+    viewField = Object.keys(view).join(", ");
   }
-  const placeholders = fieldValues.map(() => '?').join(', ');
+  const placeholders = fieldValues.map(() => "?").join(", ");
 
   const query = `
         INSERT INTO ${tableName}(${fieldNames}) 

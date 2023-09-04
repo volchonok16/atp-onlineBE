@@ -1,6 +1,6 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { CarInfoDto } from '../../dto/dtos/carInfo.dto';
-import { DataEditingRepository } from '../../repositories/dataEditing.repository';
+import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
+import { CarInfoDto } from "../../dto/dtos/carInfo.dto";
+import { DataEditingRepository } from "../../repositories/dataEditing.repository";
 
 export class CreateCarInfoCommand {
   constructor(public dto: CarInfoDto) {}

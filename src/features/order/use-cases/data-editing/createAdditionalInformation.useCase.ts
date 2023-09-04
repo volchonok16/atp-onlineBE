@@ -1,7 +1,7 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { CreateAdditionalInformationDto } from '../../dto/dtos/createAdditionalInformation.dto';
-import { DataEditingRepository } from '../../repositories/dataEditing.repository';
-import { WithId } from '../../../../common/types/withId.type';
+import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
+import { CreateAdditionalInformationDto } from "../../dto/dtos/createAdditionalInformation.dto";
+import { DataEditingRepository } from "../../repositories/dataEditing.repository";
+import { WithId } from "../../../../common/types/withId.type";
 
 export class CreateAdditionalInformationCommand {
   constructor(public dto: WithId<CreateAdditionalInformationDto>) {}
@@ -15,7 +15,7 @@ export class CreateAdditionalInformationUseCase
 
   async execute(command: CreateAdditionalInformationCommand): Promise<any> {
     return await this.dataEditingRepository.createAdditionalInformationById(
-      command.dto,
+      command.dto
     );
   }
 }

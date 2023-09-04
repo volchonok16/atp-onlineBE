@@ -1,12 +1,12 @@
-import { applyDecorators } from '@nestjs/common';
+import { applyDecorators } from "@nestjs/common";
 import {
   ApiCookieAuth,
   ApiOkResponse,
   ApiOperation,
   ApiUnauthorizedResponse,
-} from '@nestjs/swagger';
-import { SwaggerConstants } from '../swagger.constants';
-import { AcquisitionActViewModel } from '../../../features/order/models/catalogs.views/acquisitionActView.model';
+} from "@nestjs/swagger";
+import { SwaggerConstants } from "../swagger.constants";
+import { AcquisitionActViewModel } from "../../../features/order/models/catalogs.views/acquisitionActView.model";
 
 export function GetAcquisitionActsSwaggerDecorator() {
   return applyDecorators(
@@ -21,6 +21,6 @@ export function GetAcquisitionActsSwaggerDecorator() {
     }),
     ApiUnauthorizedResponse({
       description: SwaggerConstants.unauthorized,
-    }),
+    })
   );
 }

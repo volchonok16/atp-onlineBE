@@ -1,9 +1,9 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { UpdateStaffInfoDto } from '../../dto/dtos/updateStaffInfo.dto';
-import { DataEditingRepository } from '../../repositories/dataEditing.repository';
-import { WithId } from '../../../../common/types/withId.type';
-import { DataEditingQueryRepository } from '../../query.repositories/dataEditing.query.repository';
-import { NotFoundException } from '@nestjs/common';
+import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
+import { UpdateStaffInfoDto } from "../../dto/dtos/updateStaffInfo.dto";
+import { DataEditingRepository } from "../../repositories/dataEditing.repository";
+import { WithId } from "../../../../common/types/withId.type";
+import { DataEditingQueryRepository } from "../../query.repositories/dataEditing.query.repository";
+import { NotFoundException } from "@nestjs/common";
 
 export class UpdateStaffInfoCommand {
   constructor(public dto: WithId<UpdateStaffInfoDto>) {}
@@ -15,7 +15,7 @@ export class UpdateStaffInfoUseCase
 {
   constructor(
     public dataEditingRepository: DataEditingRepository,
-    private readonly dataEditingQueryRepository: DataEditingQueryRepository,
+    private readonly dataEditingQueryRepository: DataEditingQueryRepository
   ) {}
 
   async execute({ dto }: UpdateStaffInfoCommand): Promise<boolean> {

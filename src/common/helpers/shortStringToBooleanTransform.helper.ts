@@ -4,5 +4,5 @@
  * @return boolean
  */
 export const shortStringToBoolean = (string: string): boolean => {
-  return string === 'T';
+  return string === "T";
 };

@@ -1,7 +1,7 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { OneOrderDataViewModel } from './oneOrderDataView.model';
-import { RequestViewModel } from './requestView.model';
-import { format } from 'date-fns';
+import { ApiProperty } from "@nestjs/swagger";
+import { OneOrderDataViewModel } from "./oneOrderDataView.model";
+import { RequestViewModel } from "./requestView.model";
+import { format } from "date-fns";
 
 export class OrderViewModel {
   @ApiProperty()
@@ -54,10 +54,10 @@ export class OrderViewModel {
     this.HODOK = request.HODOK;
     this.VR_OT = request.VR_OT
       ? request.VR_OT
-      : format(new Date(), 'yyyy-MM-dd HH:mm:ss');
+      : format(new Date(), "yyyy-MM-dd HH:mm:ss");
     this.VR_DO = request.VR_DO
       ? request.VR_DO
-      : format(new Date(), 'yyyy-MM-dd HH:mm:ss');
+      : format(new Date(), "yyyy-MM-dd HH:mm:ss");
     this.ROUTE_ID = null;
     this.FLIGHT = null;
     this.METOD_RASCH = null;

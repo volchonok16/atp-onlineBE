@@ -1,13 +1,13 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsOptional, IsString } from 'class-validator';
+import { ApiPropertyOptional } from "@nestjs/swagger";
+import { IsOptional, IsString } from "class-validator";
 
 export class ExtendedInfoDto {
-  @ApiPropertyOptional({ description: 'State car number' })
+  @ApiPropertyOptional({ description: "State car number" })
   @IsOptional()
   @IsString()
   number: string;
 
-  @ApiPropertyOptional({ description: 'The car model' })
+  @ApiPropertyOptional({ description: "The car model" })
   @IsOptional()
   @IsString()
   brand: string;

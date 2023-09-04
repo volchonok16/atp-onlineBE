@@ -1,4 +1,4 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import {
   IsNotEmpty,
   IsNumber,
@@ -6,7 +6,7 @@ import {
   IsString,
   Max,
   MaxLength,
-} from 'class-validator';
+} from "class-validator";
 
 export class ReferralForRepairsCreateDto {
   @ApiProperty()
@@ -23,7 +23,7 @@ export class ReferralForRepairsCreateDto {
   @IsString()
   @MaxLength(10)
   @IsNotEmpty()
-  DATES = '23.07.2023';
+  DATES = "23.07.2023";
   @ApiPropertyOptional()
   @IsNumber()
   @Max(99999999)
@@ -38,10 +38,10 @@ export class ReferralForRepairsCreateDto {
   @IsString()
   @MaxLength(13)
   @IsOptional()
-  VR_N: string | null = '23:59:59.9999';
+  VR_N: string | null = "23:59:59.9999";
   @ApiPropertyOptional()
   @IsString()
   @MaxLength(13)
   @IsOptional()
-  VR_K: string | null = '23:59:59.9999';
+  VR_K: string | null = "23:59:59.9999";
 }

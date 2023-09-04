@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { shortStringToBoolean } from '../../../../common/helpers/shortStringToBooleanTransform.helper';
+import { ApiProperty } from "@nestjs/swagger";
+import { shortStringToBoolean } from "../../../../common/helpers/shortStringToBooleanTransform.helper";
 
 export class OrganizationSubunitViewModel {
   @ApiProperty()

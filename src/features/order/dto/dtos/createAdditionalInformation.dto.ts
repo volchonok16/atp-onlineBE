@@ -1,4 +1,4 @@
-import { IsBoolean, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsOptional, IsString } from "class-validator";
 
 export class CreateAdditionalInformationDto {
   @IsString()
@@ -12,10 +12,10 @@ export class CreateAdditionalInformationDto {
   KEM_VID: string | null = null;
   @IsString()
   @IsOptional()
-  DATE_OT: string | null = '2023-08-14';
+  DATE_OT: string | null = "2023-08-14";
   @IsString()
   @IsOptional()
-  DATE_DO: string | null = '2023-08-14';
+  DATE_DO: string | null = "2023-08-14";
   @IsString()
   @IsOptional()
   D_PREDUPR: number | null = null;

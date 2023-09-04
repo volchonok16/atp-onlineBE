@@ -1,8 +1,8 @@
-import { WithId } from '../../../../common/./types/withId.type';
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { DataEditingRepository } from '../../repositories/dataEditing.repository';
-import { OrganizationDto } from '../../dto/dtos/data-editing/organizationDto';
-import { NotFoundException } from '@nestjs/common';
+import { WithId } from "../../../../common/./types/withId.type";
+import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
+import { DataEditingRepository } from "../../repositories/dataEditing.repository";
+import { OrganizationDto } from "../../dto/dtos/data-editing/organizationDto";
+import { NotFoundException } from "@nestjs/common";
 
 export class UpdateOrganizationCommand {
   constructor(public dto: WithId<OrganizationDto>) {}

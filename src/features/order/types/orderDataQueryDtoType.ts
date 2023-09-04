@@ -1,4 +1,4 @@
-import { OrderDataSortByEnum } from './orderDataSortBy.enum';
+import { OrderDataSortByEnum } from "./orderDataSortBy.enum";
 
 export type OrderDataQueryDtoType = {
   date: Date;

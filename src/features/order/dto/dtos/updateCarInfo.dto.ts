@@ -1,4 +1,4 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import {
   IsEnum,
   IsNotEmpty,
@@ -6,9 +6,9 @@ import {
   IsOptional,
   IsString,
   MaxLength,
-} from 'class-validator';
-import { Archive } from '../../types/archive.enum';
-import { objectFieldFilter } from '../../../../common/helpers/objectFieldFilter';
+} from "class-validator";
+import { Archive } from "../../types/archive.enum";
+import { objectFieldFilter } from "../../../../common/helpers/objectFieldFilter";
 
 export class UpdateCarInfoDto {
   @ApiProperty()

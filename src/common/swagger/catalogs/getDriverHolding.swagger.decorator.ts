@@ -1,12 +1,12 @@
-import { applyDecorators } from '@nestjs/common';
+import { applyDecorators } from "@nestjs/common";
 import {
   ApiCookieAuth,
   ApiOkResponse,
   ApiOperation,
   ApiUnauthorizedResponse,
-} from '@nestjs/swagger';
-import { SwaggerConstants } from '../swagger.constants';
-import { DriverHoldingViewModel } from '../../../features/order/models/catalogs.views/driverHoldingView.model';
+} from "@nestjs/swagger";
+import { SwaggerConstants } from "../swagger.constants";
+import { DriverHoldingViewModel } from "../../../features/order/models/catalogs.views/driverHoldingView.model";
 
 export function GetDriverHoldingSwaggerDecorator() {
   return applyDecorators(
@@ -21,6 +21,6 @@ export function GetDriverHoldingSwaggerDecorator() {
     }),
     ApiUnauthorizedResponse({
       description: SwaggerConstants.unauthorized,
-    }),
+    })
   );
 }

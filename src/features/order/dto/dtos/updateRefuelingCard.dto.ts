@@ -1,4 +1,4 @@
-import { objectFieldFilter } from '../../../../common/helpers/objectFieldFilter';
+import { objectFieldFilter } from "../../../../common/helpers/objectFieldFilter";
 
 export class UpdateRefuelingCardDto {
   N_ZAPR_CARD: string = null;
