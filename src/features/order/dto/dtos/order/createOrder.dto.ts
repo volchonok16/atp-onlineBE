@@ -7,91 +7,97 @@ import {
   Max,
   MaxLength,
 } from "class-validator";
+import { objectFieldFilter } from "../../../../../common/helpers/objectFieldFilter";
 
 export class CreateOrderDto {
-  @ApiProperty()
+  @ApiProperty({ example: 1547 })
   @IsNumber()
   @Max(99999999)
   @IsNotEmpty()
-  RAZN_ID = 1747;
-  @ApiProperty()
+  RAZN_ID = null;
+  @ApiProperty({ example: 8 })
   @IsNumber()
   @Max(99999999)
   @IsNotEmpty()
-  ZAK_ID = 8;
+  ZAK_ID = null;
   @ApiPropertyOptional()
   @IsString()
   @MaxLength(60)
   @IsOptional()
-  PRIM: string | null = null;
+  PRIM: string = null;
   @ApiPropertyOptional()
   @IsNumber()
   @Max(99999999)
   @IsOptional()
-  DATA_PODR_ID: number | null = null;
+  DATA_PODR_ID: number = null;
   @ApiPropertyOptional()
   @IsString()
   @MaxLength(500)
   @IsOptional()
-  ADR_POGR: string | null = null;
+  ADR_POGR: string = null;
   @ApiPropertyOptional()
   @IsString()
   @MaxLength(500)
   @IsOptional()
-  ADR_RAZGR: string | null = null;
+  ADR_RAZGR: string = null;
   @ApiPropertyOptional()
   @IsString()
   @MaxLength(50)
   @IsOptional()
-  TIP_GRUZ: string | null = null;
+  TIP_GRUZ: string = null;
   @ApiPropertyOptional()
   @IsNumber()
   @Max(32767)
   @IsOptional()
-  N_PL: number | null = null;
+  N_PL: number = null;
   @ApiPropertyOptional()
   @IsNumber()
   @Max(32767)
   @IsOptional()
-  TIP_ZAYAVKI: number | null = null;
+  TIP_ZAYAVKI: number = null;
   @ApiPropertyOptional()
   @IsNumber()
   @Max(99999999)
   @IsOptional()
-  VES: number | null = null;
+  VES: number = null;
   @ApiPropertyOptional()
   @IsNumber()
   @Max(99999999)
   @IsOptional()
-  RAST_KM: number | null = null;
+  RAST_KM: number = null;
   @ApiPropertyOptional()
   @IsNumber()
   @Max(32767)
   @IsOptional()
-  HODOK: number | null = null;
+  HODOK: number = null;
   @ApiPropertyOptional()
   @IsString()
   @MaxLength(19)
   @IsOptional()
-  VR_OT: string | null = "2023-08-08 14:30:00";
+  VR_OT = "2023-08-08 14:30:00";
   @ApiPropertyOptional()
   @IsString()
   @MaxLength(19)
   @IsOptional()
-  VR_DO: string | null = "2023-08-08 14:30:00";
+  VR_DO = "2023-08-08 14:30:00";
   @ApiPropertyOptional()
   @IsNumber()
   @Max(99999999)
   @IsOptional()
-  ROUTE_ID: number | null = null;
+  ROUTE_ID: number = null;
   @ApiPropertyOptional()
   @IsString()
   @MaxLength(60)
   @IsOptional()
-  FLIGHT: string | null = null;
+  FLIGHT: string = null;
   @ApiPropertyOptional()
   @IsNumber()
   @Max(32767)
   @IsOptional()
-  METOD_RASCH: number | null = null;
+  METOD_RASCH: number = null;
+
+  static dto(data: any): CreateOrderDto {
+    const createOrderDto = new CreateOrderDto();
+    return objectFieldFilter<CreateOrderDto>(data, createOrderDto);
+  }
 }

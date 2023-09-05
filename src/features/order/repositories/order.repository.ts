@@ -188,70 +188,33 @@ export class OrderRepository {
   }
 
   async createOrder(dto: CreateOrderDto): Promise<OrderViewModel> {
-    const result = await this.firebird.query(`
-    INSERT INTO RAZN_ZAK (
-      RAZN_ID,
-      ZAK_ID,
-      PRIM,
-      DATA_PODR_ID,
-      ADR_POGR,
-      ADR_RAZGR,
-      TIP_GRUZ,
-      N_PL,
-      TIP_ZAYAVKI,
-      VES,
-      RAST_KM,
-      HODOK,
-      VR_OT,
-      VR_DO,
-      ROUTE_ID,
-      FLIGHT,
-      METOD_RASCH
-    ) VALUES (
-    ${dto.RAZN_ID},
-    ${dto.ZAK_ID},
-    '${dto.PRIM}',
-    ${dto.DATA_PODR_ID},
-    '${dto.ADR_POGR}',
-    '${dto.ADR_RAZGR}',
-    '${dto.TIP_GRUZ}',
-    ${dto.N_PL},
-    ${dto.TIP_ZAYAVKI},
-    ${dto.VES},
-    ${dto.RAST_KM},
-    ${dto.HODOK},
-   '${dto.VR_OT}',
-   '${dto.VR_DO}',
-   ${dto.ROUTE_ID},
-   '${dto.FLIGHT}',
-   ${dto.METOD_RASCH}
-    )
-    RETURNING RAZN_ZAK_KEY;
-    `);
-
-    const RAZN_ZAK_KEY = +result[0]["RAZN_ZAK_KEY"];
-
-    const responseForOrder = await this.firebird.query<OrderViewModel>( // +
-      "SELECT * FROM RAZN_ZAK WHERE RAZN_ZAK_KEY = ?",
-      [RAZN_ZAK_KEY]
+    const { query, parameters } = createQuery<CreateOrderDto, CreateOrderDto>(
+      "RAZN_ZAK",
+      dto,
+      new OrderViewModel()
     );
+    const result = await this.firebird.query(query, parameters);
 
-    return responseForOrder[0];
+    return OrderViewModel.toView(result);
   }
 
   async updateRequest(dto: WithId<UpdateRequestDto>) {
-    const data = getDataAccumulater(dto);
+    try {
+      const data = getDataAccumulater(dto);
 
-    const result = await this.firebird.query<any>(
-      `
+      await this.firebird.query<any>(
+        `
       UPDATE REQ_RAZN 
          SET ${data}
        WHERE REQ_RAZN_KEY = ? 
     `,
-      [dto.id]
-    );
+        [dto.id]
+      );
 
-    return result["count"] > 0;
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   async createBooking(dto: CreateBookingDataDto): Promise<BookingViewModel> {
@@ -273,7 +236,7 @@ export class OrderRepository {
   async updateBooking(dto: WithId<UpdateBookingDataDto>): Promise<boolean> {
     try {
       const data = getDataAccumulater(dto);
-      const result = await this.firebird.query(
+      await this.firebird.query(
         // +
         `
       UPDATE RAZNAR2

@@ -17,12 +17,13 @@ export class CreateOrderUseCase implements ICommandHandler<CreateOrderCommand> {
     private orderQueryRepository: OrderQueryRepository
   ) {}
 
-  async execute(command: CreateOrderCommand): Promise<any> {
+  async execute({ dto }: CreateOrderCommand): Promise<any> {
     const car: OneOrderDataViewModel =
-      await this.orderQueryRepository.getOneOrderData(command.dto.RAZN_ID);
+      await this.orderQueryRepository.getOneOrderData(dto.RAZN_ID);
     if (isNil(car)) {
       throw new NotFoundException("Car Not found");
     }
-    return await this.orderRepository.createOrder(command.dto);
+
+    return await this.orderRepository.createOrder(dto);
   }
 }

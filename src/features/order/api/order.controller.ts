@@ -47,6 +47,7 @@ import { AddWayBillNumberCommand } from "../use-cases/order/createOutputData.use
 import { CreateBillOfLandingReportDto } from "../dto/dtos/createBillOfLandingReport.dto";
 import { CreateOrderView } from "../models/order.views/createOrderView.model";
 import { deleteOrderCommand } from "../use-cases/order/deleteOrder.useCase";
+import { UpdateRequestCommand } from "../use-cases/order/updateRequest.useCase";
 
 @ApiTags("Order")
 @Controller("api/order")
@@ -57,17 +58,6 @@ export class OrderController {
     private reportGenerator: ReportGeneratorService,
     private commandBus: CommandBus
   ) {}
-
-  @Put("/order/:RAZNAR2_KEY")
-  @ApiOperation({ summary: "Разнарядка -> Заказы +" })
-  @ApiBody({ type: UpdateBookingDataDto })
-  async updateBookingData(
-    @Param("RAZNAR2_KEY") id: number,
-    @Body() data: any
-  ): Promise<boolean> {
-    const dto = UpdateBookingDataDto.dto(data);
-    return this.commandBus.execute(new UpdateBookingCommand({ id, ...dto }));
-  }
 
   @Get("prepare-a-table-for")
   @ApiOperation({
@@ -220,15 +210,17 @@ export class OrderController {
 
   @Post("data-preparation/create-order")
   @ApiOperation({
-    summary: "Разнарядка -> Подготовка данных -> ✔",
+    summary: "Разнарядка -> Подготовка данных +",
   })
-  async createOrder(@Body() dto: CreateOrderDto): Promise<OrderViewModel> {
+  @ApiBody({ type: CreateOrderDto })
+  async createOrder(@Body() data: any): Promise<OrderViewModel> {
+    const dto = CreateOrderDto.dto(data);
     return await this.commandBus.execute(new CreateOrderCommand(dto));
   }
 
   @Get("data-preparation/request-log")
   @ApiOperation({
-    summary: "Разнарядка -> Журнал заявок",
+    summary: "Разнарядка -> Журнал заявок (бд пустое?)",
   })
   async getRequestLog(
     @Query() dto: RequestLogDto
@@ -238,21 +230,20 @@ export class OrderController {
 
   @Put("data-preparation/request-log/:REQ_RAZN_KEY")
   @ApiOperation({
-    summary: "Разнарядка -> Журнал заявок -> Сохранить",
+    summary: "Разнарядка -> Журнал заявок -> Сохранить (бд пустое?)",
   })
-  async updateRequest(
-    @Param("REQ_RAZN_KEY") id: number,
-    @Body() dto: UpdateRequestDto
-  ) {
-    return "эндпоинт не готов бд пустое";
-    // return await this.commandBus.execute(
-    //   new UpdateRequestCommand({ id, ...dto }),
-    // );
+  @ApiBody({ type: UpdateRequestDto })
+  async updateRequest(@Param("REQ_RAZN_KEY") id: number, @Body() data: any) {
+    const dto = UpdateRequestDto.dto(data);
+    return await this.commandBus.execute(
+      new UpdateRequestCommand({ id, ...dto })
+    );
   }
 
   @Post("data-preparation/add-request-to-car/:REQ_RAZN_KEY/:RAZN_KEY")
   @ApiOperation({
-    summary: "Разнарядка -> Журнал заявок -> Добавить к выбранной машине",
+    summary:
+      "Разнарядка -> Журнал заявок -> Добавить к выбранной машине (бд пустое?)",
   })
   async addRequestToOrderData(
     @Param("REQ_RAZN_KEY") REQ_RAZN_KEY: string,
@@ -268,7 +259,10 @@ export class OrderController {
   async getBooking(
     @Query() dto: GetCarForOrderDto
   ): Promise<BookingViewModel[]> {
-    const data = await this.orderQueryRepository.getBookingData(dto);
+    const data = await this.orderQueryRepository.getOrderData({
+      ...dto,
+      tab: 3,
+    });
 
     return data.map((d) => BookingViewModel.toView(d));
   }
@@ -279,6 +273,17 @@ export class OrderController {
     @Body() dto: CreateBookingDataDto
   ): Promise<BookingViewModel> {
     return this.commandBus.execute(new CreateBookingCommand(dto));
+  }
+
+  @Put("/booking/:RAZNAR2_KEY")
+  @ApiOperation({ summary: "Разнарядка -> Заказы +" })
+  @ApiBody({ type: UpdateBookingDataDto })
+  async updateBookingData(
+    @Param("RAZNAR2_KEY") id: number,
+    @Body() data: any
+  ): Promise<boolean> {
+    const dto = UpdateBookingDataDto.dto(data);
+    return this.commandBus.execute(new UpdateBookingCommand({ id, ...dto }));
   }
 
   @Delete("/booking/:RAZNAR2_KEY")

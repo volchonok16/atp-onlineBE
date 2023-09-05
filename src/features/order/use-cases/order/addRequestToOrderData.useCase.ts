@@ -33,7 +33,7 @@ export class AddRequestToOrderDataUseCase
     if (isNil(request)) {
       throw new NotFoundException("request not found");
     }
-    const orderForSave = new OrderViewModel(orderData, request);
+    const orderForSave = OrderViewModel.dto(orderData, request); // TODO сделать проверку одним запросом
 
     return await this.orderRepository.createOrder(orderForSave);
   }

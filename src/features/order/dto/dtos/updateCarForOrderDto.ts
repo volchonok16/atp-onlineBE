@@ -15,14 +15,14 @@ import { currentDateTransform } from "../../../../common/helpers/currentDateTran
 
 export class UpdateCarForOrderDto {
   @ApiPropertyOptional()
-  @IsString()
+  @MaxLength(8)
   @IsValidTime()
   @IsOptional()
   VR_V: string = null;
 
   @ApiPropertyOptional()
-  @IsValidTime()
   @MaxLength(8)
+  @IsValidTime()
   @IsOptional()
   VR_Z: string = null;
 
