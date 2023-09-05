@@ -77,7 +77,7 @@ export class OrderController {
     @Query() dto: GetCarForOrderDto
   ): Promise<OrderFoDataPreparationViewModel[]> {
     // @ts-ignore
-    return 'Не работает'
+    return "Не работает";
     // const data = await this.orderQueryRepository.getBookingData(
     //   dto,
     // );
@@ -99,9 +99,8 @@ export class OrderController {
   @ApiOperation({
     summary: "Разнарядка -> ТТН -> Печать ТНН +",
   })
-  async createGoodsInvoiceReport(
-    // @Body() dto: CreateGoodsInvoiceReportDto
-  ): Promise<any> {
+  async createGoodsInvoiceReport(): // @Body() dto: CreateGoodsInvoiceReportDto
+  Promise<any> {
     return fs.readFileSync(
       `src/common/helpers/report-generator/mok-pdf-reports/TN_mok.pdf`
     );
@@ -194,7 +193,7 @@ export class OrderController {
   async getCarForOrderData(
     @Query() dto: GetCarForOrderDto
   ): Promise<CarForOrderViewModel[] | string> {
-    return 'Не верный скл запрос в конфлюенсе'
+    return "Не верный скл запрос в конфлюенсе";
     // return await this.orderQueryRepository.getOrderData(
     //   dto,
     // );
@@ -253,7 +252,6 @@ export class OrderController {
     // );
   }
 
-
   @Post("data-preparation/add-request-to-car/:REQ_RAZN_KEY/:RAZN_KEY")
   @ApiOperation({
     summary: "Разнарядка -> Журнал заявок -> Добавить к выбранной машине",
@@ -272,15 +270,13 @@ export class OrderController {
   async getBooking(
     @Query() dto: GetCarForOrderDto
   ): Promise<BookingViewModel[]> {
-    const data = await this.orderQueryRepository.getBookingData(
-      dto,
-    );
+    const data = await this.orderQueryRepository.getBookingData(dto);
 
     return data.map((d) => BookingViewModel.toView(d));
   }
 
   @Post("/booking")
-  @ApiOperation({ summary: "Разнарядка -> Заказы +"})
+  @ApiOperation({ summary: "Разнарядка -> Заказы +" })
   async createBookingData(
     @Body() dto: CreateBookingDataDto
   ): Promise<BookingViewModel> {
