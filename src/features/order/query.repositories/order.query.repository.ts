@@ -16,8 +16,8 @@ import { RequestLogDto } from "../dto/query.dtos/requestLog.dto";
 import { RequestViewModel } from "../models/order.views/requestView.model";
 import { FirebirdService } from "../../../common/helpers/firebird-orm/firebird";
 import { rawDbResponseTransform } from "../../../common/helpers/rawDbResponseTransform.helper";
-import {GetCarForOrderDto} from "../dto/query.dtos/getCarForOrder.dto";
-import {CarForOrderViewModel} from "../models/order.views/carForOrderView.model";
+import { GetCarForOrderDto } from "../dto/query.dtos/getCarForOrder.dto";
+import { CarForOrderViewModel } from "../models/order.views/carForOrderView.model";
 
 @Injectable()
 export class OrderQueryRepository {
@@ -39,11 +39,7 @@ export class OrderQueryRepository {
     }
   }
 
-  async getBookingData(
-    dto: GetCarForOrderDto
-  ): Promise<OrderDataViewModel[]> {
-    const date = format(dto.date, "yyyy-MM-dd");
-
+  async getBookingData(dto: GetCarForOrderDto): Promise<OrderDataViewModel[]> {
     //query to get data from db
     let query = `SELECT * FROM RAZNAR2`; // TODO RAZNAR_S(?, ?, ?, null)
 
@@ -56,9 +52,8 @@ export class OrderQueryRepository {
       OR UPPER(ZAKS) LIKE UPPER('%${dto.filter}%') `;
 
     const data = await this.firebird.query<OrderDataViewModel>(query);
-
+    console.log(data);
     const result = rawDbResponseTransform(data);
-
     return result.map((r) => OrderDataViewModel.toView(r));
   }
 
@@ -141,24 +136,71 @@ WHERE TTN.TTN_KEY = ?;
     return car[0];
   }
 
-  async getOrderData(dto: GetCarForOrderDto): Promise<CarForOrderViewModel[]> {
+  async getOrderData(dto: OrderDataQueryDtoType) {
+    const date = format(dto.date, "yyyy-MM-dd");
+
+    //query to get data from db
+    let query = `SELECT * FROM RAZNAR_S(?, ?, ?, ?, null)`;
+
     //add filter if it exists
-    let filter
     if (dto.filter)
-      filter += `
-      WHERE UPPER(MAM) LIKE UPPER('%${dto.filter}%') 
+      query += `
+     WHERE UPPER(MAM) LIKE UPPER('%${dto.filter}%') 
       OR  UPPER(NOMER) LIKE UPPER('%${dto.filter}%') 
       OR UPPER(FIO) LIKE UPPER('%${dto.filter}%') 
       OR UPPER(ZAKS) LIKE UPPER('%${dto.filter}%') `;
-    // TODO получаю не те поля
-    // TODO не могу проверит в бд присутствует объект, с неправильными полями SELECT * FROM  W_DATA  where del = ? and arhiv_razn = ?
-    const result = await this.firebird.query(`
-      SELECT * FROM  W_DATA  ${filter}
-    `)
 
-    console.log(result)
-    return result.map((r) => CarForOrderViewModel.toView(r));
+    //add sort by if it exists
+    if (dto.sortBy) {
+      switch (dto.sortBy) {
+        case OrderDataSortByEnum.cipher:
+          query += ` ORDER BY NOM, MAM, NOMER`;
+          query += ` ORDER BY NOM, MAM, NOMER`;
+          break;
+        case OrderDataSortByEnum.brand:
+          query += ` ORDER BY MAM, NOMER, VR_V`;
+          break;
+        case OrderDataSortByEnum.client:
+          query += ` ORDER BY ZAKS, MAM, NOMER`;
+          break;
+        case OrderDataSortByEnum.note:
+          query += ` ORDER BY PRIM_4_SORT nulls last`;
+          break;
+        case OrderDataSortByEnum.departureTime:
+          query += ` ORDER BY VR_V, MAM, NOMER`;
+          break;
+        case OrderDataSortByEnum.surname:
+          query += ` ORDER BY FIO nulls last`;
+          break;
+      }
+    }
+
+    return await this.firebird.query<OrderDataViewModel>(query, [
+      date,
+      date,
+      dto.tab,
+      dto.motorcadeName,
+    ]);
   }
+
+  // async getOrderData(dto: GetCarForOrderDto): Promise<CarForOrderViewModel[]> {
+  //   //add filter if it exists
+  //   let filter
+  //   if (dto.filter)
+  //     filter += `
+  //     WHERE UPPER(MAM) LIKE UPPER('%${dto.filter}%')
+  //     OR  UPPER(NOMER) LIKE UPPER('%${dto.filter}%')
+  //     OR UPPER(FIO) LIKE UPPER('%${dto.filter}%')
+  //     OR UPPER(ZAKS) LIKE UPPER('%${dto.filter}%') `;
+  //   // TODO получаю не те поля
+  //   // TODO не могу проверит в бд присутствует объект, с неправильными полями SELECT * FROM  W_DATA  where del = ? and arhiv_razn = ?
+  //   const result = await this.firebird.query(`
+  //     SELECT * FROM  W_DATA  ${filter}
+  //   `)
+  //
+  //   console.log(result)
+  //   return result.map((r) => CarForOrderViewModel.toView(r));
+  // }
 
   async getRequestLog(dto: RequestLogDto): Promise<RequestViewModel[]> {
     let query = `SELECT * FROM REQ_RAZN_4DISP(?, ?)`;
@@ -226,10 +268,10 @@ WHERE REQ_RAZN.REQ_RAZN_KEY = ?;
 
   async bookingExists(id: number): Promise<boolean> {
     const [result] = await this.firebird.query(
-        `
+      `
           SELECT COUNT(*) FROM RAZNAR2 WHERE RAZNAR2_KEY = ?;
         `,
-        [id]
+      [id]
     );
 
     return result.COUNT === 1;

@@ -1,6 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { format } from "date-fns";
-import {timeStampToTimeTransform} from "../../../../common/helpers/timeStampToTimeTransform";
 
 export class BookingViewModel {
   @ApiProperty({
@@ -37,7 +36,7 @@ export class BookingViewModel {
   @ApiProperty({
     description: "Single application",
   })
-  RAZOV: boolean = false;
+  RAZOV: number;
 
   @ApiProperty({
     description: "Attracted transport ID",
@@ -120,13 +119,13 @@ export class BookingViewModel {
       ORG_ID: data.ORG_ID,
       FIO_ID: data.FIO_ID,
       FIO2_ID: data.FIO2_ID,
-      RAZOV: !!data.RAZOV,
+      RAZOV: data.RAZOV,
       PRIVL_TRANSPORT: data.PRIVL_TRANSPORT,
       ROUTE_ID: data.ROUTE_ID,
       RAZN_T_T_ID: data.RAZN_T_T_ID,
       RAZN_OD_ID: data.RAZN_OD_ID,
-      VR_V: timeStampToTimeTransform(data.VR_V),
-      VR_Z: timeStampToTimeTransform(data.VR_Z),
+      VR_V: format(data.VR_V, "HH:mm"),
+      VR_Z: format(data.VR_Z, "HH:mm"),
       VR_I: data.VR_I,
       SUMM_VREM: data.SUMM_VREM,
       CENA: data.CENA,

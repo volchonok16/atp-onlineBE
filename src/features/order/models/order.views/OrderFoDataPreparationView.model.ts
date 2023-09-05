@@ -1,4 +1,4 @@
-import { OrderDataViewModel } from "./orderDataView.model";
+import { shortStringToBoolean } from "../../../../common/helpers/shortStringToBooleanTransform.helper";
 
 export class OrderFoDataPreparationViewModel {
   REMONT: boolean;
@@ -16,20 +16,22 @@ export class OrderFoDataPreparationViewModel {
   ROUTE: any;
   COMMENTAR: string;
 
-  constructor(data: OrderDataViewModel) {
-    this.REMONT = data.REMONT;
-    this.B_VOD = data.B_VOD;
-    this.MAM = data.MAM;
-    this.NOMER = data.NOMER;
-    this.FIO = data.FIO;
-    this.FIO_KOND = data.FIO_KOND;
-    this.VR_V = data.VR_V;
-    this.VR_Z = data.VR_Z;
-    this.ORG_NAME = data.ORG_NAME;
-    this.VID_PEREV = data.VID_PEREV;
-    this.VID_SOOB = data.VID_SOOB;
-    this.PRIM_4_SORT = data.PRIM_4_SORT;
-    this.ROUTE = null;
-    this.COMMENTAR = data.COMMENTAR;
+  static toView(data) {
+    return {
+      REMONT: shortStringToBoolean(data.REMONT),
+      B_VOD: shortStringToBoolean(data.B_VOD),
+      MAM: data.MAM,
+      NOMER: data.NOMER,
+      FIO: data.FIO,
+      FIO_KOND: data.FIO_KOND,
+      VR_V: data.VR_V,
+      VR_Z: data.VR_Z,
+      ORG_NAME: data.ORG_NAME,
+      VID_PEREV: data.VID_PEREV,
+      VID_SOOB: data.VID_SOOB,
+      PRIM_4_SORT: data.PRIM_4_SORT,
+      ROUTE: data.ROUTE,
+      COMMENTAR: data.COMMENTAR,
+    };
   }
 }

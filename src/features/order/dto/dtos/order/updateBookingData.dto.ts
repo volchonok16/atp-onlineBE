@@ -2,8 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { IsOptional, IsString, Matches } from "class-validator";
 import { BookingDataDto } from "./bookingData.dto";
 import { objectFieldFilter } from "../../../../../common/helpers/objectFieldFilter";
-import { timeStampToTimeTransform } from "../../../../../common/helpers/timeStampToTimeTransform";
-import { timeToTimestampTransformHelper } from "../../../../../common/helpers/timeToTimestampTransform.helper";
+import { format, parseISO } from "date-fns";
 
 export class UpdateBookingDataDto extends BookingDataDto {
   @ApiProperty({
@@ -21,8 +20,8 @@ export class UpdateBookingDataDto extends BookingDataDto {
       data,
       updateBookingDataDto
     );
-    result.VR_V = timeToTimestampTransformHelper(data.VR_V);
-    result.VR_Z = timeToTimestampTransformHelper(data.VR_Z);
+    result.VR_V = format(parseISO(data.VR_V), "HH:mm");
+    result.VR_Z = format(parseISO(data.VR_Z), "HH:mm");
     return result;
   }
 }

@@ -1,6 +1,4 @@
-import { Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { dbConnect_const } from "../../../common/constants/global.constants";
-import { Connection } from "odbc";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { CarInfoDto } from "../dto/dtos/carInfo.dto";
 import { UpdateStaffInfoDto } from "../dto/dtos/updateStaffInfo.dto";
 import { UpdateInternshipDto } from "../dto/dtos/updateInternship.dto";
@@ -12,10 +10,7 @@ import { UpdateAdditionalInformationDto } from "../dto/dtos/updateAdditionalInfo
 import { UpdateImageDto } from "../dto/dtos/updateImage.dto";
 import { UploadImagesArrayDto } from "../dto/dtos/uploadImagesArray.dto";
 import { getDataAccumulater } from "../../../common/helpers/getData.accumulater";
-import {
-  upsert,
-  upsertQuery,
-} from "../../../common/helpers/firebird-orm/upsert";
+import { upsertQuery } from "../../../common/helpers/firebird-orm/upsert";
 import { NoteDto } from "../dto/dtos/data-editing/note.dto";
 import { NoteViewModel } from "../models/dataEditing.views/noteView.model";
 import { PriceDto } from "../dto/dtos/data-editing/price.dto";
@@ -27,7 +22,6 @@ import { SubunitDto } from "../dto/dtos/data-editing/subunit.dto";
 import { SubunitViewModel } from "../models/dataEditing.views/subunitView.model";
 import { FirebirdService } from "../../../common/helpers/firebird-orm/firebird";
 import { createQuery } from "../../../common/helpers/firebird-orm/create";
-import { ca, tr } from "date-fns/locale";
 import { booleanToNumber } from "../../../common/helpers/booleanToNumberTransform.helper";
 
 @Injectable()

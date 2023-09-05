@@ -13,7 +13,7 @@ import { IsValidTime } from "../../../../../common/decorators/isValidTime.decora
 export class BookingDataDto {
   @ApiProperty({
     example: "2023-07-10",
-    description: "Date in the yyyy-MM-dd format or yyyy.MM.dd format",
+    description: "Date in the yyyy-MM-dd format",
   })
   @IsNotEmpty()
   @IsString()
