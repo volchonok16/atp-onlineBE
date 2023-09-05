@@ -17,12 +17,12 @@ import { EquipmentsDocViewModel } from "../models/order.views/equipmentsDocView.
 import { FlightsDto } from "../dto/query.dtos/flights.dto";
 import { FlightsViewModel } from "../models/order.views/flightsView.model";
 import { NoteViewModel } from "../models/dataEditing.views/noteView.model";
-import { rawDbResponseTransform } from "../../../common/helpers/rawDbResponseTransform.helper";
 import { PriceViewModel } from "../models/dataEditing.views/priceViewModel";
 import { WithId } from "../../../common/types/withId.type";
 import { ArchiveOrNotArchiveQuery } from "../dto/query.dtos/noteQuery.dto";
 import { booleanToShortString } from "../../../common/helpers/booleanToShortStringTransform";
 import { FirebirdService } from "../../../common/helpers/firebird-orm/firebird";
+import { rawDbResponseTransform } from "../../../common/helpers/rawDbResponseTransform.helper";
 
 @Injectable()
 export class DataEditingQueryRepository {
@@ -352,7 +352,7 @@ export class DataEditingQueryRepository {
     `,
       [id, id, booleanToShortString(ARHIV)]
     );
-
+    console.log(rawResponse);
     const result = rawDbResponseTransform(rawResponse);
     return result.map((r) => NoteViewModel.toView(r));
   }

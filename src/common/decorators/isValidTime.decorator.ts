@@ -7,6 +7,7 @@ import {
 } from "class-validator";
 import { Injectable } from "@nestjs/common";
 import { timeToTimestampTransformHelper } from "../helpers/timeToTimestampTransform.helper";
+import { val } from "cheerio/lib/api/attributes";
 
 @ValidatorConstraint({ name: "IsValidTime", async: false })
 @Injectable()
@@ -20,7 +21,7 @@ export class IsValidTimeConstraint implements ValidatorConstraintInterface {
   }
 
   defaultMessage(args: ValidationArguments) {
-    return `Invalid ${args.property} format. Expected format: DD.MM.YYYY.`;
+    return `Invalid ${args.property} format.`;
   }
 }
 

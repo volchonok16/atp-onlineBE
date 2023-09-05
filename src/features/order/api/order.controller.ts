@@ -3,7 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  NotFoundException,
   Param,
   Post,
   Put,
@@ -21,7 +20,6 @@ import { BillOfLandingDeleteDto } from "../dto/dtos/billOfLandingDelete.dto";
 import { DeleteBillOfLandingCommand } from "../use-cases/order/deleteBillOfLanding.useCase";
 import { OutputDataViewModel } from "../models/order.views/outputdataView.model";
 import { ReferralForRepairsViewModel } from "../models/order.views/referralforrepairsView.Model";
-import { OrderDataViewModel } from "../models/order.views/orderDataView.model";
 import { OrderDataInputDto } from "../dto/dtos/orderDataInput.dto";
 import { CreateOrderDataCommand } from "../use-cases/order/createOrderData.useCase";
 import { BillOfLadingViewModel } from "../models/order.views/billOfLadingViewModel";
@@ -47,6 +45,8 @@ import { CreateOrderCommand } from "../use-cases/order/createOrder.useCase";
 import * as fs from "fs";
 import { AddWayBillNumberCommand } from "../use-cases/order/createOutputData.useCase";
 import { CreateBillOfLandingReportDto } from "../dto/dtos/createBillOfLandingReport.dto";
+import { CreateOrderView } from "../models/order.views/createOrderView.model";
+import { deleteOrderCommand } from "../use-cases/order/deleteOrder.useCase";
 
 @ApiTags("Order")
 @Controller("api/order")
@@ -71,18 +71,17 @@ export class OrderController {
 
   @Get("prepare-a-table-for")
   @ApiOperation({
-    summary: "Разнарядка -> Подготовить таблицу на ?",
+    summary: "Разнарядка -> Подготовка данных -> Подготовить таблицу на... +",
   })
   async getOrderDataForDataPreparation(
     @Query() dto: GetCarForOrderDto
   ): Promise<OrderFoDataPreparationViewModel[]> {
-    // @ts-ignore
-    return 'Не работает'
-    // const data = await this.orderQueryRepository.getBookingData(
-    //   dto,
-    // );
-    //
-    // return data.map((d) => new OrderFoDataPreparationViewModel(d));
+    const data = await this.orderQueryRepository.getOrderData({
+      ...dto,
+      tab: 1,
+    });
+
+    return data.map((d) => OrderFoDataPreparationViewModel.toView(d));
   }
 
   @Post("bill-of-landing-and-waybill")
@@ -99,9 +98,8 @@ export class OrderController {
   @ApiOperation({
     summary: "Разнарядка -> ТТН -> Печать ТНН +",
   })
-  async createGoodsInvoiceReport(
-    // @Body() dto: CreateGoodsInvoiceReportDto
-  ): Promise<any> {
+  async createGoodsInvoiceReport(): // @Body() dto: CreateGoodsInvoiceReportDto
+  Promise<any> {
     return fs.readFileSync(
       `src/common/helpers/report-generator/mok-pdf-reports/TN_mok.pdf`
     );
@@ -181,45 +179,44 @@ export class OrderController {
   })
   async createOrderData(
     @Body() inputDto: OrderDataInputDto
-  ): Promise<OrderDataViewModel> {
-    return await this.commandBus.execute(
-      new CreateOrderDataCommand(inputDto, inputDto.motorcadeName)
-    );
+  ): Promise<CreateOrderView> {
+    return await this.commandBus.execute(new CreateOrderDataCommand(inputDto));
   }
 
   @Get("/order")
   @ApiOperation({
-    summary: "Разнарядка -> Разнарядка ?",
+    summary: "Разнарядка -> Разнарядка +",
   })
   async getCarForOrderData(
     @Query() dto: GetCarForOrderDto
-  ): Promise<CarForOrderViewModel[] | string> {
-    return 'Не верный скл запрос в конфлюенсе'
-    // return await this.orderQueryRepository.getOrderData(
-    //   dto,
-    // );
+  ): Promise<CarForOrderViewModel[]> {
+    const data = await this.orderQueryRepository.getOrderData({
+      ...dto,
+      tab: 2,
+    });
+
+    return data.map((d) => CarForOrderViewModel.toView(d));
   }
 
   @Put("/order/:RAZN_KEY")
   @ApiOperation({
     summary: "Разнарядка -> Разнарядка",
   })
+  @ApiBody({ type: UpdateCarForOrderDto })
   async updateCarForOrder(
     @Param("RAZN_KEY") id: number,
     @Body() data: any
-  ): Promise<boolean | any> {
-    return "эндпоинт не работает";
-
+  ): Promise<boolean> {
     const dto = UpdateCarForOrderDto.dto(data);
     return this.commandBus.execute(new UpdateOrderCommand({ id, ...dto }));
   }
 
-  /*  @Delete('/order/:RAZN_KEY')
-                                                                      async deleteCarForOrder(
-                                                                        @Param('RAZN_KEY') RAZN_KEY: number,
-                                                                      ): Promise<boolean> {
-                                                                        return this.commandBus.execute(new deleteOrderCommand(RAZN_KEY));
-                                                                      }*/
+  @Delete("/order/:RAZN_KEY +")
+  async deleteCarForOrder(
+    @Param("RAZN_KEY") RAZN_KEY: number
+  ): Promise<boolean> {
+    return this.commandBus.execute(new deleteOrderCommand(RAZN_KEY));
+  }
 
   @Post("data-preparation/create-order")
   @ApiOperation({
@@ -271,15 +268,13 @@ export class OrderController {
   async getBooking(
     @Query() dto: GetCarForOrderDto
   ): Promise<BookingViewModel[]> {
-    const data = await this.orderQueryRepository.getBookingData(
-      dto,
-    );
+    const data = await this.orderQueryRepository.getBookingData(dto);
 
     return data.map((d) => BookingViewModel.toView(d));
   }
 
   @Post("/booking")
-  @ApiOperation({ summary: "Разнарядка -> Заказы +"})
+  @ApiOperation({ summary: "Разнарядка -> Заказы +" })
   async createBookingData(
     @Body() dto: CreateBookingDataDto
   ): Promise<BookingViewModel> {
