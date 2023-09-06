@@ -167,7 +167,7 @@ export class OrderController {
 
   @Put("referral-for-repairs/:RAZN_N_R_KEY")
   @ApiOperation({
-    summary: "Разнарядка -> Направление на ремонт",
+    summary: "Разнарядка -> Направление на ремонт +",
   })
   async updateReferral(
     @Body() data: any,
@@ -181,7 +181,7 @@ export class OrderController {
 
   @Delete("referral-for-repairs/:RAZN_N_R_KEY")
   @ApiOperation({
-    summary: "Разнарядка -> Направление на ремонт",
+    summary: "Разнарядка -> Направление на ремонт +",
   })
   async deleteReferral(@Param("RAZN_N_R_KEY") id: number): Promise<boolean> {
     return await this.commandBus.execute(
