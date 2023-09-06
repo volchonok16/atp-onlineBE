@@ -22,6 +22,7 @@ import { DriverHoldingViewModel } from "../models/catalogs.views/driverHoldingVi
 import { CarEquipmentViewModel } from "../models/catalogs.views/carEquipmentView.model";
 import { AcquisitionActViewModel } from "../models/catalogs.views/acquisitionActView.model";
 import { FirebirdService } from "../../../common/helpers/firebird-orm/firebird";
+import { RadioButtonKeyViewModel } from "../models/catalogs.views/radioButtonKeyView.model";
 
 @Injectable()
 export class CatalogsQueryRepository {
@@ -352,5 +353,13 @@ ORDER BY T_T`);
     if (queryDto.number)
       filter += ` AND UPPER(NOMER) LIKE UPPER('%${queryDto.number}%')`;
     return filter;
+  }
+
+  async getRadioButtonKeys(): Promise<RadioButtonKeyViewModel[]> {
+    const result = await this.firebird.query(`
+      SELECT RAZN_NAK_KEY, NAME_AK FROM W_RAZN_NAK
+    `);
+
+    return result.map((r) => RadioButtonKeyViewModel.toView(r));
   }
 }

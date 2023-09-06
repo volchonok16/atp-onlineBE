@@ -6,26 +6,28 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  Matches,
   MaxLength,
 } from "class-validator";
 import { MotorcadeNameEnum } from "../../types/motorcadeName.enum";
 import { Transform, Type } from "class-transformer";
 import { OrderDataSortByEnum } from "../../types/orderDataSortBy.enum";
+import { currentDateTransform } from "../../../../common/helpers/currentDateTransform.helper";
 
 export class OrderDataQueryDto {
   @ApiProperty({
-    example: "2023-07-10",
-    description: "Date in the yyyy-MM-dd format or yyyy.MM.dd format",
+    example: `${String(currentDateTransform())}`,
+    description: "Date in the yyyy-MM-dd format",
   })
   @IsNotEmpty()
   @IsDate()
   @Type(() => Date)
   date: Date;
 
-  @ApiProperty({ enum: MotorcadeNameEnum })
+  @ApiProperty({ description: "Radio-button value", example: 0 })
   @IsNumber()
   @IsNotEmpty()
-  @Transform(({ value }) => sortingMotorcadeName(value))
+  @Type(() => Number)
   motorcadeName: number;
 
   @ApiPropertyOptional()
@@ -38,11 +40,4 @@ export class OrderDataQueryDto {
   @IsEnum(OrderDataSortByEnum)
   @IsOptional()
   sortBy: OrderDataSortByEnum;
-}
-
-export function sortingMotorcadeName(value) {
-  if (value === MotorcadeNameEnum.all) return 0;
-  if (value === MotorcadeNameEnum.first) return 1;
-  if (value === MotorcadeNameEnum.upp) return 2;
-  return value;
 }

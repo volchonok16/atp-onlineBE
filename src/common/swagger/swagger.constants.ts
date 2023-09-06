@@ -76,4 +76,5 @@ export enum SwaggerConstants {
   getDirectoriesGoodsType = "Returns array of goods type",
   getDirectoriesTransportationType = "Returns array of transportation type",
   getDirectoriesCommunicationType = "Returns array of communication type",
+  getDirectoriesRadioButtonKeys = "Return array values for radio button",
 }

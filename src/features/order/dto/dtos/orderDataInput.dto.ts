@@ -1,22 +1,21 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsDate, IsNotEmpty, IsNumber } from "class-validator";
-import { Transform, Type } from "class-transformer";
-import { MotorcadeNameEnum } from "../../types/motorcadeName.enum";
-import { sortingMotorcadeName } from "../query.dtos/orderData.query.dto";
+import { Type } from "class-transformer";
+import { currentDateTransform } from "../../../../common/helpers/currentDateTransform.helper";
 
 export class OrderDataInputDto {
   @ApiProperty({
-    example: "2023-08-03",
-    description: "Date in the yyyy-MM-dd format or yyyy.MM.dd format",
+    example: `${currentDateTransform()}`,
+    description: "Date in the yyyy-MM-dd",
   })
   @IsNotEmpty()
   @IsDate()
   @Type(() => Date)
   date: Date;
 
-  @ApiProperty({ enum: MotorcadeNameEnum })
+  @ApiProperty({ description: "Radio-button value", example: 0 })
   @IsNumber()
   @IsNotEmpty()
-  @Transform(({ value }) => sortingMotorcadeName(value))
+  @Type(() => Number)
   motorcadeName: number;
 }

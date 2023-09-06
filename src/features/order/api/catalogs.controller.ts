@@ -48,6 +48,8 @@ import { CarEquipmentViewModel } from "../models/catalogs.views/carEquipmentView
 import { GetCarEquipmentSwaggerDecorator } from "../../../common/swagger/catalogs/getCarEquipment.swagger.decorator";
 import { AcquisitionActViewModel } from "../models/catalogs.views/acquisitionActView.model";
 import { GetAcquisitionActsSwaggerDecorator } from "../../../common/swagger/catalogs/getAcquisitionActs.swagger.decorator";
+import { GetRadioButtonKeysSwaggerDecorator } from "../../../common/swagger/catalogs/getRadioButtonKeys.swagger.decorator";
+import { RadioButtonKeyViewModel } from "../models/catalogs.views/radioButtonKeyView.model";
 
 @ApiTags("Catalogs")
 @Controller("api/catalogs")
@@ -213,5 +215,11 @@ export class CatalogsController {
     DirectoriesCommunicationTypeViewModel[]
   > {
     return this.catalogsQueryRepository.getCommunicationType();
+  }
+
+  @Get("directories/radio-button-keys")
+  @GetRadioButtonKeysSwaggerDecorator()
+  async getRadio(): Promise<RadioButtonKeyViewModel[]> {
+    return this.catalogsQueryRepository.getRadioButtonKeys();
   }
 }
