@@ -138,8 +138,7 @@ WHERE TTN.TTN_KEY = ?;
 
   async getOrderData(dto: OrderDataQueryDtoType) {
     const date = format(dto.date, "yyyy-MM-dd");
-    console.log(dto);
-    console.log(date);
+
     //query to get data from db
     let query = `SELECT * FROM RAZNAR_S(?, ?, ?, ?, null)`;
 
@@ -253,6 +252,17 @@ WHERE REQ_RAZN.REQ_RAZN_KEY = ?;
       `
           SELECT COUNT(*) FROM RAZNAR2 WHERE RAZNAR2_KEY = ?;
         `,
+      [id]
+    );
+
+    return result.COUNT === 1;
+  }
+
+  async referalIsExists(id: number): Promise<boolean> {
+    const [result] = await this.firebird.query(
+      `
+      SELECT COUNT(*) FROM RAZN_NAPR_REM WHERE RAZN_N_R_KEY = ?;
+    `,
       [id]
     );
 

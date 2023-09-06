@@ -1,17 +1,12 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { format } from "date-fns";
+import { objectFieldFilter } from "../../../../common/helpers/objectFieldFilter";
 
 export class BookingViewModel {
   @ApiProperty({
     description: "ID.",
   })
   RAZNAR2_KEY: number = null;
-
-  // @ApiProperty({
-  //   example: "2023-07-10",
-  //   description: "Date of work.",
-  // })
-  // DATE_RAB: Date;
 
   @ApiProperty({
     description: "Customer ID",
@@ -112,9 +107,9 @@ export class BookingViewModel {
   COMMENTAR: string = null;
 
   static toView(data) {
-    const result = { ...data };
-    result.VR_V = format(data.VR_V, "HH:mm");
-    result.VR_Z = format(data.VR_Z, "HH:mm");
+    const result = objectFieldFilter({ ...data }, new BookingViewModel());
+    result.VR_V = format(new Date(data.VR_V), "HH:mm");
+    result.VR_Z = format(new Date(data.VR_Z), "HH:mm");
 
     return result;
   }
