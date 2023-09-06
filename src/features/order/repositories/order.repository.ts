@@ -98,7 +98,6 @@ export class OrderRepository {
         return true;
       }); // TODO каскадное удаление работает нре полностью
     } catch (e) {
-      console.log(e);
       return false;
     }
   }
@@ -111,8 +110,9 @@ export class OrderRepository {
       dto,
       new ReferralForRepairsViewModel()
     );
+    const result = await this.firebird.query(query, parameters);
 
-    return await this.firebird.query(query, parameters);
+    return ReferralForRepairsViewModel.toView(result);
   }
 
   async createOrderData(dto: OrderDataInputDto): Promise<CreateOrderView> {
@@ -218,19 +218,14 @@ export class OrderRepository {
   }
 
   async createBooking(dto: CreateBookingDataDto): Promise<BookingViewModel> {
-    try {
-      const { query, parameters } = createQuery(
-        "RAZNAR2",
-        dto,
-        new BookingViewModel()
-      );
-      const result = await this.firebird.query(query, parameters);
-      console.log(result);
+    const { query, parameters } = createQuery(
+      "RAZNAR2",
+      dto,
+      new BookingViewModel()
+    );
+    const result = await this.firebird.query(query, parameters);
 
-      return BookingViewModel.toView(result);
-    } catch (e) {
-      console.log(e);
-    }
+    return BookingViewModel.toView(result);
   }
 
   async updateBooking(dto: WithId<UpdateBookingDataDto>): Promise<boolean> {
