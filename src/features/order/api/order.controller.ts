@@ -255,7 +255,10 @@ export class OrderController {
   }
 
   @Get("/booking")
-  @ApiOperation({ summary: "Разнарядка -> Заказы +/-" })
+  @ApiOperation({
+    summary:
+      "Разнарядка -> Заказы (локальная база содержит не корректные поля таблица RAZN_OD_SEL)",
+  })
   async getBooking(
     @Query() dto: GetCarForOrderDto
   ): Promise<BookingViewModel[]> {
