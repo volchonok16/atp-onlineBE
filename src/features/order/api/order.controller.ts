@@ -50,6 +50,10 @@ import { deleteOrderCommand } from "../use-cases/order/deleteOrder.useCase";
 import { UpdateRequestCommand } from "../use-cases/order/updateRequest.useCase";
 import { UpdateReferralForRepairsCommand } from "../use-cases/order/updateReferalForRepairs.useCase";
 import { DeleteReferralForRepairsCommand } from "../use-cases/order/deleteReferralForRepairs.useCase";
+import { CarNameForPrepareOutputDataView } from "../models/order.views/carNameForPrepareOutputDataView";
+import { CarInfoForPrepareOutputDataView } from "../models/order.views/carInfoForPrepareOutputDataView.model";
+import { OrderDataQueryDto } from "../dto/query.dtos/orderData.query.dto";
+import { PrepareOutputDataDto } from "../dto/dtos/order/prepareOutputData.dto";
 
 @ApiTags("Order")
 @Controller("api/order")
@@ -145,6 +149,48 @@ export class OrderController {
 
   @Post("output-data")
   @ApiOperation({
+    summary: "Разнарядка -> Выходная информация",
+  })
+  @ApiBody({ type: PrepareOutputDataDto })
+  createPrepareOutputData(@Body() data: any) {
+    return "in progress";
+  }
+
+  @Put("output-data")
+  @ApiOperation({
+    summary: "Разнарядка -> Выходная информация",
+  })
+  cupdatePrepareOutputData() {
+    return "in progress";
+  }
+
+  @Get("output-data/car-name")
+  @ApiOperation({
+    summary: "Разнарядка -> Выходная информация -> Таблица с машинами +",
+  })
+  async getCarsNamesForPrepareOutputData(): Promise<
+    CarNameForPrepareOutputDataView[]
+  > {
+    return this.orderQueryRepository.getCarsNamesForPrepareOutputData();
+  }
+
+  @Get("output-data/car-info")
+  @ApiOperation({
+    summary: "Разнарядка -> Выходная информация -> Таблица с ФИО +",
+  })
+  async getCarInfoForPrepareOutputDataView(
+    @Query() dto: OrderDataQueryDto
+  ): Promise<CarInfoForPrepareOutputDataView[]> {
+    const result = await this.orderQueryRepository.getOrderData({
+      ...dto,
+      tab: 4,
+    });
+
+    return result.map((r) => CarInfoForPrepareOutputDataView.toView(r));
+  }
+
+  @Post("output-data")
+  @ApiOperation({
     summary: "Разнарядка -> Выходная информация +",
   })
   async prepareOutputData(
@@ -167,7 +213,7 @@ export class OrderController {
 
   @Put("referral-for-repairs/:RAZN_N_R_KEY")
   @ApiOperation({
-    summary: "Разнарядка -> Направление на ремонт",
+    summary: "Разнарядка -> Направление на ремонт +",
   })
   async updateReferral(
     @Body() data: any,
@@ -181,7 +227,7 @@ export class OrderController {
 
   @Delete("referral-for-repairs/:RAZN_N_R_KEY")
   @ApiOperation({
-    summary: "Разнарядка -> Направление на ремонт",
+    summary: "Разнарядка -> Направление на ремонт +",
   })
   async deleteReferral(@Param("RAZN_N_R_KEY") id: number): Promise<boolean> {
     return await this.commandBus.execute(
