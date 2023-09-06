@@ -14,8 +14,8 @@ import { CommandBus } from "@nestjs/cqrs";
 import { BillOfLadingCreateDto } from "../dto/dtos/billOfLadingCreate.dto";
 import { CreateBillOfLadingCommand } from "../use-cases/order/createBillOfLanding.useCase";
 import { OutputDataDto } from "../dto/dtos/outputData.dto";
-import { ReferralForRepairsCreateDto } from "../dto/dtos/referralForRepairsCreate.dto";
-import { CreateReferralForRepairsCommand } from "../use-cases/data-editing/referralForRepairs.useCase";
+import { ReferralForRepairsDto } from "../dto/dtos/order/referralForRepairs.dto";
+import { CreateReferralForRepairsCommand } from "../use-cases/order/referralForRepairs.useCase";
 import { BillOfLandingDeleteDto } from "../dto/dtos/billOfLandingDelete.dto";
 import { DeleteBillOfLandingCommand } from "../use-cases/order/deleteBillOfLanding.useCase";
 import { OutputDataViewModel } from "../models/order.views/outputdataView.model";
@@ -48,6 +48,8 @@ import { CreateBillOfLandingReportDto } from "../dto/dtos/createBillOfLandingRep
 import { CreateOrderView } from "../models/order.views/createOrderView.model";
 import { deleteOrderCommand } from "../use-cases/order/deleteOrder.useCase";
 import { UpdateRequestCommand } from "../use-cases/order/updateRequest.useCase";
+import { UpdateReferralForRepairsCommand } from "../use-cases/order/updateReferalForRepairs.useCase";
+import { DeleteReferralForRepairsCommand } from "../use-cases/order/deleteReferralForRepairs.useCase";
 
 @ApiTags("Order")
 @Controller("api/order")
@@ -156,10 +158,34 @@ export class OrderController {
     summary: "Разнарядка -> Направление на ремонт +",
   })
   async createReferral(
-    @Body() dto: ReferralForRepairsCreateDto
+    @Body() dto: ReferralForRepairsDto
   ): Promise<ReferralForRepairsViewModel> {
     return await this.commandBus.execute(
       new CreateReferralForRepairsCommand(dto)
+    );
+  }
+
+  @Put("referral-for-repairs/:RAZN_N_R_KEY")
+  @ApiOperation({
+    summary: "Разнарядка -> Направление на ремонт",
+  })
+  async updateReferral(
+    @Body() data: any,
+    @Param("RAZN_N_R_KEY") id: number
+  ): Promise<boolean> {
+    const dto = ReferralForRepairsDto.dto(data);
+    return await this.commandBus.execute(
+      new UpdateReferralForRepairsCommand({ ...dto, id })
+    );
+  }
+
+  @Delete("referral-for-repairs/:RAZN_N_R_KEY")
+  @ApiOperation({
+    summary: "Разнарядка -> Направление на ремонт",
+  })
+  async deleteReferral(@Param("RAZN_N_R_KEY") id: number): Promise<boolean> {
+    return await this.commandBus.execute(
+      new DeleteReferralForRepairsCommand(id)
     );
   }
 

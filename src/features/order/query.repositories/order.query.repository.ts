@@ -276,4 +276,15 @@ WHERE REQ_RAZN.REQ_RAZN_KEY = ?;
 
     return result.COUNT === 1;
   }
+
+  async referalIsExists(id: number): Promise<boolean> {
+    const [result] = await this.firebird.query(
+      `
+      SELECT COUNT(*) FROM RAZN_NAPR_REM WHERE RAZN_N_R_KEY = ?;
+    `,
+      [id]
+    );
+
+    return result.COUNT === 1;
+  }
 }

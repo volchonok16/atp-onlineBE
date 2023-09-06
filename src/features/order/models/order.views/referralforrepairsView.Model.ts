@@ -2,6 +2,8 @@ import { ApiProperty } from "@nestjs/swagger";
 
 export class ReferralForRepairsViewModel {
   @ApiProperty()
+  RAZN_N_R_KEY: number = null;
+  @ApiProperty()
   NOM: number = null;
   @ApiProperty()
   FIO_ID: number = null;
@@ -18,6 +20,7 @@ export class ReferralForRepairsViewModel {
 
   static toView(data) {
     return {
+      RAZN_N_R_KEY: data.RAZN_N_R_KEY,
       NOM: data.NOM,
       FIO_ID: data.FIO_ID,
       DATES: data.DATES,

@@ -7,7 +7,7 @@ import { OrderRepository } from "./repositories/order.repository";
 import { CreateCarInfoUseCase } from "./use-cases/data-editing/createCarInfo.useCase";
 import { CqrsModule } from "@nestjs/cqrs";
 import { CreateBillOfLandingUseCase } from "./use-cases/order/createBillOfLanding.useCase";
-import { CreateReferralForRepairsUseCase } from "./use-cases/data-editing/referralForRepairs.useCase";
+import { CreateReferralForRepairsUseCase } from "./use-cases/order/referralForRepairs.useCase";
 import { AddWayBillNumberUseCase } from "./use-cases/order/createOutputData.useCase";
 import { DataEditingQueryRepository } from "./query.repositories/dataEditing.query.repository";
 import { DataEditingController } from "./api/dataEditing.controller";
@@ -42,7 +42,6 @@ import { CreateOrderUseCase } from "./use-cases/order/createOrder.useCase";
 const useCases = [
   CreateCarInfoUseCase,
   CreateBillOfLandingUseCase,
-  CreateReferralForRepairsUseCase,
   AddWayBillNumberUseCase,
   DeleteBillOfLandingUseCase,
   CreateOrderDataUseCase,

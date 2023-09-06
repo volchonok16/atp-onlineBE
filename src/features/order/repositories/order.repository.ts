@@ -1,5 +1,5 @@
-import { Injectable, Logger, NotFoundException } from "@nestjs/common";
-import { ReferralForRepairsCreateDto } from "../dto/dtos/referralForRepairsCreate.dto";
+import { Injectable, Logger } from "@nestjs/common";
+import { ReferralForRepairsDto } from "../dto/dtos/order/referralForRepairs.dto";
 import { BillOfLadingViewModel } from "../models/order.views/billOfLadingViewModel";
 import { ReferralForRepairsViewModel } from "../models/order.views/referralforrepairsView.Model";
 import { format } from "date-fns";
@@ -15,8 +15,6 @@ import { FirebirdService } from "../../../common/helpers/firebird-orm/firebird";
 import { BookingViewModel } from "../models/order.views/bookingView.model";
 import { CreateBookingDataDto } from "../dto/dtos/order/createBookingDataDto";
 import { createQuery } from "../../../common/helpers/firebird-orm/create";
-import { OrderDataViewModel } from "../models/order.views/orderDataView.model";
-import { CarForOrderViewModel } from "../models/order.views/carForOrderView.model";
 import { OrderDataInputDto } from "../dto/dtos/orderDataInput.dto";
 import { CreateOrderView } from "../models/order.views/createOrderView.model";
 
@@ -104,15 +102,51 @@ export class OrderRepository {
   }
 
   async createReferralForRepairs(
-    dto: ReferralForRepairsCreateDto
+    dto: ReferralForRepairsDto
   ): Promise<ReferralForRepairsViewModel> {
     const { query, parameters } = createQuery(
       "RAZN_NAPR_REM",
       dto,
       new ReferralForRepairsViewModel()
     );
+    const result = await this.firebird.query(query, parameters);
 
-    return await this.firebird.query(query, parameters);
+    return ReferralForRepairsViewModel.toView(result);
+  }
+
+  async updateReferalForRepairs(
+    dto: WithId<ReferralForRepairsDto>
+  ): Promise<boolean> {
+    try {
+      const data = getDataAccumulater(dto);
+      await this.firebird.query(
+        `
+        UPDATE RAZN_NAPR_REM
+        SET ${data} 
+        WHERE RAZN_N_R_KEY = ?;
+      `,
+        [dto.id]
+      );
+
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  async deleteReferralForRepairs(id: number): Promise<boolean> {
+    try {
+      await this.firebird.query(
+        `
+        DELETE FROM RAZN_NAPR_REM WHERE RAZN_N_R_KEY = ?;
+      `,
+        [id]
+      );
+
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   async createOrderData(dto: OrderDataInputDto): Promise<CreateOrderView> {

@@ -7,13 +7,14 @@ import {
   Max,
   MaxLength,
 } from "class-validator";
+import { objectFieldFilter } from "../../../../../common/helpers/objectFieldFilter";
 
-export class ReferralForRepairsCreateDto {
+export class ReferralForRepairsDto {
   @ApiProperty()
   @IsNumber()
   @Max(99999999)
   @IsNotEmpty()
-  NOM: number;
+  NOM: number = null;
   @ApiProperty()
   @IsNumber()
   @Max(99999999)
@@ -33,7 +34,7 @@ export class ReferralForRepairsCreateDto {
   @IsString()
   @MaxLength(200)
   @IsOptional()
-  VID_RAB: string | null;
+  VID_RAB: string = null;
   @ApiPropertyOptional()
   @IsString()
   @MaxLength(13)
@@ -44,4 +45,9 @@ export class ReferralForRepairsCreateDto {
   @MaxLength(13)
   @IsOptional()
   VR_K: string | null = "23:59:59.9999";
+
+  static dto(data: any): ReferralForRepairsDto {
+    const referralForRepairsDto = new ReferralForRepairsDto();
+    return objectFieldFilter(data, referralForRepairsDto);
+  }
 }
