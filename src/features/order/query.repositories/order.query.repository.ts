@@ -18,6 +18,8 @@ import { FirebirdService } from "../../../common/helpers/firebird-orm/firebird";
 import { rawDbResponseTransform } from "../../../common/helpers/rawDbResponseTransform.helper";
 import { GetCarForOrderDto } from "../dto/query.dtos/getCarForOrder.dto";
 import { CarForOrderViewModel } from "../models/order.views/carForOrderView.model";
+import { CarNameForPrepareOutputDataView } from "../models/order.views/carNameForPrepareOutputDataView";
+import { CarInfoForPrepareOutputDataView } from "../models/order.views/carInfoForPrepareOutputDataView.model";
 
 @Injectable()
 export class OrderQueryRepository {
@@ -37,24 +39,6 @@ export class OrderQueryRepository {
     } catch (e) {
       throw new NotFoundException();
     }
-  }
-
-  async getBookingData(dto: GetCarForOrderDto): Promise<OrderDataViewModel[]> {
-    //query to get data from db
-    let query = `SELECT * FROM RAZNAR2`; // TODO RAZNAR_S(?, ?, ?, null)
-
-    //add filter if it exists
-    if (dto.filter)
-      query += `
-     WHERE UPPER(MAM) LIKE UPPER('%${dto.filter}%') 
-      OR  UPPER(NOMER) LIKE UPPER('%${dto.filter}%') 
-      OR UPPER(FIO) LIKE UPPER('%${dto.filter}%') 
-      OR UPPER(ZAKS) LIKE UPPER('%${dto.filter}%') `;
-
-    const data = await this.firebird.query<OrderDataViewModel>(query);
-    console.log(data);
-    const result = rawDbResponseTransform(data);
-    return result.map((r) => OrderDataViewModel.toView(r));
   }
 
   async getDataForGoodsInvoiceANDBillOfLanding(
@@ -212,6 +196,16 @@ WHERE REQ_RAZN.REQ_RAZN_KEY = ?;
       [REQ_RAZN_KEY]
     );
     return result[0];
+  }
+
+  async getCarsNamesForPrepareOutputData(): Promise<
+    CarNameForPrepareOutputDataView[]
+  > {
+    const result = await this.firebird.query(`
+      SELECT * FROM  RAZN_OD_SEL(1, null) where mk is not null;
+    `);
+
+    return result.map((r) => CarNameForPrepareOutputDataView.toView(r));
   }
 
   async orderExists(id: number): Promise<boolean> {
