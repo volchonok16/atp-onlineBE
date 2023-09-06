@@ -1,4 +1,4 @@
-import {Injectable, Logger} from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { nodeFirebirdOptions } from "../../../../firebird.config";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Firebird = require("node-firebird");
@@ -6,14 +6,14 @@ const Firebird = require("node-firebird");
 @Injectable()
 export class FirebirdService {
   db;
-  transaction
+  transaction;
 
   async query<T>(query: string, parameters: any[] = []): Promise<any> {
     await this.connect();
 
     try {
       const result = await new Promise<any>((resolve, reject) => {
-        this. db.query(query, parameters, (err, result) => {
+        this.db.query(query, parameters, (err, result) => {
           if (err) {
             reject(err);
           } else {
@@ -42,7 +42,7 @@ export class FirebirdService {
       return result;
     } catch (err) {
       console.log(`Transaction failed: ${err}`);
-      await this.rollBackTransaction(this.transaction)
+      await this.rollBackTransaction(this.transaction);
     } finally {
       await this.db.detach();
     }
@@ -52,7 +52,7 @@ export class FirebirdService {
     return new Promise((resolve, reject) => {
       this.transaction.query(sql, parameters, (err, result) => {
         if (err) {
-          Logger.error(err)
+          Logger.error(err);
           reject(err);
         } else {
           resolve(result);
@@ -65,7 +65,7 @@ export class FirebirdService {
     return new Promise((resolve, reject) => {
       Firebird.attach(nodeFirebirdOptions, (err, db) => {
         if (err) {
-          Logger.error(err)
+          Logger.error(err);
           reject(err);
         } else {
           this.db = db;
@@ -84,7 +84,7 @@ export class FirebirdService {
         if (err) {
           reject(err);
         } else {
-          this.transaction = transaction
+          this.transaction = transaction;
           resolve(transaction);
         }
       });
@@ -96,8 +96,7 @@ export class FirebirdService {
       transaction.commit((err) => {
         if (err) {
           reject(err);
-        }
-        else {
+        } else {
           resolve(err);
         }
       });
@@ -109,8 +108,7 @@ export class FirebirdService {
       transaction.rollback((err) => {
         if (err) {
           reject(err);
-        }
-        else {
+        } else {
           resolve(err);
         }
       });

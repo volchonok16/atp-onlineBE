@@ -183,25 +183,6 @@ WHERE TTN.TTN_KEY = ?;
     ]);
   }
 
-  // async getOrderData(dto: GetCarForOrderDto): Promise<CarForOrderViewModel[]> {
-  //   //add filter if it exists
-  //   let filter
-  //   if (dto.filter)
-  //     filter += `
-  //     WHERE UPPER(MAM) LIKE UPPER('%${dto.filter}%')
-  //     OR  UPPER(NOMER) LIKE UPPER('%${dto.filter}%')
-  //     OR UPPER(FIO) LIKE UPPER('%${dto.filter}%')
-  //     OR UPPER(ZAKS) LIKE UPPER('%${dto.filter}%') `;
-  //   // TODO получаю не те поля
-  //   // TODO не могу проверит в бд присутствует объект, с неправильными полями SELECT * FROM  W_DATA  where del = ? and arhiv_razn = ?
-  //   const result = await this.firebird.query(`
-  //     SELECT * FROM  W_DATA  ${filter}
-  //   `)
-  //
-  //   console.log(result)
-  //   return result.map((r) => CarForOrderViewModel.toView(r));
-  // }
-
   async getRequestLog(dto: RequestLogDto): Promise<RequestViewModel[]> {
     let query = `SELECT * FROM REQ_RAZN_4DISP(?, ?)`;
     let filter = null;
@@ -271,6 +252,17 @@ WHERE REQ_RAZN.REQ_RAZN_KEY = ?;
       `
           SELECT COUNT(*) FROM RAZNAR2 WHERE RAZNAR2_KEY = ?;
         `,
+      [id]
+    );
+
+    return result.COUNT === 1;
+  }
+
+  async referalIsExists(id: number): Promise<boolean> {
+    const [result] = await this.firebird.query(
+      `
+      SELECT COUNT(*) FROM RAZN_NAPR_REM WHERE RAZN_N_R_KEY = ?;
+    `,
       [id]
     );
 
