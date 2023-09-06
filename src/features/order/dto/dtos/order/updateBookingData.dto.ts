@@ -3,6 +3,7 @@ import { IsOptional, IsString, Matches } from "class-validator";
 import { BookingDataDto } from "./bookingData.dto";
 import { objectFieldFilter } from "../../../../../common/helpers/objectFieldFilter";
 import { format, parseISO } from "date-fns";
+import { timeToTimestampTransformHelper } from "../../../../../common/helpers/timeToTimestampTransform.helper";
 
 export class UpdateBookingDataDto extends BookingDataDto {
   @ApiProperty({
@@ -20,8 +21,8 @@ export class UpdateBookingDataDto extends BookingDataDto {
       data,
       updateBookingDataDto
     );
-    result.VR_V = format(parseISO(data.VR_V), "HH:mm");
-    result.VR_Z = format(parseISO(data.VR_Z), "HH:mm");
+    result.VR_V = timeToTimestampTransformHelper(data.VR_V);
+    result.VR_Z = timeToTimestampTransformHelper(data.VR_Z);
     return result;
   }
 }

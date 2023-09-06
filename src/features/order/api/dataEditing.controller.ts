@@ -162,7 +162,7 @@ export class DataEditingController {
 
   @Put("staff-info/:FIO_KEY")
   @ApiOperation({
-    summary: "Редактирование общих данных -> Список персонала",
+    summary: "Редактирование общих данных -> Список персонала ",
   })
   async updateStaffInfoById(
     @Param("FIO_KEY") id: number,

@@ -28,7 +28,6 @@ export class CarForOrderViewModel {
   static toView(data) {
     const vr_v = data.VR_V ? format(new Date(data.VR_V), "HH:mm") : null;
     const vr_z = data.VR_Z ? format(new Date(data.VR_Z), "HH:mm") : null;
-    // TODO спрятать в функцию
     return {
       RAZN_KEY: data.RAZN_KEY,
       MAM: data.MAM,

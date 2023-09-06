@@ -1,4 +1,4 @@
-import { ApiTags } from "@nestjs/swagger";
+import { ApiOperation, ApiProperty, ApiTags } from "@nestjs/swagger";
 import {
   Controller,
   Get,
@@ -114,6 +114,9 @@ export class CatalogsController {
   }
 
   @Get("extended-information/:id/documentation/timing-control")
+  @ApiOperation({
+    description: "Для проверки наполности бд: SELECT * FROM RAZN_OD_DOCS",
+  })
   @GetDocumentationTimingControlSwaggerDecorator()
   async getTimingById(
     @Param("id", new ParseIntPipe()) extendedInfoId: number
@@ -122,6 +125,9 @@ export class CatalogsController {
   }
 
   @Get("extended-information/:id/documentation/refueling-cards")
+  @ApiOperation({
+    description: "Для проверки наполности бд: SELECT * FROM RAZN_OD_ZAPR_CARDS",
+  })
   @GetDocumentationRefuelingCardsByIdSwaggerDecorator()
   async getRefuelingCardsById(
     @Param("id", new ParseIntPipe()) extendedInfoId: number
@@ -130,6 +136,9 @@ export class CatalogsController {
   }
 
   @Get("extended-information/:id/additional-info/not-in-demand")
+  @ApiOperation({
+    description: "Для проверки наполности бд: SELECT * FROM RAZN_OD_NE_VOSTR",
+  })
   @GetAdditionalInfoNotInDemandSwaggerDecorator()
   async getNotInDemandInfo(
     @Param("id", new ParseIntPipe()) extendedInfoId: number
@@ -138,6 +147,9 @@ export class CatalogsController {
   }
 
   @Get("extended-information/:id/additional-info/conservation")
+  @ApiOperation({
+    description: "Для проверки наполности бд: SELECT * FROM RAZN_OD_KONSERV",
+  })
   @GetAdditionalInfoConservationSwaggerDecorator()
   async getConservation(
     @Param("id", new ParseIntPipe()) extendedInfoId: number
@@ -146,6 +158,9 @@ export class CatalogsController {
   }
 
   @Get("extended-information/:id/passes")
+  @ApiOperation({
+    description: "Для проверки наполности бд: SELECT * FROM PROPUSK",
+  })
   @GetPassesSwaggerDecorator()
   async getPasses(
     @Param("id", new ParseIntPipe()) extendedInfoId: number
@@ -154,6 +169,9 @@ export class CatalogsController {
   }
 
   @Get("extended-information/:id/driver-holding")
+  @ApiOperation({
+    description: "Для теста id: 794",
+  })
   @GetDriverHoldingSwaggerDecorator()
   async getDriverHolding(
     @Param("id", new ParseIntPipe()) extendedInfoId: number
@@ -162,6 +180,9 @@ export class CatalogsController {
   }
 
   @Get("extended-information/:id/car-equipment")
+  @ApiOperation({
+    description: "Для проверки наполности бд: SELECT * FROM RAZN_OD_KOMPL",
+  })
   @GetCarEquipmentSwaggerDecorator()
   async getCarEquipment(
     @Param("id", new ParseIntPipe()) extendedInfoId: number
@@ -190,12 +211,18 @@ export class CatalogsController {
   }
 
   @Get("directories/loading-unloading-addresses")
+  @ApiOperation({
+    description: "Для проверки наполности бд: SELECT * FROM W_RAZN_ADRESS",
+  })
   @GetDirectoriesAddressesSwaggerDecorator()
   async getAddresses(): Promise<DirectoriesAddressesViewModel[]> {
     return this.catalogsQueryRepository.getAddresses();
   }
 
   @Get("directories/goods-types")
+  @ApiOperation({
+    description: "Для проверки наполности бд: SELECT * FROM W_RAZN_TIP_GRUZ",
+  })
   @GetDirectoriesGoodsTypeSwaggerDecorator()
   async getGoodsType(): Promise<DirectoriesGoodsTypeViewModel[]> {
     return this.catalogsQueryRepository.getGoodsType();
