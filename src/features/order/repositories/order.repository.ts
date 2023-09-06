@@ -1,5 +1,4 @@
 import { Injectable, Logger } from "@nestjs/common";
-import { ReferralForRepairsDto } from "../dto/dtos/order/referralForRepairs.dto";
 import { BillOfLadingViewModel } from "../models/order.views/billOfLadingViewModel";
 import { ReferralForRepairsViewModel } from "../models/order.views/referralforrepairsView.Model";
 import { format } from "date-fns";
@@ -17,6 +16,7 @@ import { CreateBookingDataDto } from "../dto/dtos/order/createBookingDataDto";
 import { createQuery } from "../../../common/helpers/firebird-orm/create";
 import { OrderDataInputDto } from "../dto/dtos/orderDataInput.dto";
 import { CreateOrderView } from "../models/order.views/createOrderView.model";
+import { ReferralForRepairsDto } from "../dto/dtos/order/referralForRepairs.dto";
 
 @Injectable()
 export class OrderRepository {
@@ -96,7 +96,6 @@ export class OrderRepository {
         return true;
       }); // TODO каскадное удаление работает нре полностью
     } catch (e) {
-      console.log(e);
       return false;
     }
   }
@@ -252,19 +251,14 @@ export class OrderRepository {
   }
 
   async createBooking(dto: CreateBookingDataDto): Promise<BookingViewModel> {
-    try {
-      const { query, parameters } = createQuery(
-        "RAZNAR2",
-        dto,
-        new BookingViewModel()
-      );
-      const result = await this.firebird.query(query, parameters);
-      console.log(result);
+    const { query, parameters } = createQuery(
+      "RAZNAR2",
+      dto,
+      new BookingViewModel()
+    );
+    const result = await this.firebird.query(query, parameters);
 
-      return BookingViewModel.toView(result);
-    } catch (e) {
-      console.log(e);
-    }
+    return BookingViewModel.toView(result);
   }
 
   async updateBooking(dto: WithId<UpdateBookingDataDto>): Promise<boolean> {

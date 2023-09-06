@@ -281,7 +281,10 @@ export class OrderController {
   }
 
   @Get("/booking")
-  @ApiOperation({ summary: "Разнарядка -> Заказы +/-" })
+  @ApiOperation({
+    summary:
+      "Разнарядка -> Заказы (локальная база содержит не корректные поля таблица RAZN_OD_SEL)",
+  })
   async getBooking(
     @Query() dto: GetCarForOrderDto
   ): Promise<BookingViewModel[]> {
@@ -295,9 +298,9 @@ export class OrderController {
 
   @Post("/booking")
   @ApiOperation({ summary: "Разнарядка -> Заказы +" })
-  async createBookingData(
-    @Body() dto: CreateBookingDataDto
-  ): Promise<BookingViewModel> {
+  @ApiBody({ type: CreateBookingDataDto })
+  async createBookingData(@Body() data: any): Promise<BookingViewModel> {
+    const dto = CreateBookingDataDto.dto(data);
     return this.commandBus.execute(new CreateBookingCommand(dto));
   }
 

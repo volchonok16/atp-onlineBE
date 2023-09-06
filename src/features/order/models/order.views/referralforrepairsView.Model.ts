@@ -1,4 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { format } from "date-fns";
 
 export class ReferralForRepairsViewModel {
   @ApiProperty()
@@ -19,15 +20,9 @@ export class ReferralForRepairsViewModel {
   VR_K: string = null;
 
   static toView(data) {
-    return {
-      RAZN_N_R_KEY: data.RAZN_N_R_KEY,
-      NOM: data.NOM,
-      FIO_ID: data.FIO_ID,
-      DATES: data.DATES,
-      RAZN_OD_ID: data.RAZN_OD_ID,
-      VID_RAB: data.VID_RAB,
-      VR_N: data.VR_N,
-      VR_K: data.VR_K,
-    };
+    const result = { ...data };
+    result.VR_N = format(data.VR_N, "HH:mm");
+    result.VR_K = format(data.VR_K, "HH:mm");
+    return result;
   }
 }

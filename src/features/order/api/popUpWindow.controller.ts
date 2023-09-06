@@ -1,4 +1,4 @@
-import { ApiTags } from "@nestjs/swagger";
+import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { Controller, Get, Param, Query } from "@nestjs/common";
 import { PopUpWindowQueryRepository } from "../query.repositories/popUpWindow.query.repository";
 import { EmployeeQueryDto } from "../dto/query.dtos/employe.query.dto";
