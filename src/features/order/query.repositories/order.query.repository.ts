@@ -39,24 +39,6 @@ export class OrderQueryRepository {
     }
   }
 
-  async getBookingData(dto: GetCarForOrderDto): Promise<OrderDataViewModel[]> {
-    //query to get data from db
-    let query = `SELECT * FROM RAZNAR2`; // TODO RAZNAR_S(?, ?, ?, null)
-
-    //add filter if it exists
-    if (dto.filter)
-      query += `
-     WHERE UPPER(MAM) LIKE UPPER('%${dto.filter}%') 
-      OR  UPPER(NOMER) LIKE UPPER('%${dto.filter}%') 
-      OR UPPER(FIO) LIKE UPPER('%${dto.filter}%') 
-      OR UPPER(ZAKS) LIKE UPPER('%${dto.filter}%') `;
-
-    const data = await this.firebird.query<OrderDataViewModel>(query);
-    console.log(data);
-    const result = rawDbResponseTransform(data);
-    return result.map((r) => OrderDataViewModel.toView(r));
-  }
-
   async getDataForGoodsInvoiceANDBillOfLanding(
     TTN_KEY: number
   ): Promise<CreateReportDataType[]> {
