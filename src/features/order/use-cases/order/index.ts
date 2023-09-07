@@ -6,6 +6,7 @@ import { UpdateOrderUseCase } from "./updateOrder.useCase";
 import { CreateReferralForRepairsUseCase } from "./referralForRepairs.useCase";
 import { UpdateReferralForRepairsUseCase } from "./updateReferalForRepairs.useCase";
 import { DeleteReferralForRepairsUseCase } from "./deleteReferralForRepairs.useCase";
+import { CreatePrepareOutputDataUseCase } from "./createPrepareOutputData.useCase";
 
 export const orderUseCases = [
   CreateBookingUseCase,
@@ -16,4 +17,5 @@ export const orderUseCases = [
   CreateReferralForRepairsUseCase,
   UpdateReferralForRepairsUseCase,
   DeleteReferralForRepairsUseCase,
+  CreatePrepareOutputDataUseCase,
 ];

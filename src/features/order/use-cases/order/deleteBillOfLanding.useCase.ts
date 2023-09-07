@@ -12,8 +12,8 @@ export class DeleteBillOfLandingUseCase
   implements ICommandHandler<DeleteBillOfLandingCommand>
 {
   constructor(
-    public orderRepository: OrderRepository,
-    public orderQueryRepository: OrderQueryRepository
+    private readonly orderRepository: OrderRepository,
+    private readonly orderQueryRepository: OrderQueryRepository
   ) {}
 
   async execute({ TTN_ID }: DeleteBillOfLandingCommand): Promise<any> {

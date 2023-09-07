@@ -27,7 +27,7 @@ export class OrderQueryRepository {
 
   async getOutputData(RAZN_ID: number): Promise<OutputDataViewModel> {
     try {
-      const result = await this.firebird.query<OutputDataViewModel>( //+
+      const result = await this.firebird.query<OutputDataViewModel>(
         `
     SELECT *
     FROM  RAZNAR
@@ -44,14 +44,14 @@ export class OrderQueryRepository {
   async getDataForGoodsInvoiceANDBillOfLanding(
     TTN_KEY: number
   ): Promise<CreateReportDataType[]> {
-    const resultFromTTN_SEL = await this.firebird.query<any>( // +
+    const resultFromTTN_SEL = await this.firebird.query<any>(
       ` SELECT * FROM TTN_SEL(?)`,
       [TTN_KEY]
     );
 
     const RAZN_ZAK_KEY = resultFromTTN_SEL[0].RAZN_ZAK_ID;
 
-    const resultFromTTN_TRANSP = await this.firebird.query<any>( // +
+    const resultFromTTN_TRANSP = await this.firebird.query<any>(
       ` SELECT * FROM TTN_TRANSP WHERE TTN_ID = ?`,
       [TTN_KEY]
     );
@@ -60,7 +60,7 @@ export class OrderQueryRepository {
       (e) => new TransportSectionViewModel(e)
     );
 
-    const resultFromTTN_EXT = await this.firebird.query<any>( // +
+    const resultFromTTN_EXT = await this.firebird.query<any>(
       ` SELECT * FROM TTN_EXT WHERE TTN_ID = ?`,
       [TTN_KEY]
     );
@@ -69,7 +69,7 @@ export class OrderQueryRepository {
       (e) => new CommoditySectionViewModel(e)
     );
 
-    const resultForFULL_FIO = await this.firebird.query<any>( // +
+    const resultForFULL_FIO = await this.firebird.query<any>(
       `
     SELECT *
 FROM TTN
@@ -81,7 +81,7 @@ WHERE TTN.TTN_KEY = ?;
       [TTN_KEY]
     );
 
-    const resultForPRICEP_MAM = await this.firebird.query<any>( // +
+    const resultForPRICEP_MAM = await this.firebird.query<any>(
       `
     SELECT * FROM RAZNAR_S(null, null, null, null, ?);
     `,

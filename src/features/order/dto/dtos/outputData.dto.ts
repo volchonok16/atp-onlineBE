@@ -7,6 +7,7 @@ import {
   Max,
   MaxLength,
 } from "class-validator";
+import { constants } from "../../../../common/constants/dataBaseField.constants";
 
 export class OutputDataDto {
   @ApiProperty()
@@ -24,4 +25,9 @@ export class OutputDataDto {
   @MaxLength(20)
   @IsOptional()
   usersWayBillNumber?: string | null;
+  @ApiProperty({ description: "FIO ID" })
+  @IsNumber()
+  @MaxLength(constants.idLength)
+  @IsOptional()
+  FIO_ID: number = null;
 }

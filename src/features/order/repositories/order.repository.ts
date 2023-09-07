@@ -17,6 +17,9 @@ import { createQuery } from "../../../common/helpers/firebird-orm/create";
 import { OrderDataInputDto } from "../dto/dtos/orderDataInput.dto";
 import { CreateOrderView } from "../models/order.views/createOrderView.model";
 import { ReferralForRepairsDto } from "../dto/dtos/order/referralForRepairs.dto";
+import { PrepareOutputDataDto } from "../dto/dtos/order/prepareOutputData.dto";
+import { PreparedOutputDataView } from "../models/order.views/PreparedOutputDataView.model";
+import { OutputDataDto } from "../dto/dtos/outputData.dto";
 
 @Injectable()
 export class OrderRepository {
@@ -63,18 +66,21 @@ export class OrderRepository {
     }
   }
 
-  async addWayBillNumber(
-    newWayBillNumber: string,
-    orderId: number
-  ): Promise<boolean> {
+  async addWayBillNumber(dto: OutputDataDto): Promise<boolean> {
     try {
+      let data = "";
+      if (dto.N_TTN) data += `N_TTN = ${dto.N_TTN}`;
+      if (dto.usersWayBillNumber) data += `NPL = ${dto.usersWayBillNumber}`;
+      if (dto.FIO_ID) data += `FIO_ID = ${dto.FIO_ID}`;
+      if (!!data.length) return false;
+
       await this.firebird.query(
         `
         UPDATE RAZNAR
-        SET NPL = ?
+        SET ${data}
         WHERE RAZN_KEY = ?;
       `,
-        [newWayBillNumber, orderId]
+        [dto.RAZN_ID]
       );
       return true;
     } catch (e) {
@@ -94,10 +100,22 @@ export class OrderRepository {
           [TTN_ID]
         );
         return true;
-      }); // TODO каскадное удаление работает нре полностью
+      }); // TODO каскадное удаление работает не полностью, необходима транзакция
     } catch (e) {
       return false;
     }
+  }
+
+  async createPrepareOutputData(
+    dto: PrepareOutputDataDto
+  ): Promise<PreparedOutputDataView> {
+    const { query, parameters } = createQuery(
+      "RAZNAR",
+      dto,
+      new PreparedOutputDataView()
+    );
+
+    return this.firebird.query(query, parameters);
   }
 
   async createReferralForRepairs(

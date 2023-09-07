@@ -25,14 +25,7 @@ export class AddWayBillNumberUseCase
       const isExist = await this.orderQueryRepository.wayBillExist(dto.RAZN_ID);
       if (!isExist) throw new NotFoundException();
 
-      const isUpdated = await this.orderRepository.addWayBillNumber(
-        dto.usersWayBillNumber,
-        dto.RAZN_ID
-      );
-
-      if (!isUpdated) {
-        throw new NotFoundException("разнарядки с таким номером не существует");
-      }
+      await this.orderRepository.addWayBillNumber(dto);
     }
 
     return await this.orderQueryRepository.getOutputData(dto.RAZN_ID);

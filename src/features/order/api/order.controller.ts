@@ -54,6 +54,8 @@ import { CarNameForPrepareOutputDataView } from "../models/order.views/carNameFo
 import { CarInfoForPrepareOutputDataView } from "../models/order.views/carInfoForPrepareOutputDataView.model";
 import { OrderDataQueryDto } from "../dto/query.dtos/orderData.query.dto";
 import { PrepareOutputDataDto } from "../dto/dtos/order/prepareOutputData.dto";
+import { CreatePrepareOutputDataCommand } from "../use-cases/order/createPrepareOutputData.useCase";
+import { PreparedOutputDataView } from "../models/order.views/PreparedOutputDataView.model";
 
 @ApiTags("Order")
 @Controller("api/order")
@@ -117,9 +119,8 @@ export class OrderController {
   @ApiOperation({
     summary: "Разнарядка -> ТТН -> Печать ТНН +",
   })
-  async createBillOfLandingReport(
-    @Body() dto: CreateBillOfLandingReportDto
-  ): Promise<any> {
+  async createBillOfLandingReport(): // @Body() dto: CreateBillOfLandingReportDto
+  Promise<any> {
     return fs.readFileSync(
       `src/common/helpers/report-generator/mok-pdf-reports/TTN_mok.pdf`
     );
@@ -147,14 +148,20 @@ export class OrderController {
     );
   }
 
-  @Post("output-data")
-  @ApiOperation({
-    summary: "Разнарядка -> Выходная информация",
-  })
-  @ApiBody({ type: PrepareOutputDataDto })
-  createPrepareOutputData(@Body() data: any) {
-    return "in progress";
-  }
+  // Походу в конфлюенсе описана не нужная логика
+  // @Post("output-data/")
+  // @ApiOperation({
+  //   summary: "Разнарядка -> Выходная информация",
+  // })
+  // @ApiBody({ type: PrepareOutputDataDto })
+  // async createPrepareOutputData(
+  //   @Body() data: any
+  // ): Promise<PreparedOutputDataView> {
+  //   const dto = PrepareOutputDataDto.dto(data);
+  //   return await this.commandBus.execute(
+  //     new CreatePrepareOutputDataCommand(dto)
+  //   );
+  // }
 
   @Put("output-data")
   @ApiOperation({
@@ -189,9 +196,9 @@ export class OrderController {
     return result.map((r) => CarInfoForPrepareOutputDataView.toView(r));
   }
 
-  @Post("output-data")
+  @Put("output-data")
   @ApiOperation({
-    summary: "Разнарядка -> Выходная информация +",
+    summary: "Разнарядка -> Выходная информация",
   })
   async prepareOutputData(
     @Body() dto: OutputDataDto
