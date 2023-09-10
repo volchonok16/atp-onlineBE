@@ -10,7 +10,8 @@ export const appInitSettings = (app: INestApplication) => {
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     preflightContinue: false,
     credentials: true,
-    allowedHeaders: "Content-Type, Accept",
+    allowedHeaders:
+      "Content-Type, Accept, Access-Control-Allow-Origin, Authorization",
   };
   app.enableCors(options);
   app.use(cookieParser());
