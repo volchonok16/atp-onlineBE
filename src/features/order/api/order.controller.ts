@@ -10,7 +10,7 @@ import {
 } from "@nestjs/common";
 import { OrderQueryRepository } from "../query.repositories/order.query.repository";
 import { ApiBody, ApiOperation, ApiTags } from "@nestjs/swagger";
-import { CommandBus } from "@nestjs/cqrs";
+import { CommandBus, QueryBus } from "@nestjs/cqrs";
 import { BillOfLadingCreateDto } from "../dto/dtos/billOfLadingCreate.dto";
 import { CreateBillOfLadingCommand } from "../use-cases/order/createBillOfLanding.useCase";
 import { OutputDataDto } from "../dto/dtos/outputData.dto";
@@ -35,7 +35,7 @@ import { CreateBookingDataDto } from "../dto/dtos/order/createBookingDataDto";
 import { CreateBookingCommand } from "../use-cases/order/createBooking.useCase";
 import { UpdateBookingCommand } from "../use-cases/order/updateBooking.useCase";
 import { UpdateOrderCommand } from "../use-cases/order/updateOrder.useCase";
-import { BookingViewModel } from "../models/order.views/bookingView.model";
+import { CreateBookingViewModel } from "../models/order.views/createBookingView.model";
 import { AddRequestToCarCommand } from "../use-cases/order/addRequestToOrderData.useCase";
 import { OrderFoDataPreparationViewModel } from "../models/order.views/OrderFoDataPreparationView.model";
 import { CreateOrderDto } from "../dto/dtos/order/createOrder.dto";
@@ -54,6 +54,8 @@ import { CarNameForPrepareOutputDataView } from "../models/order.views/carNameFo
 import { CarInfoForPrepareOutputDataView } from "../models/order.views/carInfoForPrepareOutputDataView.model";
 import { OrderDataQueryDto } from "../dto/query.dtos/orderData.query.dto";
 import { PrepareOutputDataDto } from "../dto/dtos/order/prepareOutputData.dto";
+import { GetBookingViewModel } from "../models/order.views/getBookingView.model";
+import { GetBookingQuery } from "../use-cases/order/query-bus/getBooking.query-handler";
 
 @ApiTags("Order")
 @Controller("api/order")
@@ -62,7 +64,8 @@ export class OrderController {
   constructor(
     private orderQueryRepository: OrderQueryRepository,
     private reportGenerator: ReportGeneratorService,
-    private commandBus: CommandBus
+    private commandBus: CommandBus,
+    private queryBus: QueryBus
   ) {}
 
   @Get("prepare-a-table-for")
@@ -333,19 +336,19 @@ export class OrderController {
   })
   async getBooking(
     @Query() dto: GetCarForOrderDto
-  ): Promise<BookingViewModel[]> {
-    const data = await this.orderQueryRepository.getOrderData({
-      ...dto,
-      tab: 3,
-    });
-
-    return data.map((d) => BookingViewModel.toView(d));
+  ): Promise<CreateBookingViewModel[]> {
+    return this.queryBus.execute(
+      new GetBookingQuery({
+        ...dto,
+        tab: 3,
+      })
+    );
   }
 
   @Post("/booking")
   @ApiOperation({ summary: "Разнарядка -> Заказы +" })
   @ApiBody({ type: CreateBookingDataDto })
-  async createBookingData(@Body() data: any): Promise<BookingViewModel> {
+  async createBookingData(@Body() data: any): Promise<CreateBookingViewModel> {
     const dto = CreateBookingDataDto.dto(data);
     return this.commandBus.execute(new CreateBookingCommand(dto));
   }
