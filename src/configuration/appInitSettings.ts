@@ -6,12 +6,9 @@ import { useContainer } from "class-validator";
 
 export const appInitSettings = (app: INestApplication) => {
   const options = {
-    origin: ["http://localhost:3000", "adjnatech.ru:3000"],
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    preflightContinue: false,
+    origin: ["http://localhost:3000", "http://adjnatech.ru"],
+    methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
     credentials: true,
-    allowedHeaders:
-      "Content-Type, Accept, Access-Control-Allow-Origin, Authorization",
   };
   app.enableCors(options);
   app.use(cookieParser());
