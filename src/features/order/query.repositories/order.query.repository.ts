@@ -208,6 +208,18 @@ WHERE REQ_RAZN.REQ_RAZN_KEY = ?;
     return result.map((r) => CarNameForPrepareOutputDataView.toView(r));
   }
 
+  async getSecondDiverFIO(
+    id: number
+  ): Promise<{ FIO_KEY: number; FULL_FIO: string }> {
+    const [result] = await this.firebird.query(
+      `
+      SELECT FIO_KEY, FULL_FIO FROM FIO WHERE FIO_KEY = ?;
+    `,
+      [id]
+    );
+    return result;
+  }
+
   async orderExists(id: number): Promise<boolean> {
     const [result] = await this.firebird.query(
       `

@@ -1,6 +1,6 @@
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { CreateBookingDataDto } from "../../dto/dtos/order/createBookingDataDto";
-import { BookingViewModel } from "../../models/order.views/bookingView.model";
+import { CreateBookingViewModel } from "../../models/order.views/createBookingView.model";
 import { OrderRepository } from "../../repositories/order.repository";
 
 export class CreateBookingCommand {
@@ -9,11 +9,13 @@ export class CreateBookingCommand {
 
 @CommandHandler(CreateBookingCommand)
 export class CreateBookingUseCase
-  implements ICommandHandler<CreateBookingCommand, BookingViewModel>
+  implements ICommandHandler<CreateBookingCommand, CreateBookingViewModel>
 {
   constructor(private readonly orderRepository: OrderRepository) {}
 
-  async execute({ dto }: CreateBookingCommand): Promise<BookingViewModel> {
+  async execute({
+    dto,
+  }: CreateBookingCommand): Promise<CreateBookingViewModel> {
     return await this.orderRepository.createBooking(dto);
   }
 }
