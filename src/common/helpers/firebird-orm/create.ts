@@ -34,7 +34,6 @@ export function createQuery<T, P>(
         VALUES(${placeholders})
         RETURNING ${viewField};
     `;
-  console.log(query);
-  console.log(fieldValues);
+
   return { query, parameters: fieldValues };
 }
