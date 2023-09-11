@@ -5,11 +5,16 @@ import { AppModule } from "../app.module";
 import { useContainer } from "class-validator";
 
 export const appInitSettings = (app: INestApplication) => {
-  const options = {
-    origin: ["http://localhost:3000", "http://adjnatech.ru"],
-    methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
-    credentials: true,
-  };
+    const options = {
+        origin: ["http://localhost:3000", "http://adjnatech.ru:3000", "http://adjnatech.ru:3000/auth"],
+        methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
+        credentials: true,
+        allowedHeaders: [
+            'Access-Control-Allow-Headers',
+            'Origin, X-Requested-With, Content-Type, Accept',
+            'Authorization',
+        ]
+    };
   app.enableCors(options);
   app.use(cookieParser());
   app.useGlobalPipes(
