@@ -42,7 +42,6 @@ import { CreateOrderUseCase } from "./use-cases/order/createOrder.useCase";
 const useCases = [
   CreateCarInfoUseCase,
   CreateBillOfLandingUseCase,
-  UpdatePrepareOutputDataUseCase,
   DeleteBillOfLandingUseCase,
   CreateOrderDataUseCase,
   UpdateOrderUseCase,
