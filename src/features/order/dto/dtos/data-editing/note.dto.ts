@@ -5,12 +5,14 @@ import { IsNotEmpty, IsOptional } from "class-validator";
 export class NoteDto {
   @ApiProperty({
     description: "Note ID",
+    example: 5,
   })
-  @IsOptional()
+  @IsNotEmpty()
   DATA_PRIM_KEY: number = null;
 
   @ApiProperty({
     description: "Organization ID",
+    example: 1,
   })
   @IsNotEmpty()
   DATA_ID: number = null;

@@ -35,6 +35,7 @@ export class DataEditingRepository {
       OrganizationDto,
       OrganizationViewModel
     >("DATA", "DATA_KEY", dto, new OrganizationViewModel());
+    //console.log(query, parameters);
     const result = await this.firebird.query(query, parameters);
 
     return OrganizationViewModel.toView(result);
@@ -192,7 +193,7 @@ export class DataEditingRepository {
 
     const [result] = await this.firebird.query(
       `
-        SELECT * FROM OD WHERE OD_KEY = ?
+        SELECT * FROM OD WHERE OD_KEY = ?;
       `,
       [resultId.OD_KEY]
     );
@@ -313,6 +314,7 @@ export class DataEditingRepository {
   ): Promise<boolean> {
     try {
       const data = getDataAccumulater(dto);
+      if (!data.length) return false;
 
       await this.firebird.query(
         `
@@ -322,6 +324,7 @@ export class DataEditingRepository {
       );
       return true;
     } catch (e) {
+      console.log(e);
       return false;
     }
   }

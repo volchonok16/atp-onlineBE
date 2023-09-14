@@ -35,7 +35,7 @@ export class CreateOrUpdatePriceUseCase
           isUnique = false;
         }
         if (!isUnique) {
-          const message = `Couple of ields DATA_ID or VID_RAB must be unique.`;
+          const message = `Couple of fields DATA_ID or VID_RAB must be unique.`;
           throw new BadRequestException(message);
         }
       }

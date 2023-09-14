@@ -1,30 +1,31 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { da } from "date-fns/locale";
 
 export class OtherEquipmentViewModel {
   @ApiProperty()
-  SKLAD_OBJ_SPIS_KEY: number;
+  SKLAD_OBJ_SPIS_KEY: number = null;
 
   @ApiProperty()
-  MAM: string;
+  MAM: string = null;
 
   @ApiProperty()
-  NOMER: string;
+  NOMER: string = null;
 
   @ApiProperty()
-  DEL: number;
+  DEL: boolean = null;
 
   @ApiProperty()
-  SETUP_ID: number;
+  SETUP_ID: number = null;
 
   @ApiProperty()
-  DESCR: string;
+  DESCR: string = null;
 
   @ApiProperty()
-  PREDUPR: number;
+  PREDUPR: number = null;
 
   @ApiProperty()
-  FULL_NAME: string;
+  FULL_NAME: string = null;
 
   @ApiProperty()
-  DATE_VVODA: Date;
+  DATE_VVODA: Date = null;
 }

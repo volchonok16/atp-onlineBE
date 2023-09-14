@@ -13,28 +13,28 @@ import { objectFieldFilter } from "../../../../common/helpers/objectFieldFilter"
 import { Transform } from "class-transformer";
 
 export class CarInfoDto {
-  @ApiProperty()
+  @ApiProperty({ example: "Трактор МТЗ-8  0" })
   @IsString()
   @MaxLength(50)
   @IsNotEmpty()
   M_AM: string = null;
 
-  @ApiProperty()
+  @ApiProperty({ example: "12" }) // в бд поле стринг, но хранит число
   @IsString()
   @MaxLength(15)
   @IsNotEmpty()
   NAVTO: string = null;
 
-  @ApiProperty()
+  @ApiProperty({ example: "ЗиЛ-431410" })
   @IsString()
   @MaxLength(20)
-  @IsNotEmpty()
+  @IsOptional()
   LM_AM: string = null;
 
-  @ApiProperty()
+  @ApiProperty({ default: false })
   @IsNotEmpty()
   @IsBoolean()
-  @Transform(({ value }) => eval(value))
+  @IsOptional()
   ARHIV = false;
 
   @ApiPropertyOptional()
