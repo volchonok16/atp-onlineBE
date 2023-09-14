@@ -43,7 +43,7 @@ import { UpdateBookingDataDto } from "../dto/dtos/order/updateBookingData.dto";
 import { DeleteBookingDataCommand } from "../use-cases/order/deleteBookingData.useCase";
 import { CreateOrderCommand } from "../use-cases/order/createOrder.useCase";
 import * as fs from "fs";
-import { AddWayBillNumberCommand } from "../use-cases/order/createOutputData.useCase";
+import { UpdatePrepareOutputDataCommand } from "../use-cases/order/updatePrepareOutputData.useCase";
 import { CreateBillOfLandingReportDto } from "../dto/dtos/createBillOfLandingReport.dto";
 import { CreateOrderView } from "../models/order.views/createOrderView.model";
 import { deleteOrderCommand } from "../use-cases/order/deleteOrder.useCase";
@@ -163,14 +163,6 @@ export class OrderController {
   //   );
   // }
 
-  @Put("output-data")
-  @ApiOperation({
-    summary: "Разнарядка -> Выходная информация",
-  })
-  cupdatePrepareOutputData() {
-    return "in progress";
-  }
-
   @Get("output-data/car-name")
   @ApiOperation({
     summary: "Разнарядка -> Выходная информация -> Таблица с машинами +",
@@ -200,10 +192,8 @@ export class OrderController {
   @ApiOperation({
     summary: "Разнарядка -> Выходная информация",
   })
-  async prepareOutputData(
-    @Body() dto: OutputDataDto
-  ): Promise<OutputDataViewModel | any> {
-    return this.commandBus.execute(new AddWayBillNumberCommand(dto));
+  async prepareOutputData(@Body() dto: OutputDataDto): Promise<boolean> {
+    return this.commandBus.execute(new UpdatePrepareOutputDataCommand(dto));
   }
 
   @Post("referral-for-repairs")

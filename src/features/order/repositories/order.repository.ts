@@ -66,11 +66,11 @@ export class OrderRepository {
     }
   }
 
-  async addWayBillNumber(dto: OutputDataDto): Promise<boolean> {
+  async updateRaznar(dto: OutputDataDto): Promise<boolean> {
     try {
       let data = "";
       if (dto.N_TTN) data += `N_TTN = ${dto.N_TTN}`;
-      if (dto.usersWayBillNumber) data += `NPL = ${dto.usersWayBillNumber}`;
+      if (dto.NPL) data += `NPL = ${dto.NPL}`;
       if (dto.FIO_ID) data += `FIO_ID = ${dto.FIO_ID}`;
       if (!!data.length) return false;
 
@@ -80,11 +80,27 @@ export class OrderRepository {
         SET ${data}
         WHERE RAZN_KEY = ?;
       `,
-        [dto.RAZN_ID]
+        [dto.RAZN_KEY]
       );
       return true;
     } catch (e) {
       throw false;
+    }
+  }
+
+  async updateRaznOd(id: number, NORM_ZAPR: number): Promise<boolean> {
+    try {
+      await this.firebird.query(
+        `
+        UPDATE RAZNAR
+        SET NORM_ZAPR = ?
+        WHERE RAZN_OD_KEY = ?;
+      `,
+        [NORM_ZAPR, id]
+      );
+      return true;
+    } catch (e) {
+      return false;
     }
   }
 

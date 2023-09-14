@@ -230,15 +230,29 @@ WHERE REQ_RAZN.REQ_RAZN_KEY = ?;
     return result.COUNT === 1;
   }
 
-  async wayBillExist(id: number): Promise<boolean> {
+  /**
+   * [The method will return RAZN_OD_ID if there is a record with the passed id
+   * and in this record there is a record for the related table.
+   *
+   * Return RAZN_OD_ID = null if there is a record for the given id, but there
+   * is no record for the related table
+   *
+   * Returns null if there is no entry for given id]
+   *
+   * @param { number } id
+   * @returns { RAZN_OD_ID: number | null }
+   */
+  async preparedOutputDataExist(
+    id: number
+  ): Promise<{ RAZN_OD_ID: number | null }> {
     const [result] = await this.firebird.query(
       `
-          SELECT COUNT(*) FROM RAZNAR WHERE RAZN_KEY = ?;
+          SELECT RAZN_OD_ID FROM RAZNAR WHERE RAZN_KEY = ?;
         `,
       [id]
     );
 
-    return result.COUNT === 1;
+    return result?.RAZN_OD_ID;
   }
 
   async bookingExists(id: number): Promise<boolean> {

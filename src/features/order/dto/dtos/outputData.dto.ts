@@ -14,17 +14,26 @@ export class OutputDataDto {
   @IsNumber()
   @Max(99999999)
   @IsNotEmpty()
-  RAZN_ID = 1750;
-  @ApiProperty()
+  RAZN_KEY: number = null;
+
+  @ApiProperty({ description: "TTN number" })
   @IsString()
   @MaxLength(20)
   @IsNotEmpty()
-  N_TTN: string;
-  @ApiPropertyOptional()
+  N_TTN: number = null;
+
+  @ApiProperty({ description: "Fuel filling rate" })
+  @IsString()
+  @MaxLength(20)
+  @IsNotEmpty()
+  NORM_ZAPR: number = null;
+
+  @ApiPropertyOptional({ description: "Your waybill number" })
   @IsString()
   @MaxLength(20)
   @IsOptional()
-  usersWayBillNumber?: string | null;
+  NPL: string = null;
+
   @ApiProperty({ description: "FIO ID" })
   @IsNumber()
   @MaxLength(constants.idLength)
