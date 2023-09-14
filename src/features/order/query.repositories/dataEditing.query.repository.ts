@@ -232,12 +232,12 @@ export class DataEditingQueryRepository {
   async noteExists(id: number): Promise<boolean> {
     const [result] = await this.firebird.query(
       `
-      SELECT * FROM DATA_PRIM WHERE DATA_PRIM_KEY = ?;
+      SELECT COUNT(*) FROM DATA_PRIM WHERE DATA_PRIM_KEY = ?;
     `,
       [id]
     );
 
-    return !!result;
+    return result.COUNT > 0;
   }
 
   async subunitExists(id: number): Promise<boolean> {
@@ -287,11 +287,11 @@ export class DataEditingQueryRepository {
 
   async internshipExists(id: number): Promise<boolean> {
     const [result] = await this.firebird.query(
-      `SELECT * FROM FIO_STAGIROVKA WHERE FIO_ID = ?;`,
+      `SELECT COUNT(*) FROM FIO_STAGIROVKA WHERE FIO_ID = ?;`,
       [id]
     );
 
-    return !!result;
+    return result.COUNT > 1;
   }
 
   async staffCardExists(id: number): Promise<boolean> {
@@ -314,11 +314,11 @@ export class DataEditingQueryRepository {
 
   async refuelingCardExistsById(id: number): Promise<boolean> {
     const [result] = await this.firebird.query(
-      `SELECT * FROM FIO_ZAPR_CARDS WHERE FIO_ZAPR_CARDS_KEY = ?;`,
+      `SELECT COUNT(*) FROM FIO_ZAPR_CARDS WHERE FIO_ZAPR_CARDS_KEY = ?;`,
       [id]
     );
 
-    return !!result;
+    return result.COUNT > 0;
   }
 
   async additionalInformationExists(id: number): Promise<boolean> {
@@ -345,20 +345,19 @@ export class DataEditingQueryRepository {
     id,
     ARHIV,
   }: WithId<ArchiveOrNotArchiveQuery>): Promise<NoteViewModel[]> {
-    const rawResponse = await this.firebird.query(
+    const result = await this.firebird.query(
       `
-      SELECT * FROM DATA_PRIM WHERE DATA_ID = ? AND (SELECT ARHIV FROM DATA WHERE DATA_KEY = ?) = ?
+      SELECT * FROM DATA_PRIM WHERE DATA_ID = ? AND (SELECT ARHIV FROM DATA WHERE DATA_KEY = ?) = ?;
       ; 
     `,
       [id, id, booleanToShortString(ARHIV)]
     );
-    console.log(rawResponse);
-    const result = rawDbResponseTransform(rawResponse);
+
     return result.map((r) => NoteViewModel.toView(r));
   }
 
   async getPrices(id: number): Promise<PriceViewModel[]> {
-    const rawResponse = await this.firebird.query(
+    const result = await this.firebird.query(
       `
       SELECT * FROM DATA_CENA WHERE DATA_ID = ? 
        ORDER BY DATE_D DESC; 
@@ -366,8 +365,18 @@ export class DataEditingQueryRepository {
       [id]
     );
 
-    const result = rawDbResponseTransform(rawResponse);
     return result.map((r) => PriceViewModel.toView(r));
+  }
+
+  async fioExists(id: number): Promise<boolean> {
+    const [result] = await this.firebird.query(
+      `
+      SELECT COUNT(*) FROM FIO WHERE FIO_KEY = ?;
+    `,
+      [id]
+    );
+
+    return result.COUNT > 0;
   }
 
   private getFlightsFilter(queryDto: FlightsDto) {
