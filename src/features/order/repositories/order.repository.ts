@@ -11,7 +11,7 @@ import { OrderViewModel } from "../models/order.views/orderView.model";
 import { UpdateRequestDto } from "../dto/dtos/updateRequest.dto";
 import { getDataAccumulater } from "../../../common/helpers/getData.accumulater";
 import { FirebirdService } from "../../../common/helpers/firebird-orm/firebird";
-import { BookingViewModel } from "../models/order.views/bookingView.model";
+import { CreateBookingViewModel } from "../models/order.views/createBookingView.model";
 import { CreateBookingDataDto } from "../dto/dtos/order/createBookingDataDto";
 import { createQuery } from "../../../common/helpers/firebird-orm/create";
 import { OrderDataInputDto } from "../dto/dtos/orderDataInput.dto";
@@ -284,15 +284,17 @@ export class OrderRepository {
     }
   }
 
-  async createBooking(dto: CreateBookingDataDto): Promise<BookingViewModel> {
+  async createBooking(
+    dto: CreateBookingDataDto
+  ): Promise<CreateBookingViewModel> {
     const { query, parameters } = createQuery(
       "RAZNAR2",
       dto,
-      new BookingViewModel()
+      new CreateBookingViewModel()
     );
     const result = await this.firebird.query(query, parameters);
 
-    return BookingViewModel.toView(result);
+    return CreateBookingViewModel.toView(result);
   }
 
   async updateBooking(dto: WithId<UpdateBookingDataDto>): Promise<boolean> {
