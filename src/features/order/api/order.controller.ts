@@ -43,7 +43,7 @@ import { UpdateBookingDataDto } from "../dto/dtos/order/updateBookingData.dto";
 import { DeleteBookingDataCommand } from "../use-cases/order/deleteBookingData.useCase";
 import { CreateOrderCommand } from "../use-cases/order/createOrder.useCase";
 import * as fs from "fs";
-import { AddWayBillNumberCommand } from "../use-cases/order/createOutputData.useCase";
+import { UpdatePrepareOutputDataCommand } from "../use-cases/order/updatePrepareOutputData.useCase";
 import { CreateBillOfLandingReportDto } from "../dto/dtos/createBillOfLandingReport.dto";
 import { CreateOrderView } from "../models/order.views/createOrderView.model";
 import { deleteOrderCommand } from "../use-cases/order/deleteOrder.useCase";
@@ -56,6 +56,8 @@ import { OrderDataQueryDto } from "../dto/query.dtos/orderData.query.dto";
 import { PrepareOutputDataDto } from "../dto/dtos/order/prepareOutputData.dto";
 import { GetBookingViewModel } from "../models/order.views/getBookingView.model";
 import { GetBookingQuery } from "../use-cases/order/query-bus/getBooking.query-handler";
+import { CreatePrepareOutputDataCommand } from "../use-cases/order/createPrepareOutputData.useCase";
+import { PreparedOutputDataView } from "../models/order.views/PreparedOutputDataView.model";
 
 @ApiTags("Order")
 @Controller("api/order")
@@ -120,9 +122,8 @@ export class OrderController {
   @ApiOperation({
     summary: "Разнарядка -> ТТН -> Печать ТНН +",
   })
-  async createBillOfLandingReport(
-    @Body() dto: CreateBillOfLandingReportDto
-  ): Promise<any> {
+  async createBillOfLandingReport(): // @Body() dto: CreateBillOfLandingReportDto
+  Promise<any> {
     return fs.readFileSync(
       `src/common/helpers/report-generator/mok-pdf-reports/TTN_mok.pdf`
     );
@@ -150,22 +151,20 @@ export class OrderController {
     );
   }
 
-  @Post("output-data")
-  @ApiOperation({
-    summary: "Разнарядка -> Выходная информация",
-  })
-  @ApiBody({ type: PrepareOutputDataDto })
-  createPrepareOutputData(@Body() data: any) {
-    return "in progress";
-  }
-
-  @Put("output-data")
-  @ApiOperation({
-    summary: "Разнарядка -> Выходная информация",
-  })
-  cupdatePrepareOutputData() {
-    return "in progress";
-  }
+  // Походу в конфлюенсе описана не нужная логика
+  // @Post("output-data/")
+  // @ApiOperation({
+  //   summary: "Разнарядка -> Выходная информация",
+  // })
+  // @ApiBody({ type: PrepareOutputDataDto })
+  // async createPrepareOutputData(
+  //   @Body() data: any
+  // ): Promise<PreparedOutputDataView> {
+  //   const dto = PrepareOutputDataDto.dto(data);
+  //   return await this.commandBus.execute(
+  //     new CreatePrepareOutputDataCommand(dto)
+  //   );
+  // }
 
   @Get("output-data/car-name")
   @ApiOperation({
@@ -192,14 +191,14 @@ export class OrderController {
     return result.map((r) => CarInfoForPrepareOutputDataView.toView(r));
   }
 
-  @Post("output-data")
+  @Put("output-data")
   @ApiOperation({
-    summary: "Разнарядка -> Выходная информация +",
+    summary: "Разнарядка -> Выходная информация",
   })
-  async prepareOutputData(
-    @Body() dto: OutputDataDto
-  ): Promise<OutputDataViewModel | any> {
-    return this.commandBus.execute(new AddWayBillNumberCommand(dto));
+  @ApiBody({ type: OutputDataDto })
+  async prepareOutputData(@Body() data: any): Promise<boolean> {
+    const dto = OutputDataDto.dto(data);
+    return this.commandBus.execute(new UpdatePrepareOutputDataCommand(dto));
   }
 
   @Post("referral-for-repairs")
