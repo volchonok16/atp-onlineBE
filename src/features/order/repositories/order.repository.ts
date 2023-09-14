@@ -68,16 +68,15 @@ export class OrderRepository {
 
   async updateRaznar(dto: OutputDataDto): Promise<boolean> {
     try {
-      let data = "";
-      if (dto.N_TTN) data += `N_TTN = ${dto.N_TTN}`;
-      if (dto.NPL) data += `NPL = ${dto.NPL}`;
-      if (dto.FIO_ID) data += `FIO_ID = ${dto.FIO_ID}`;
-      if (!!data.length) return false;
+      const data = [];
+      if (dto.NPL) data.push(`NPL = '${dto.NPL}'`);
+      if (dto.FIO_ID) data.push(`FIO_ID = ${dto.FIO_ID}`);
+      if (!data.length) return false;
 
       await this.firebird.query(
         `
         UPDATE RAZNAR
-        SET ${data}
+        SET ${data.join(",")}   
         WHERE RAZN_KEY = ?;
       `,
         [dto.RAZN_KEY]
@@ -92,7 +91,7 @@ export class OrderRepository {
     try {
       await this.firebird.query(
         `
-        UPDATE RAZNAR
+        UPDATE RAZN_OD
         SET NORM_ZAPR = ?
         WHERE RAZN_OD_KEY = ?;
       `,

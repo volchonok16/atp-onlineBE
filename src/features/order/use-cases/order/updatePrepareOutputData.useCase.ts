@@ -28,7 +28,7 @@ export class UpdatePrepareOutputDataUseCase
 
     if (!data.RAZN_OD_ID)
       throw new BadRequestException(
-        `Field N_TTN, NPL and FIO_ID: ${raznarUpdated} have been updated. NORM_ZAPR not updated for this id record not found.`
+        `Field NPL and FIO_ID: ${raznarUpdated} have been updated. NORM_ZAPR not updated for this id record not found.`
       );
 
     return await this.orderRepository.updateRaznOd(

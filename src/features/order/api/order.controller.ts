@@ -195,7 +195,9 @@ export class OrderController {
   @ApiOperation({
     summary: "Разнарядка -> Выходная информация",
   })
-  async prepareOutputData(@Body() dto: OutputDataDto): Promise<boolean> {
+  @ApiBody({ type: OutputDataDto })
+  async prepareOutputData(@Body() data: any): Promise<boolean> {
+    const dto = OutputDataDto.dto(data);
     return this.commandBus.execute(new UpdatePrepareOutputDataCommand(dto));
   }
 

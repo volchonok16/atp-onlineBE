@@ -8,8 +8,6 @@ export class CarInfoForPrepareOutputDataView {
   MAM: string = null;
   @ApiProperty({ description: "State number" })
   NOMER: string = null;
-  @ApiProperty({ description: "Driver ID" })
-  FIO_ID: number = null;
   @ApiProperty({ description: "Full fio" })
   FULL_FIO: string = null;
 
