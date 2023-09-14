@@ -9,6 +9,8 @@ import { DeleteReferralForRepairsUseCase } from "./deleteReferralForRepairs.useC
 import { GetBookingQueryHandler } from "./query-bus/getBooking.query-handler";
 
 const queryHandlers = [GetBookingQueryHandler];
+import { CreatePrepareOutputDataUseCase } from "./createPrepareOutputData.useCase";
+import { UpdatePrepareOutputDataUseCase } from "./updatePrepareOutputData.useCase";
 
 export const orderUseCases = [
   CreateBookingUseCase,
@@ -19,5 +21,7 @@ export const orderUseCases = [
   CreateReferralForRepairsUseCase,
   UpdateReferralForRepairsUseCase,
   DeleteReferralForRepairsUseCase,
+  CreatePrepareOutputDataUseCase,
+  UpdatePrepareOutputDataUseCase,
   ...queryHandlers,
 ];

@@ -17,6 +17,9 @@ import { createQuery } from "../../../common/helpers/firebird-orm/create";
 import { OrderDataInputDto } from "../dto/dtos/orderDataInput.dto";
 import { CreateOrderView } from "../models/order.views/createOrderView.model";
 import { ReferralForRepairsDto } from "../dto/dtos/order/referralForRepairs.dto";
+import { PrepareOutputDataDto } from "../dto/dtos/order/prepareOutputData.dto";
+import { PreparedOutputDataView } from "../models/order.views/PreparedOutputDataView.model";
+import { OutputDataDto } from "../dto/dtos/outputData.dto";
 
 @Injectable()
 export class OrderRepository {
@@ -63,22 +66,40 @@ export class OrderRepository {
     }
   }
 
-  async addWayBillNumber(
-    newWayBillNumber: string,
-    orderId: number
-  ): Promise<boolean> {
+  async updateRaznar(dto: OutputDataDto): Promise<boolean> {
     try {
+      const data = [];
+      if (dto.NPL) data.push(`NPL = '${dto.NPL}'`);
+      if (dto.FIO_ID) data.push(`FIO_ID = ${dto.FIO_ID}`);
+      if (!data.length) return false;
+
       await this.firebird.query(
         `
         UPDATE RAZNAR
-        SET NPL = ?
+        SET ${data.join(",")}   
         WHERE RAZN_KEY = ?;
       `,
-        [newWayBillNumber, orderId]
+        [dto.RAZN_KEY]
       );
       return true;
     } catch (e) {
       throw false;
+    }
+  }
+
+  async updateRaznOd(id: number, NORM_ZAPR: number): Promise<boolean> {
+    try {
+      await this.firebird.query(
+        `
+        UPDATE RAZN_OD
+        SET NORM_ZAPR = ?
+        WHERE RAZN_OD_KEY = ?;
+      `,
+        [NORM_ZAPR, id]
+      );
+      return true;
+    } catch (e) {
+      return false;
     }
   }
 
@@ -94,10 +115,22 @@ export class OrderRepository {
           [TTN_ID]
         );
         return true;
-      }); // TODO каскадное удаление работает нре полностью
+      }); // TODO каскадное удаление работает не полностью, необходима транзакция
     } catch (e) {
       return false;
     }
+  }
+
+  async createPrepareOutputData(
+    dto: PrepareOutputDataDto
+  ): Promise<PreparedOutputDataView> {
+    const { query, parameters } = createQuery(
+      "RAZNAR",
+      dto,
+      new PreparedOutputDataView()
+    );
+
+    return this.firebird.query(query, parameters);
   }
 
   async createReferralForRepairs(

@@ -90,6 +90,7 @@ export class OrganizationDto {
 
   @ApiProperty({
     description: "Archive",
+    default: false,
   })
   @IsOptional()
   @IsBoolean()
@@ -97,6 +98,7 @@ export class OrganizationDto {
 
   @ApiProperty({
     description: "Require the input of types of work",
+    example: false,
   })
   @IsOptional()
   @IsBoolean()
@@ -104,6 +106,7 @@ export class OrganizationDto {
 
   @ApiProperty({
     description: "Remove",
+    example: false,
   })
   @IsOptional()
   @IsBoolean()
@@ -153,6 +156,7 @@ export class OrganizationDto {
 
   @ApiProperty({
     description: "Hide from the order",
+    example: false,
   })
   @IsOptional()
   @IsBoolean()

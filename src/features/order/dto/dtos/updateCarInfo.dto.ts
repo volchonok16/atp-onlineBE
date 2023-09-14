@@ -11,17 +11,17 @@ import { Archive } from "../../types/archive.enum";
 import { objectFieldFilter } from "../../../../common/helpers/objectFieldFilter";
 
 export class UpdateCarInfoDto {
-  @ApiProperty()
+  @ApiProperty({ example: "КамАЗ-55111 самосвал" })
   M_AM: string = null;
 
-  @ApiProperty()
+  @ApiProperty({ example: "5859" })
   NAVTO: string = null;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ example: "КамАЗ-55111" })
   LM_AM: string = null;
 
-  @ApiProperty()
-  ARHIV: boolean = null;
+  @ApiProperty({ default: false })
+  ARHIV = false;
 
   @ApiPropertyOptional()
   RAZN_OD_ID: number = null;
