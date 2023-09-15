@@ -3,3 +3,7 @@ export type UserType = {
   USER_NAME: string;
   PASS: string;
 };
+
+export type TokensObjectType = {
+  accessToken: string;
+};
