@@ -18,6 +18,7 @@ import { NewPasswordSwaggerDecorator } from "../../../common/swagger/auth/newPas
 import { LoginSwaggerDecorator } from "../../../common/swagger/auth/login.swagger.decorator";
 import { ApiTags } from "@nestjs/swagger";
 import { LogoutSwaggerDecorator } from "../../../common/swagger/auth/logout.swagger.decorator";
+import { TokensObjectType } from "../types/user.type";
 
 @ApiTags("Auth")
 @Controller("api/auth")
@@ -28,16 +29,14 @@ export class AuthController {
   @LoginSwaggerDecorator()
   @UseGuards(PasswordAuthGuard)
   @HttpCode(200)
-  async login(
-    @CurrentUserId() userId: number,
-    @Res({ passthrough: true }) response: Response
-  ): Promise<void> {
-    const token = await this.commandBus.execute(new CreateTokenCommand(userId));
-    response.cookie("refreshToken", token, {
-      httpOnly: true,
-      secure: true,
-    });
-    return;
+  async login(@CurrentUserId() userId: number): Promise<TokensObjectType> {
+    const accessToken: string = await this.commandBus.execute(
+      new CreateTokenCommand(userId)
+    );
+
+    return {
+      accessToken,
+    };
   }
 
   @Post("logout")
