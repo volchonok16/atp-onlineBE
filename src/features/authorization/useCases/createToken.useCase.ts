@@ -14,6 +14,7 @@ export class CreateTokenUseCase
   async execute(command: CreateTokenCommand): Promise<string> {
     //create token
     const token = await this.jwtAdapter.createToken(command.userId);
+
     return token;
   }
 }
