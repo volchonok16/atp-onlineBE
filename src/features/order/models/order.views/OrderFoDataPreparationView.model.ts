@@ -22,7 +22,7 @@ export class OrderFoDataPreparationViewModel {
       B_VOD: shortStringToBoolean(data.B_VOD),
       MAM: data.MAM,
       NOMER: data.NOMER,
-      FIO: data.FIO,
+      FIO: data.FULL_FIO,
       FIO_KOND: data.FIO_KOND,
       VR_V: data.VR_V,
       VR_Z: data.VR_Z,
