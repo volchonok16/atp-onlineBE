@@ -1,63 +1,48 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-  Query,
-} from "@nestjs/common";
-import { OrderQueryRepository } from "../query.repositories/order.query.repository";
-import { ApiBody, ApiOperation, ApiTags } from "@nestjs/swagger";
-import { CommandBus, QueryBus } from "@nestjs/cqrs";
-import { BillOfLadingCreateDto } from "../dto/dtos/billOfLadingCreate.dto";
-import { CreateBillOfLadingCommand } from "../use-cases/order/createBillOfLanding.useCase";
-import { OutputDataDto } from "../dto/dtos/outputData.dto";
-import { ReferralForRepairsDto } from "../dto/dtos/order/referralForRepairs.dto";
-import { CreateReferralForRepairsCommand } from "../use-cases/order/referralForRepairs.useCase";
-import { BillOfLandingDeleteDto } from "../dto/dtos/billOfLandingDelete.dto";
-import { DeleteBillOfLandingCommand } from "../use-cases/order/deleteBillOfLanding.useCase";
-import { OutputDataViewModel } from "../models/order.views/outputdataView.model";
-import { ReferralForRepairsViewModel } from "../models/order.views/referralforrepairsView.Model";
-import { OrderDataInputDto } from "../dto/dtos/orderDataInput.dto";
-import { CreateOrderDataCommand } from "../use-cases/order/createOrderData.useCase";
-import { BillOfLadingViewModel } from "../models/order.views/billOfLadingViewModel";
-import { ReportGeneratorService } from "../../../common/helpers/report-generator/reportGenerator.service";
-import { UpdateCarForOrderDto } from "../dto/dtos/updateCarForOrderDto";
-import { GetCarForOrderDto } from "../dto/query.dtos/getCarForOrder.dto";
-import { CarForOrderViewModel } from "../models/order.views/carForOrderView.model";
-import { OrderViewModel } from "../models/order.views/orderView.model";
-import { RequestLogDto } from "../dto/query.dtos/requestLog.dto";
-import { RequestViewModel } from "../models/order.views/requestView.model";
-import { UpdateRequestDto } from "../dto/dtos/updateRequest.dto";
-import { CreateBookingDataDto } from "../dto/dtos/order/createBookingDataDto";
-import { CreateBookingCommand } from "../use-cases/order/createBooking.useCase";
-import { UpdateBookingCommand } from "../use-cases/order/updateBooking.useCase";
-import { UpdateOrderCommand } from "../use-cases/order/updateOrder.useCase";
-import { CreateBookingViewModel } from "../models/order.views/createBookingView.model";
-import { AddRequestToCarCommand } from "../use-cases/order/addRequestToOrderData.useCase";
-import { OrderFoDataPreparationViewModel } from "../models/order.views/OrderFoDataPreparationView.model";
-import { CreateOrderDto } from "../dto/dtos/order/createOrder.dto";
-import { UpdateBookingDataDto } from "../dto/dtos/order/updateBookingData.dto";
-import { DeleteBookingDataCommand } from "../use-cases/order/deleteBookingData.useCase";
-import { CreateOrderCommand } from "../use-cases/order/createOrder.useCase";
+import {Body, Controller, Delete, Get, Param, Post, Put, Query,} from "@nestjs/common";
+import {OrderQueryRepository} from "../query.repositories/order.query.repository";
+import {ApiBody, ApiOperation, ApiTags} from "@nestjs/swagger";
+import {CommandBus, QueryBus} from "@nestjs/cqrs";
+import {BillOfLadingCreateDto} from "../dto/dtos/billOfLadingCreate.dto";
+import {CreateBillOfLadingCommand} from "../use-cases/order/createBillOfLanding.useCase";
+import {OutputDataDto} from "../dto/dtos/outputData.dto";
+import {ReferralForRepairsDto} from "../dto/dtos/order/referralForRepairs.dto";
+import {CreateReferralForRepairsCommand} from "../use-cases/order/referralForRepairs.useCase";
+import {BillOfLandingDeleteDto} from "../dto/dtos/billOfLandingDelete.dto";
+import {DeleteBillOfLandingCommand} from "../use-cases/order/deleteBillOfLanding.useCase";
+import {ReferralForRepairsViewModel} from "../models/order.views/referralforrepairsView.Model";
+import {OrderDataInputDto} from "../dto/dtos/orderDataInput.dto";
+import {CreateOrderDataCommand} from "../use-cases/order/createOrderData.useCase";
+import {BillOfLadingViewModel} from "../models/order.views/billOfLadingViewModel";
+import {ReportGeneratorService} from "../../../common/helpers/report-generator/reportGenerator.service";
+import {UpdateCarForOrderDto} from "../dto/dtos/updateCarForOrderDto";
+import {GetCarForOrderDto} from "../dto/query.dtos/getCarForOrder.dto";
+import {CarForOrderViewModel} from "../models/order.views/carForOrderView.model";
+import {OrderViewModel} from "../models/order.views/orderView.model";
+import {RequestLogDto} from "../dto/query.dtos/requestLog.dto";
+import {RequestViewModel} from "../models/order.views/requestView.model";
+import {UpdateRequestDto} from "../dto/dtos/updateRequest.dto";
+import {CreateBookingDataDto} from "../dto/dtos/order/createBookingDataDto";
+import {CreateBookingCommand} from "../use-cases/order/createBooking.useCase";
+import {UpdateBookingCommand} from "../use-cases/order/updateBooking.useCase";
+import {UpdateOrderCommand} from "../use-cases/order/updateOrder.useCase";
+import {CreateBookingViewModel} from "../models/order.views/createBookingView.model";
+import {AddRequestToCarCommand} from "../use-cases/order/addRequestToOrderData.useCase";
+import {OrderFoDataPreparationViewModel} from "../models/order.views/OrderFoDataPreparationView.model";
+import {CreateOrderDto} from "../dto/dtos/order/createOrder.dto";
+import {UpdateBookingDataDto} from "../dto/dtos/order/updateBookingData.dto";
+import {DeleteBookingDataCommand} from "../use-cases/order/deleteBookingData.useCase";
+import {CreateOrderCommand} from "../use-cases/order/createOrder.useCase";
 import * as fs from "fs";
-import { UpdatePrepareOutputDataCommand } from "../use-cases/order/updatePrepareOutputData.useCase";
-import { CreateBillOfLandingReportDto } from "../dto/dtos/createBillOfLandingReport.dto";
-import { CreateOrderView } from "../models/order.views/createOrderView.model";
-import { deleteOrderCommand } from "../use-cases/order/deleteOrder.useCase";
-import { UpdateRequestCommand } from "../use-cases/order/updateRequest.useCase";
-import { UpdateReferralForRepairsCommand } from "../use-cases/order/updateReferalForRepairs.useCase";
-import { DeleteReferralForRepairsCommand } from "../use-cases/order/deleteReferralForRepairs.useCase";
-import { CarNameForPrepareOutputDataView } from "../models/order.views/carNameForPrepareOutputDataView";
-import { CarInfoForPrepareOutputDataView } from "../models/order.views/carInfoForPrepareOutputDataView.model";
-import { OrderDataQueryDto } from "../dto/query.dtos/orderData.query.dto";
-import { PrepareOutputDataDto } from "../dto/dtos/order/prepareOutputData.dto";
-import { GetBookingViewModel } from "../models/order.views/getBookingView.model";
-import { GetBookingQuery } from "../use-cases/order/query-bus/getBooking.query-handler";
-import { CreatePrepareOutputDataCommand } from "../use-cases/order/createPrepareOutputData.useCase";
-import { PreparedOutputDataView } from "../models/order.views/PreparedOutputDataView.model";
+import {UpdatePrepareOutputDataCommand} from "../use-cases/order/updatePrepareOutputData.useCase";
+import {CreateOrderView} from "../models/order.views/createOrderView.model";
+import {deleteOrderCommand} from "../use-cases/order/deleteOrder.useCase";
+import {UpdateRequestCommand} from "../use-cases/order/updateRequest.useCase";
+import {UpdateReferralForRepairsCommand} from "../use-cases/order/updateReferalForRepairs.useCase";
+import {DeleteReferralForRepairsCommand} from "../use-cases/order/deleteReferralForRepairs.useCase";
+import {CarNameForPrepareOutputDataView} from "../models/order.views/carNameForPrepareOutputDataView";
+import {CarInfoForPrepareOutputDataView} from "../models/order.views/carInfoForPrepareOutputDataView.model";
+import {OrderDataQueryDto} from "../dto/query.dtos/orderData.query.dto";
+import {GetBookingQuery} from "../use-cases/order/query-bus/getBooking.query-handler";
 
 @ApiTags("Order")
 @Controller("api/order")
