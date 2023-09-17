@@ -242,18 +242,6 @@ WHERE REQ_RAZN.REQ_RAZN_KEY = ?;
     return result.COUNT === 1;
   }
 
-  /**
-   * [The method will return RAZN_OD_ID if there is a record with the passed id
-   * and in this record there is a record for the related table.
-   *
-   * Return RAZN_OD_ID = null if there is a record for the given id, but there
-   * is no record for the related table
-   *
-   * Returns null if there is no entry for given id]
-   *
-   * @param { number } id
-   * @returns { RAZN_OD_ID: number | null }
-   */
   async preparedOutputDataExist(
     id: number
   ): Promise<{ RAZN_OD_ID: number | null }> {
