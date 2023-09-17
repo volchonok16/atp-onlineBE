@@ -151,21 +151,6 @@ export class OrderController {
     );
   }
 
-  // Походу в конфлюенсе описана не нужная логика
-  // @Post("output-data/")
-  // @ApiOperation({
-  //   summary: "Разнарядка -> Выходная информация",
-  // })
-  // @ApiBody({ type: PrepareOutputDataDto })
-  // async createPrepareOutputData(
-  //   @Body() data: any
-  // ): Promise<PreparedOutputDataView> {
-  //   const dto = PrepareOutputDataDto.dto(data);
-  //   return await this.commandBus.execute(
-  //     new CreatePrepareOutputDataCommand(dto)
-  //   );
-  // }
-
   @Get("output-data/car-name")
   @ApiOperation({
     summary: "Разнарядка -> Выходная информация -> Таблица с машинами +",

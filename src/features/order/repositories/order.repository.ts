@@ -66,40 +66,41 @@ export class OrderRepository {
     }
   }
 
-  async updateRaznar(dto: OutputDataDto): Promise<boolean> {
+  async updateRaznar(
+    dto: OutputDataDto,
+    id: number | undefined
+  ): Promise<boolean> {
     try {
-      const data = [];
-      if (dto.NPL) data.push(`NPL = '${dto.NPL}'`);
-      if (dto.FIO_ID) data.push(`FIO_ID = ${dto.FIO_ID}`);
-      if (!data.length) return false;
+      const doUpdate = id ? true : false;
+      return await this.firebird.executeInTransaction(async () => {
+        const data = [];
+        if (dto.NPL) data.push(`NPL = '${dto.NPL}'`);
+        if (dto.FIO_ID) data.push(`FIO_ID = ${dto.FIO_ID}`);
+        if (!data.length) return false;
 
-      await this.firebird.query(
-        `
+        await this.firebird.transactionQuery(
+          `
         UPDATE RAZNAR
         SET ${data.join(",")}   
         WHERE RAZN_KEY = ?;
       `,
-        [dto.RAZN_KEY]
-      );
-      return true;
-    } catch (e) {
-      throw false;
-    }
-  }
+          [dto.RAZN_KEY]
+        );
 
-  async updateRaznOd(id: number, NORM_ZAPR: number): Promise<boolean> {
-    try {
-      await this.firebird.query(
-        `
+        if (doUpdate) {
+          await this.firebird.transactionQuery(
+            `
         UPDATE RAZN_OD
         SET NORM_ZAPR = ?
         WHERE RAZN_OD_KEY = ?;
       `,
-        [NORM_ZAPR, id]
-      );
-      return true;
+            [dto.NORM_ZAPR, id]
+          );
+        }
+        return true;
+      });
     } catch (e) {
-      return false;
+      throw false;
     }
   }
 
@@ -115,7 +116,7 @@ export class OrderRepository {
           [TTN_ID]
         );
         return true;
-      }); // TODO каскадное удаление работает не полностью, необходима транзакция
+      }); // каскадное удаление работает не полностью, необходима транзакция
     } catch (e) {
       return false;
     }
