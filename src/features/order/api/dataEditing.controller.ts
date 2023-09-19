@@ -11,7 +11,7 @@ import {
   Put,
   Query,
 } from "@nestjs/common";
-import { ApiOperation, ApiTags } from "@nestjs/swagger";
+import { ApiBody, ApiOperation, ApiProperty, ApiTags } from "@nestjs/swagger";
 import { DataEditingQueryRepository } from "../query.repositories/dataEditing.query.repository";
 import { GetCarsInfoSwaggerDecorator } from "../../../common/swagger/order/getCarsInfo.swagger.decorator";
 import { CarsInfoInputDto } from "../dto/query.dtos/carInfoInput.dto";
@@ -109,6 +109,7 @@ export class DataEditingController {
   @ApiOperation({
     summary: "Редактирование общих данных -> Данные по машинам",
   })
+  @ApiBody({ type: CarInfoDto })
   async createCarInfoById(@Body() data: any) {
     const dto = CarInfoDto.dto(data);
     return await this.commandBus.execute(new CreateCarInfoCommand(dto));
@@ -118,6 +119,7 @@ export class DataEditingController {
   @ApiOperation({
     summary: "Редактирование общих данных -> Данные по машинам",
   })
+  @ApiBody({ type: UpdateCarInfoDto })
   async updateCarInfoById(@Param("OD_KEY") id: number, @Body() data: any) {
     const dto = UpdateCarInfoDto.dto(data);
     return await this.commandBus.execute(
@@ -164,6 +166,7 @@ export class DataEditingController {
   @ApiOperation({
     summary: "Редактирование общих данных -> Список персонала ",
   })
+  @ApiBody({ type: UpdateStaffInfoDto })
   async updateStaffInfoById(
     @Param("FIO_KEY") id: number,
     @Body() data: any
@@ -176,7 +179,9 @@ export class DataEditingController {
   @ApiOperation({
     summary:
       "Редактирование общих данных -> Список персонала -> Период стажировки",
+    description: "Пустое бд, проверка SELECT * FROM FIO_STAGIROVKA ",
   })
+  @ApiBody({ type: UpdateStaffInfoDto })
   async updateInternshipById(
     @Param("FIO_ID") id: number,
     @Body() data: any
@@ -190,6 +195,7 @@ export class DataEditingController {
     summary:
       "Редактирование общих данных -> Список персонала -> Карточка сотрудника",
   })
+  @ApiBody({ type: UpdateStaffCardDto })
   async updateStaffCardById(
     @Param("FIO_KEY") id: number,
     @Body() data: any
@@ -217,6 +223,7 @@ export class DataEditingController {
     summary:
       "Редактирование общих данных -> Список персонала -> Заправочные карты",
   })
+  @ApiBody({ type: CreateRefuelingCardDto })
   async createRefuelingCardById(
     @Param("FIO_ID") id: number,
     @Body() data: any
@@ -232,6 +239,7 @@ export class DataEditingController {
     summary:
       "Редактирование общих данных -> Список персонала -> Период стажировки",
   })
+  @ApiBody({ type: UpdateRefuelingCardDto })
   async updateRefuelingCardById(
     @Param("FIO_KEY") id: number,
     @Body() data: any
@@ -338,7 +346,7 @@ export class DataEditingController {
   @Post("staff-info/files/upload-images/:FILES_KEY")
   @ApiOperation({
     summary:
-      "Редактирование общих данных -> Список персонала -> Файлы -> Загрузить изображения",
+      "Редактирование общих данных -> Список персонала -> Файлы -> Загрузить изображения ???",
   })
   async uploadImages(@Body() dtoArray: UploadImagesArrayDto): Promise<boolean> {
     return await this.commandBus.execute(new UploadImagesCommand(dtoArray));
@@ -379,6 +387,7 @@ export class DataEditingController {
 
   @Get("organizations-list/:organizationId/executive")
   @GetOrganizationExecutiveSwaggerDecorator()
+  @ApiProperty({ description: "Бд пустое, проверка SELECT * FROM DATA_FIO" })
   async getOrganizationExecutive(
     @Param("organizationId", new ParseIntPipe()) organizationId: number
   ): Promise<OrganizationExecuteViewModel[]> {
@@ -400,6 +409,9 @@ export class DataEditingController {
   }
 
   @Get("other-equipment/:id")
+  @ApiProperty({
+    description: "Бд пустое, проверка: SELECT * FROM RAZN_OD_DOCS",
+  })
   @GetEquipmentDocsSwaggerDecorator()
   async getEquipmentDocs(
     @Param("id", new ParseIntPipe()) equipmentId: number
@@ -423,6 +435,7 @@ export class DataEditingController {
     summary:
       "Редактирование общих данных -> Список организаций (создание и обновление)",
   })
+  @ApiBody({ type: OrganizationDto })
   async createOrUpdateOrganization(
     @Body() data: any
   ): Promise<OrganizationViewModel> {
@@ -450,6 +463,7 @@ export class DataEditingController {
     summary:
       "Редактирование общих данных -> Список организаций -> Подразделения (создание и обновление)",
   })
+  @ApiBody({ type: SubunitDto })
   async createOrUpdateSubunit(
     @Body() data: any,
     @Param("DATA_KEY") id: number
@@ -479,6 +493,9 @@ export class DataEditingController {
   @ApiOperation({
     summary: "Редактирование общих данных -> Список организаций -> Примечание",
   })
+  @ApiProperty({
+    description: "Бд пустое, проверка: SELECT * FROM DATA_PRIM",
+  })
   async getNote(
     @Param("DATA_KEY") id: number,
     @Query() query: ArchiveOrNotArchiveQuery
@@ -495,6 +512,7 @@ export class DataEditingController {
     summary:
       "Редактирование общих данных -> Список организаций -> Примечание (создание и обновление)",
   })
+  @ApiBody({ type: NoteDto })
   async createOrUpdateNote(@Body() data: any): Promise<NoteViewModel> {
     const dto = NoteDto.dto(data);
     return this.commandBus.execute(new CreateNoteCommand(dto));
@@ -511,6 +529,7 @@ export class DataEditingController {
   @Get("organizations-list/prices/:DATA_KEY")
   @ApiOperation({
     summary: "Редактирование общих данных -> Список организаций -> Цены",
+    description: "БД пустое, проверка: SELECT * FROM DATA_CENA",
   })
   async getPrices(@Param("DATA_KEY") id: number): Promise<PriceViewModel[]> {
     const isExists = await this.dataEditingQueryRepository.organizationExists(
@@ -525,6 +544,7 @@ export class DataEditingController {
     summary:
       "Редактирование общих данных -> Список организаций -> Цены (создание и обновление)",
   })
+  @ApiBody({ type: PriceDto })
   async createOrUpdatePrice(@Body() data: any): Promise<PriceViewModel> {
     const dto = PriceDto.dto(data);
     return this.commandBus.execute(new CreateOrUpdatePriceCommand(dto));
