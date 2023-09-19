@@ -18,7 +18,6 @@ import { ReferralForRepairsDto } from "../dto/dtos/order/referralForRepairs.dto"
 import { CreateReferralForRepairsCommand } from "../use-cases/order/referralForRepairs.useCase";
 import { BillOfLandingDeleteDto } from "../dto/dtos/billOfLandingDelete.dto";
 import { DeleteBillOfLandingCommand } from "../use-cases/order/deleteBillOfLanding.useCase";
-import { OutputDataViewModel } from "../models/order.views/outputdataView.model";
 import { ReferralForRepairsViewModel } from "../models/order.views/referralforrepairsView.Model";
 import { OrderDataInputDto } from "../dto/dtos/orderDataInput.dto";
 import { CreateOrderDataCommand } from "../use-cases/order/createOrderData.useCase";
@@ -44,7 +43,6 @@ import { DeleteBookingDataCommand } from "../use-cases/order/deleteBookingData.u
 import { CreateOrderCommand } from "../use-cases/order/createOrder.useCase";
 import * as fs from "fs";
 import { UpdatePrepareOutputDataCommand } from "../use-cases/order/updatePrepareOutputData.useCase";
-import { CreateBillOfLandingReportDto } from "../dto/dtos/createBillOfLandingReport.dto";
 import { CreateOrderView } from "../models/order.views/createOrderView.model";
 import { deleteOrderCommand } from "../use-cases/order/deleteOrder.useCase";
 import { UpdateRequestCommand } from "../use-cases/order/updateRequest.useCase";
@@ -53,11 +51,7 @@ import { DeleteReferralForRepairsCommand } from "../use-cases/order/deleteReferr
 import { CarNameForPrepareOutputDataView } from "../models/order.views/carNameForPrepareOutputDataView";
 import { CarInfoForPrepareOutputDataView } from "../models/order.views/carInfoForPrepareOutputDataView.model";
 import { OrderDataQueryDto } from "../dto/query.dtos/orderData.query.dto";
-import { PrepareOutputDataDto } from "../dto/dtos/order/prepareOutputData.dto";
-import { GetBookingViewModel } from "../models/order.views/getBookingView.model";
 import { GetBookingQuery } from "../use-cases/order/query-bus/getBooking.query-handler";
-import { CreatePrepareOutputDataCommand } from "../use-cases/order/createPrepareOutputData.useCase";
-import { PreparedOutputDataView } from "../models/order.views/PreparedOutputDataView.model";
 
 @ApiTags("Order")
 @Controller("api/order")
@@ -149,6 +143,12 @@ export class OrderController {
     return await this.commandBus.execute(
       new DeleteBillOfLandingCommand(dto.TTN_ID)
     );
+  }
+
+  @Get("bill-of-landing-and-waybill/product-section/:TTN_KEY ")
+  @ApiOperation({ summary: "Разнарядка -> ТТН -> Товарный раздел" })
+  async getProductSection(@Param("TTN_KEY") id: number) {
+    //return this.orderQueryRepository.
   }
 
   @Get("output-data/car-name")
