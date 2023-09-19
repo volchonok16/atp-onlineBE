@@ -19,21 +19,24 @@ export class UpdatePrepareOutputDataUseCase
   ) {}
 
   async execute({ dto }: UpdatePrepareOutputDataCommand): Promise<boolean> {
+    /**
+     * [The method will return RAZN_OD_ID if there is a record with the passed id
+     * and in this record there is a record for the related table.
+     *
+     * Return RAZN_OD_ID = null if there is a record for the given id, but there
+     * is no record for the related table
+     *
+     * Returns null if there is no entry for given id]
+     */
     const data = await this.orderQueryRepository.preparedOutputDataExist(
       dto.RAZN_KEY
     );
     if (!data) throw new NotFoundException();
-    const raznarUpdated = await this.orderRepository.updateRaznar(dto);
-    if (!raznarUpdated) return false;
-
-    if (!data.RAZN_OD_ID)
+    if (!data.RAZN_OD_ID && dto.NORM_ZAPR)
       throw new BadRequestException(
-        `Field NPL and FIO_ID: ${raznarUpdated} have been updated. NORM_ZAPR not updated for this id record not found.`
+        `Can't update NORM_ZAPR for this id record not found. Delete NORM_ZAPR field and true again.`
       );
 
-    return await this.orderRepository.updateRaznOd(
-      data.RAZN_OD_ID,
-      dto.NORM_ZAPR
-    );
+    return await this.orderRepository.updateRaznar(dto, data.RAZN_OD_ID);
   }
 }
