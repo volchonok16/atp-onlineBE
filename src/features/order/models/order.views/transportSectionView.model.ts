@@ -1,11 +1,11 @@
 import { ApiProperty } from "@nestjs/swagger";
 
 export class TransportSectionViewModel {
-  @ApiProperty()
+  @ApiProperty({ description: "Short name of the cargo" })
   NAIM_TRANP: string | null;
-  @ApiProperty()
+  @ApiProperty({ description: "Type of packaging" })
   VID_UPAK: string | null;
-  @ApiProperty()
+  @ApiProperty({ description: "Documents accompany the cargo" })
   DOCS: string | null;
   @ApiProperty()
   MEST_TRANSP: number | null;

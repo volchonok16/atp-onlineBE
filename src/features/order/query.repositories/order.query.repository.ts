@@ -20,6 +20,8 @@ import { GetCarForOrderDto } from "../dto/query.dtos/getCarForOrder.dto";
 import { CarForOrderViewModel } from "../models/order.views/carForOrderView.model";
 import { CarNameForPrepareOutputDataView } from "../models/order.views/carNameForPrepareOutputDataView";
 import { CarInfoForPrepareOutputDataView } from "../models/order.views/carInfoForPrepareOutputDataView.model";
+import { ProductSectionView } from "../models/order.views/productSectionView.model";
+import { TransportSectionView2 } from "../models/order.views/transportSectionView2.model";
 
 @Injectable()
 export class OrderQueryRepository {
@@ -198,6 +200,28 @@ WHERE REQ_RAZN.REQ_RAZN_KEY = ?;
     return result[0];
   }
 
+  async getProductSectionData(id: number): Promise<ProductSectionView[]> {
+    return this.firebird.query(
+      `
+      SELECT TTN_EXT_KEY, TTN_ID,NOM_PRICE, ARTICUL, KOL, CENA, NAIM, ED_IZM, UPAKOVKA, MEST, MASSA 
+      FROM TTN_EXT
+      WHERE TTN_ID = ?;
+    `,
+      [id]
+    );
+  }
+
+  async getTransportSectionData(id: number): Promise<TransportSectionView2[]> {
+    return this.firebird.query(
+      `
+      SELECT NAIM, VID_UPAK, DOCS, MEST, SPOSOB, CODE, N_KONT, KLASS, MASSA
+      FROM TTN_TRANSP
+      WHERE TTN_ID = ?;
+    `,
+      [id]
+    );
+  }
+
   async getCarsNamesForPrepareOutputData(): Promise<
     CarNameForPrepareOutputDataView[]
   > {
@@ -270,6 +294,28 @@ WHERE REQ_RAZN.REQ_RAZN_KEY = ?;
     const [result] = await this.firebird.query(
       `
       SELECT COUNT(*) FROM RAZN_NAPR_REM WHERE RAZN_N_R_KEY = ?;
+    `,
+      [id]
+    );
+
+    return result.COUNT === 1;
+  }
+
+  async productSectionExists(id: number): Promise<boolean> {
+    const [result] = await this.firebird.query(
+      `
+      SELECT COUNT(*) FROM TTN_EXT WHERE TTN_EXT_KEY = ?;
+    `,
+      [id]
+    );
+
+    return result.COUNT === 1;
+  }
+
+  async transportSectionExists(id: number): Promise<boolean> {
+    const [result] = await this.firebird.query(
+      `
+      SELECT COUNT(*) FROM TTN_TRANSP WHERE TTN_TRANSP_KEY = ?;
     `,
       [id]
     );

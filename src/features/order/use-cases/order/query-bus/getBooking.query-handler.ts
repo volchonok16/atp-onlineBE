@@ -1,9 +1,7 @@
 import { OrderDataQueryDtoType } from "../../../types/orderDataQueryDtoType";
 import { IQueryHandler, QueryHandler } from "@nestjs/cqrs";
-import { CreateBookingViewModel } from "../../../models/order.views/createBookingView.model";
 import { OrderQueryRepository } from "../../../query.repositories/order.query.repository";
 import { GetBookingViewModel } from "../../../models/order.views/getBookingView.model";
-import { isLogLevelEnabled } from "@nestjs/common/services/utils";
 
 export class GetBookingQuery {
   constructor(public query: OrderDataQueryDtoType) {}

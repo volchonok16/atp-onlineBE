@@ -35,7 +35,6 @@ export class DataEditingRepository {
       OrganizationDto,
       OrganizationViewModel
     >("DATA", "DATA_KEY", dto, new OrganizationViewModel());
-    //console.log(query, parameters);
     const result = await this.firebird.query(query, parameters);
 
     return OrganizationViewModel.toView(result);

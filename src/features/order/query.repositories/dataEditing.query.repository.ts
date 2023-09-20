@@ -107,7 +107,7 @@ export class DataEditingQueryRepository {
     queryDto: OrganizationsInputDto
   ): Promise<OrganizationsViewModel[]> {
     const organizationsFilter = this.getOrganizationsFilter(queryDto);
-    console.log(organizationsFilter);
+
     const organizations = await this.firebird.query<OrganizationsViewModel[]>(`
         SELECT DATA_KEY, ZAK_, LNAME, KAT, N_KAT, METOD
         FROM W_DATA
