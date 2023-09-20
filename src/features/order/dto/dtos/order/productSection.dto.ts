@@ -39,13 +39,13 @@ export class ProductSectionDto implements ProductSectionView {
   @ApiProperty({ description: "Count", example: 42 })
   @IsOptional()
   @IsNumber()
-  @MaxLength(constants.ttnExt.numeric)
+  @MaxLength(constants.numeric)
   KOL: number = null;
 
   @ApiProperty({ description: "Price", example: 9.99 })
   @IsOptional()
   @IsNumber()
-  @MaxLength(constants.ttnExt.numeric)
+  @MaxLength(constants.numeric)
   CENA: number = null;
 
   @ApiProperty({ description: "Name", example: "Name" })
@@ -78,7 +78,7 @@ export class ProductSectionDto implements ProductSectionView {
   @ApiProperty({ description: "Weight", example: 3 })
   @IsOptional()
   @IsNumber()
-  @MaxLength(constants.ttnExt.numeric)
+  @MaxLength(constants.numeric)
   MASSA: number = null;
 
   static dto(data: any): ProductSectionDto {

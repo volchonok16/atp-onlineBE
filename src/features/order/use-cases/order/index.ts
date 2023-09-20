@@ -12,10 +12,16 @@ import { UpdatePrepareOutputDataUseCase } from "./updatePrepareOutputData.useCas
 import { GetProductSectionDataQueryHandler } from "./query-bus/getProductSectionData.query-handler";
 import { InsertOrUpdateProductSectionUseCase } from "./insertOrUpdateProductSection.useCase";
 import { DeleteProductSectionUseCase } from "./DeleteProductSection.useCase";
+import { GetTransportSectionQueryHandler } from "./query-bus/getTransportSectionData.query-handler";
+import {
+  InsertOrUpdateTransportSectionCommand,
+  InsertOrUpdateTransportSectionUseCase,
+} from "./insertOrUpdateTransportSection.useCase";
 
 const queryHandlers = [
   GetBookingQueryHandler,
   GetProductSectionDataQueryHandler,
+  GetTransportSectionQueryHandler,
 ];
 
 const commandHandlers = [
@@ -31,6 +37,7 @@ const commandHandlers = [
   UpdatePrepareOutputDataUseCase,
   InsertOrUpdateProductSectionUseCase,
   DeleteProductSectionUseCase,
+  InsertOrUpdateTransportSectionUseCase,
 ];
 
 export const orderUseCases = [...commandHandlers, ...queryHandlers];

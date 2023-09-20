@@ -17,9 +17,9 @@ export class DeleteProductSectionUseCase
   ) {}
 
   async execute({ id }: DeleteProductSectionCommand): Promise<boolean> {
-    const isExist = await this.orderQueryRepository.billOfLandingExist(id);
-    if (!isExist) throw new NotFoundException();
-    // return this.orderRepository.deleteProductSection(id)
-    return true;
+    const isExists = await this.orderQueryRepository.productSectionExists(id);
+    if (!isExists) throw new NotFoundException();
+
+    return this.orderRepository.deleteProductSection(id);
   }
 }

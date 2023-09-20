@@ -23,6 +23,8 @@ import { OutputDataDto } from "../dto/dtos/outputData.dto";
 import { ProductSectionDto } from "../dto/dtos/order/productSection.dto";
 import { ProductSectionView } from "../models/order.views/productSectionView.model";
 import { upsertQuery } from "../../../common/helpers/firebird-orm/upsert";
+import { TransportSectionView2 } from "../models/order.views/transportSectionView2.model";
+import { TransportSectionDto } from "../dto/dtos/order/transportSection.dto";
 
 @Injectable()
 export class OrderRepository {
@@ -132,8 +134,30 @@ export class OrderRepository {
       ProductSectionDto,
       ProductSectionView
     >("TTN_EXT", "TTN_EXT_KEY", dto, new ProductSectionView());
-    console.log(query, parameters);
+
     return await this.firebird.query(query, parameters);
+  }
+
+  async insertOrUpdateTransportSection(
+    dto: TransportSectionDto
+  ): Promise<TransportSectionView2> {
+    const { query, parameters } = upsertQuery<
+      TransportSectionDto,
+      TransportSectionView2
+    >("TTN_TRANSP", "TTN_TRANSP_KEY", dto, new TransportSectionView2());
+
+    return this.firebird.query(query, parameters);
+  }
+
+  async deleteProductSection(id: number): Promise<boolean> {
+    try {
+      await this.firebird.query("DELETE FROM TTN_EXT WHERE TTN_EXT_KEY = ?;", [
+        id,
+      ]);
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   async createPrepareOutputData(
