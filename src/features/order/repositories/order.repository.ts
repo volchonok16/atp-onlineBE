@@ -169,6 +169,7 @@ export class OrderRepository {
         [id]
       );
       return true;
+
     } catch (e) {
       return false;
     }

@@ -156,6 +156,7 @@ export class OrderController {
     );
   }
 
+
   @Get("bill-of-landing-and-waybill/product-section/:TTN_KEY")
   @ApiOperation({ summary: "Разнарядка -> ТТН -> Товарный раздел" })
   async getProductSection(
@@ -212,7 +213,6 @@ export class OrderController {
     return this.commandBus.execute(new DeleteTransportSectionCommand(id));
   }
 
-  @Get("bill-of-landing-and-waybill")
   @Get("output-data/car-name")
   @ApiOperation({
     summary: "Разнарядка -> Выходная информация -> Таблица с машинами +",
