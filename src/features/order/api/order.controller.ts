@@ -52,6 +52,11 @@ import { CarNameForPrepareOutputDataView } from "../models/order.views/carNameFo
 import { CarInfoForPrepareOutputDataView } from "../models/order.views/carInfoForPrepareOutputDataView.model";
 import { OrderDataQueryDto } from "../dto/query.dtos/orderData.query.dto";
 import { GetBookingQuery } from "../use-cases/order/query-bus/getBooking.query-handler";
+import { ProductSectionView } from "../models/order.views/productSectionView.model";
+import { ProductSectionDto } from "../dto/dtos/order/productSection.dto";
+import { GetProductSectionDataQuery } from "../use-cases/order/query-bus/getProductSectionData.query-handler";
+import { InsertOrUpdateProductSectionCommand } from "../use-cases/order/insertOrUpdateProductSection.useCase";
+import { DeleteProductSectionCommand } from "../use-cases/order/DeleteProductSection.useCase";
 
 @ApiTags("Order")
 @Controller("api/order")
@@ -145,10 +150,32 @@ export class OrderController {
     );
   }
 
-  @Get("bill-of-landing-and-waybill/product-section/:TTN_KEY ")
+  @Get("bill-of-landing-and-waybill/product-section/:TTN_KEY")
   @ApiOperation({ summary: "Разнарядка -> ТТН -> Товарный раздел" })
-  async getProductSection(@Param("TTN_KEY") id: number) {
-    //return this.orderQueryRepository.
+  async getProductSection(
+    @Param("TTN_KEY") id: number
+  ): Promise<ProductSectionView[]> {
+    return this.queryBus.execute(new GetProductSectionDataQuery(id));
+  }
+
+  @Post("bill-of-landing-and-waybill/product-section")
+  @ApiOperation({ summary: "Разнарядка -> ТТН -> Товарный раздел" })
+  @ApiBody({ type: ProductSectionDto })
+  async insertOrUpdateProductSection(
+    @Body() data: any
+  ): Promise<ProductSectionView> {
+    const dto = ProductSectionDto.dto(data);
+    return this.commandBus.execute(
+      new InsertOrUpdateProductSectionCommand(dto)
+    );
+  }
+
+  @Delete("bill-of-landing-and-waybill/product-section/:TTN_EXT_KEY")
+  @ApiOperation({ summary: "Разнарядка -> ТТН -> Товарный раздел" })
+  async deleteProductSection(
+    @Param("TTN_EXT_KEY") id: number
+  ): Promise<boolean> {
+    return this.commandBus.execute(new DeleteProductSectionCommand(id));
   }
 
   @Get("output-data/car-name")

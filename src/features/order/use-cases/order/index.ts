@@ -7,12 +7,18 @@ import { CreateReferralForRepairsUseCase } from "./referralForRepairs.useCase";
 import { UpdateReferralForRepairsUseCase } from "./updateReferalForRepairs.useCase";
 import { DeleteReferralForRepairsUseCase } from "./deleteReferralForRepairs.useCase";
 import { GetBookingQueryHandler } from "./query-bus/getBooking.query-handler";
-
-const queryHandlers = [GetBookingQueryHandler];
 import { CreatePrepareOutputDataUseCase } from "./createPrepareOutputData.useCase";
 import { UpdatePrepareOutputDataUseCase } from "./updatePrepareOutputData.useCase";
+import { GetProductSectionDataQueryHandler } from "./query-bus/getProductSectionData.query-handler";
+import { InsertOrUpdateProductSectionUseCase } from "./insertOrUpdateProductSection.useCase";
+import { DeleteProductSectionUseCase } from "./DeleteProductSection.useCase";
 
-export const orderUseCases = [
+const queryHandlers = [
+  GetBookingQueryHandler,
+  GetProductSectionDataQueryHandler,
+];
+
+const commandHandlers = [
   CreateBookingUseCase,
   DeleteBookingUseCase,
   DeleteOrderUseCase,
@@ -23,5 +29,8 @@ export const orderUseCases = [
   DeleteReferralForRepairsUseCase,
   CreatePrepareOutputDataUseCase,
   UpdatePrepareOutputDataUseCase,
-  ...queryHandlers,
+  InsertOrUpdateProductSectionUseCase,
+  DeleteProductSectionUseCase,
 ];
+
+export const orderUseCases = [...commandHandlers, ...queryHandlers];

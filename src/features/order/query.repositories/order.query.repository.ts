@@ -20,6 +20,7 @@ import { GetCarForOrderDto } from "../dto/query.dtos/getCarForOrder.dto";
 import { CarForOrderViewModel } from "../models/order.views/carForOrderView.model";
 import { CarNameForPrepareOutputDataView } from "../models/order.views/carNameForPrepareOutputDataView";
 import { CarInfoForPrepareOutputDataView } from "../models/order.views/carInfoForPrepareOutputDataView.model";
+import { ProductSectionView } from "../models/order.views/productSectionView.model";
 
 @Injectable()
 export class OrderQueryRepository {
@@ -196,6 +197,17 @@ WHERE REQ_RAZN.REQ_RAZN_KEY = ?;
       [REQ_RAZN_KEY]
     );
     return result[0];
+  }
+
+  async getProductSectionData(id: number): Promise<ProductSectionView[]> {
+    return this.firebird.query(
+      `
+      SELECT TTN_EXT_KEY, TTN_ID,NOM_PRICE, ARTICUL, KOL, CENA, NAIM, ED_IZM, UPAKOVKA, MEST, MASSA 
+      FROM TTN_EXT
+      WHERE TTN_ID = ?
+    `,
+      [id]
+    );
   }
 
   async getCarsNamesForPrepareOutputData(): Promise<

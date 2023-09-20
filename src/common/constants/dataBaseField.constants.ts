@@ -10,4 +10,13 @@ export const constants = {
     vidPerev: 200,
     vidSoob: 500,
   },
+  ttnExt: {
+    nomPrice: 50,
+    arcticul: 20,
+    numeric: 8,
+    naim: 100,
+    edIzm: 10,
+    upacovka: 20,
+    mest: 20,
+  },
 };
