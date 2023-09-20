@@ -17,6 +17,7 @@ import {
   InsertOrUpdateTransportSectionCommand,
   InsertOrUpdateTransportSectionUseCase,
 } from "./insertOrUpdateTransportSection.useCase";
+import { DeleteTransportSectionUseCase } from "./deleteTransportSection.useCase";
 
 const queryHandlers = [
   GetBookingQueryHandler,
@@ -38,6 +39,7 @@ const commandHandlers = [
   InsertOrUpdateProductSectionUseCase,
   DeleteProductSectionUseCase,
   InsertOrUpdateTransportSectionUseCase,
+  DeleteTransportSectionUseCase,
 ];
 
 export const orderUseCases = [...commandHandlers, ...queryHandlers];

@@ -311,4 +311,15 @@ WHERE REQ_RAZN.REQ_RAZN_KEY = ?;
 
     return result.COUNT === 1;
   }
+
+  async transportSectionExists(id: number): Promise<boolean> {
+    const [result] = await this.firebird.query(
+      `
+      SELECT COUNT(*) FROM TTN_TRANSP WHERE TTN_TRANSP_KEY = ?;
+    `,
+      [id]
+    );
+
+    return result.COUNT === 1;
+  }
 }

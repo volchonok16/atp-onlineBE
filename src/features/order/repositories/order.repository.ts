@@ -138,6 +138,17 @@ export class OrderRepository {
     return await this.firebird.query(query, parameters);
   }
 
+  async deleteProductSection(id: number): Promise<boolean> {
+    try {
+      await this.firebird.query("DELETE FROM TTN_EXT WHERE TTN_EXT_KEY = ?;", [
+        id,
+      ]);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   async insertOrUpdateTransportSection(
     dto: TransportSectionDto
   ): Promise<TransportSectionView2> {
@@ -149,11 +160,14 @@ export class OrderRepository {
     return this.firebird.query(query, parameters);
   }
 
-  async deleteProductSection(id: number): Promise<boolean> {
+  async deleteTransportSection(id: number): Promise<boolean> {
     try {
-      await this.firebird.query("DELETE FROM TTN_EXT WHERE TTN_EXT_KEY = ?;", [
-        id,
-      ]);
+      await this.firebird.query(
+        `
+        DELETE FROM TTN_TRANSP WHERE TTN_TRANSP_KEY = ?; 
+      `,
+        [id]
+      );
       return true;
     } catch (e) {
       return false;

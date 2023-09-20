@@ -62,6 +62,7 @@ import { TransportSectionView2 } from "../models/order.views/transportSectionVie
 import { GetTransportSectionDataQuery } from "../use-cases/order/query-bus/getTransportSectionData.query-handler";
 import { TransportSectionDto } from "../dto/dtos/order/transportSection.dto";
 import { InsertOrUpdateTransportSectionCommand } from "../use-cases/order/insertOrUpdateTransportSection.useCase";
+import { DeleteTransportSectionCommand } from "../use-cases/order/deleteTransportSection.useCase";
 
 @ApiTags("Order")
 @Controller("api/order")
@@ -201,8 +202,17 @@ export class OrderController {
     return this.commandBus.execute(
       new InsertOrUpdateTransportSectionCommand(dto)
     );
-  } // TODO
+  }
 
+  @Delete("bill-of-landing-and-waybill/transport-section/:TTN_TRANSP_KEY")
+  @ApiOperation({ summary: "Разнарядка -> ТТН -> Транспортный раздел" })
+  async deleteTransportSection(
+    @Param("TTN_TRANSP_KEY") id: number
+  ): Promise<boolean> {
+    return this.commandBus.execute(new DeleteTransportSectionCommand(id));
+  }
+
+  @Get("bill-of-landing-and-waybill")
   @Get("output-data/car-name")
   @ApiOperation({
     summary: "Разнарядка -> Выходная информация -> Таблица с машинами +",
