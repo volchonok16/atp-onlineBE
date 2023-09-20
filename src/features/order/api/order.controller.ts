@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   Put,
   Query,
@@ -52,6 +53,16 @@ import { CarNameForPrepareOutputDataView } from "../models/order.views/carNameFo
 import { CarInfoForPrepareOutputDataView } from "../models/order.views/carInfoForPrepareOutputDataView.model";
 import { OrderDataQueryDto } from "../dto/query.dtos/orderData.query.dto";
 import { GetBookingQuery } from "../use-cases/order/query-bus/getBooking.query-handler";
+import { ProductSectionView } from "../models/order.views/productSectionView.model";
+import { ProductSectionDto } from "../dto/dtos/order/productSection.dto";
+import { GetProductSectionDataQuery } from "../use-cases/order/query-bus/getProductSectionData.query-handler";
+import { InsertOrUpdateProductSectionCommand } from "../use-cases/order/insertOrUpdateProductSection.useCase";
+import { DeleteProductSectionCommand } from "../use-cases/order/DeleteProductSection.useCase";
+import { TransportSectionView2 } from "../models/order.views/transportSectionView2.model";
+import { GetTransportSectionDataQuery } from "../use-cases/order/query-bus/getTransportSectionData.query-handler";
+import { TransportSectionDto } from "../dto/dtos/order/transportSection.dto";
+import { InsertOrUpdateTransportSectionCommand } from "../use-cases/order/insertOrUpdateTransportSection.useCase";
+import { DeleteTransportSectionCommand } from "../use-cases/order/deleteTransportSection.useCase";
 
 @ApiTags("Order")
 @Controller("api/order")
@@ -145,12 +156,63 @@ export class OrderController {
     );
   }
 
-  @Get("bill-of-landing-and-waybill/product-section/:TTN_KEY ")
+  @Get("bill-of-landing-and-waybill/product-section/:TTN_KEY")
   @ApiOperation({ summary: "Разнарядка -> ТТН -> Товарный раздел" })
-  async getProductSection(@Param("TTN_KEY") id: number) {
-    //return this.orderQueryRepository.
+  async getProductSection(
+    @Param("TTN_KEY") id: number
+  ): Promise<ProductSectionView[]> {
+    return this.queryBus.execute(new GetProductSectionDataQuery(id));
   }
 
+  @Post("bill-of-landing-and-waybill/product-section")
+  @ApiOperation({ summary: "Разнарядка -> ТТН -> Товарный раздел" })
+  @ApiBody({ type: ProductSectionDto })
+  async insertOrUpdateProductSection(
+    @Body() data: any
+  ): Promise<ProductSectionView> {
+    const dto = ProductSectionDto.dto(data);
+    return this.commandBus.execute(
+      new InsertOrUpdateProductSectionCommand(dto)
+    );
+  }
+
+  @Delete("bill-of-landing-and-waybill/product-section/:TTN_EXT_KEY")
+  @ApiOperation({ summary: "Разнарядка -> ТТН -> Товарный раздел" })
+  async deleteProductSection(
+    @Param("TTN_EXT_KEY") id: number
+  ): Promise<boolean> {
+    return this.commandBus.execute(new DeleteProductSectionCommand(id));
+  }
+
+  @Get("bill-of-landing-and-waybill/transport-section/:TTN_KEY")
+  @ApiOperation({ summary: "Разнарядка -> ТТН -> Транспортный раздел" })
+  async getTransportSectionData(
+    @Param("TTN_KEY") id: number
+  ): Promise<TransportSectionView2[]> {
+    return this.queryBus.execute(new GetTransportSectionDataQuery(id));
+  }
+
+  @Post("bill-of-landing-and-waybill/transport-section")
+  @ApiOperation({ summary: "Разнарядка -> ТТН -> Транспортный раздел" })
+  @ApiBody({ type: TransportSectionDto })
+  async insertOrUpdateTransportSection(
+    @Body() data: any
+  ): Promise<TransportSectionView2> {
+    const dto = TransportSectionDto.dto(data);
+    return this.commandBus.execute(
+      new InsertOrUpdateTransportSectionCommand(dto)
+    );
+  }
+
+  @Delete("bill-of-landing-and-waybill/transport-section/:TTN_TRANSP_KEY")
+  @ApiOperation({ summary: "Разнарядка -> ТТН -> Транспортный раздел" })
+  async deleteTransportSection(
+    @Param("TTN_TRANSP_KEY") id: number
+  ): Promise<boolean> {
+    return this.commandBus.execute(new DeleteTransportSectionCommand(id));
+  }
+
+  @Get("bill-of-landing-and-waybill")
   @Get("output-data/car-name")
   @ApiOperation({
     summary: "Разнарядка -> Выходная информация -> Таблица с машинами +",
