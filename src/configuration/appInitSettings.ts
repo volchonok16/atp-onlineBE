@@ -8,8 +8,8 @@ export const appInitSettings = (app: INestApplication) => {
   const options = {
     origin: [
       "http://localhost:3000",
-      "http://adjnatech.ru:3000",
-      "http://adjnatech.ru:3000/auth",
+      "http://adjnatec.ru:3000",
+      "http://adjnatec.ru:3000/auth",
     ],
     methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
     credentials: true,
