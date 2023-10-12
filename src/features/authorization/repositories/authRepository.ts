@@ -1,12 +1,12 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { dbConnect_const } from "../../../common/constants/global.constants";
-import { Connection } from "odbc";
 import { UserDto } from "../dto/user.dto";
 import { UserType } from "../types/user.type";
+import { FirebirdService } from "../../../common/helpers/firebird-orm/firebird";
 
 @Injectable()
 export class AuthRepository {
-  constructor(@Inject(dbConnect_const) private firebird: Connection) {}
+  constructor(private readonly firebird: FirebirdService) {}
 
   async findUserByUsernameAndPass(
     username: string,

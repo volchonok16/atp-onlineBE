@@ -1,6 +1,4 @@
-import { Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { dbConnect_const } from "../../../common/constants/global.constants";
-import { Connection } from "odbc";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { OutputDataViewModel } from "../models/order.views/outputdataView.model";
 import { format } from "date-fns";
 import { OrderDataQueryDtoType } from "../types/orderDataQueryDtoType";
@@ -15,11 +13,7 @@ import { OneOrderDataViewModel } from "../models/order.views/oneOrderDataView.mo
 import { RequestLogDto } from "../dto/query.dtos/requestLog.dto";
 import { RequestViewModel } from "../models/order.views/requestView.model";
 import { FirebirdService } from "../../../common/helpers/firebird-orm/firebird";
-import { rawDbResponseTransform } from "../../../common/helpers/rawDbResponseTransform.helper";
-import { GetCarForOrderDto } from "../dto/query.dtos/getCarForOrder.dto";
-import { CarForOrderViewModel } from "../models/order.views/carForOrderView.model";
 import { CarNameForPrepareOutputDataView } from "../models/order.views/carNameForPrepareOutputDataView";
-import { CarInfoForPrepareOutputDataView } from "../models/order.views/carInfoForPrepareOutputDataView.model";
 import { ProductSectionView } from "../models/order.views/productSectionView.model";
 import { TransportSectionView2 } from "../models/order.views/transportSectionView2.model";
 
