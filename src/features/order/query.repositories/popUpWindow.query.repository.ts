@@ -1,9 +1,6 @@
-import { Inject, Injectable } from "@nestjs/common";
-import { dbConnect_const } from "../../../common/constants/global.constants";
-import { Connection } from "odbc";
+import { Injectable } from "@nestjs/common";
 import { EmployeeQueryDto } from "../dto/query.dtos/employe.query.dto";
 import { FirebirdService } from "../../../common/helpers/firebird-orm/firebird";
-import { isLogLevelEnabled } from "@nestjs/common/services/utils";
 
 @Injectable()
 export class PopUpWindowQueryRepository {

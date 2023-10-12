@@ -41,7 +41,6 @@
     "dotenv": "16.3.1",
     "node-firebird": "1.1.5",
     "node-gyp": "9.3.1",
-    "odbc": "2.4.8",
     "passport": "0.6.0",
     "passport-jwt": "4.0.1",
     "passport-local": "1.0.0",
