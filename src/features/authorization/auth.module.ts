@@ -10,6 +10,7 @@ import { CqrsModule } from "@nestjs/cqrs";
 import { CreateTokenUseCase } from "./useCases/createToken.useCase";
 import { RefreshTokenStrategy } from "./strategies/refreshToken.strategy";
 import { ChangePasswordUseCase } from "./useCases/changePassword.useCase";
+import { FirebirdService } from "../../common/helpers/firebird-orm/firebird";
 
 const useCases = [
   CheckCredentialsUseCase,
@@ -31,6 +32,12 @@ const adapters = [JwtAdapter];
     }),
   ],
   controllers: [AuthController],
-  providers: [...useCases, ...repositories, ...adapters, ...strategies],
+  providers: [
+    ...useCases,
+    ...repositories,
+    ...adapters,
+    ...strategies,
+    FirebirdService,
+  ],
 })
 export class AuthModule {}

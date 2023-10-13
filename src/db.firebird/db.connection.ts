@@ -1,9 +1,5 @@
 import { Logger } from "@nestjs/common";
-import * as odbc from "odbc";
-import {
-  connectionStringForODBC,
-  nodeFirebirdOptions,
-} from "../../firebird.config";
+import { nodeFirebirdOptions } from "../../firebird.config";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Firebird = require("node-firebird");
 
@@ -15,26 +11,14 @@ export const runDb = async () => {
 
       try {
         await db.query("SELECT * FROM OD", (err, result) => {
-          console.log("node-firebird is ok", result.length);
+          logger.log("Connection success.");
           return result;
           db.detach();
         });
       } catch (error) {
-        console.error("Error:", error);
+        logger.error("Error:", error);
       }
     });
-  } catch (e) {
-    const errorText = "DB connection error:" + e;
-    logger.error(errorText);
-    throw new Error(errorText);
-  }
-
-  try {
-    const connect = await odbc.connect({
-      connectionString: connectionStringForODBC,
-    });
-    logger.log("Successful db connection");
-    return connect;
   } catch (e) {
     const errorText = "DB connection error:" + e;
     logger.error(errorText);
