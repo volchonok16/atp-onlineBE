@@ -25,6 +25,8 @@ import { ProductSectionView } from "../models/order.views/productSectionView.mod
 import { upsertQuery } from "../../../common/helpers/firebird-orm/upsert";
 import { TransportSectionView2 } from "../models/order.views/transportSectionView2.model";
 import { TransportSectionDto } from "../dto/dtos/order/transportSection.dto";
+import { UpdateRaznarWeekPlanDto } from "../dto/dtos/updateRaznarWeekPlan.dto";
+import { CreateOrderDataForRaznarModel } from "../models/order.views/createOrderDataForRaznar.model";
 
 @Injectable()
 export class OrderRepository {
@@ -169,7 +171,6 @@ export class OrderRepository {
         [id]
       );
       return true;
-
     } catch (e) {
       return false;
     }
@@ -383,5 +384,48 @@ export class OrderRepository {
     } catch (e) {
       return false;
     }
+  }
+
+  async deleteOldRaznKey(OLD_RAZN_KEY: number) {
+    try {
+      await this.firebird.query(
+        `
+      DELETE FROM RAZNAR
+       WHERE RAZN_KEY = ?;
+    `,
+        [OLD_RAZN_KEY]
+      );
+
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  async updateRaznarWeekPlan(
+    id: number,
+    dto: UpdateRaznarWeekPlanDto
+  ): Promise<boolean> {
+    try {
+      const data = getDataAccumulater(dto);
+      await this.firebird.query(
+        `
+      UPDATE RAZNAR
+         SET ${data}
+       WHERE RAZN_KEY = ?;
+    `,
+        [id]
+      );
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  async insertIntoRaznar(
+    dto: CreateOrderDataForRaznarModel
+  ): Promise<CreateOrderView> {
+    const { query, parameters } = createQuery("RAZNAR", dto, "RAZN_KEY");
+    return this.firebird.query(query, parameters);
   }
 }

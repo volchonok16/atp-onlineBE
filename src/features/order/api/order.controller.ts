@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   Param,
-  Patch,
   Post,
   Put,
   Query,
@@ -63,6 +62,12 @@ import { GetTransportSectionDataQuery } from "../use-cases/order/query-bus/getTr
 import { TransportSectionDto } from "../dto/dtos/order/transportSection.dto";
 import { InsertOrUpdateTransportSectionCommand } from "../use-cases/order/insertOrUpdateTransportSection.useCase";
 import { DeleteTransportSectionCommand } from "../use-cases/order/deleteTransportSection.useCase";
+import { DeleteOldRaznKeyCommand } from "../use-cases/order/deleteOldRaznKey.useCase";
+import { UpdateRaznarCommand } from "../use-cases/order/updateRaznar.useCase";
+import { UpdateRaznarWeekPlanDto } from "../dto/dtos/updateRaznarWeekPlan.dto";
+import { GetRaznarWeekDto } from "../dto/dtos/getRaznarWeek.dto";
+import { CreateOrderDataEntryDto } from "../dto/dtos/createOrderDataEntry.dto";
+import { CreateOrderDataForWeekPlanCommand } from "../use-cases/order/createOrderDataForWeekPlan.useCase";
 
 @ApiTags("Order")
 @Controller("api/order")
@@ -155,7 +160,6 @@ export class OrderController {
       new DeleteBillOfLandingCommand(dto.TTN_ID)
     );
   }
-
 
   @Get("bill-of-landing-and-waybill/product-section/:TTN_KEY")
   @ApiOperation({ summary: "Разнарядка -> ТТН -> Товарный раздел" })
@@ -416,5 +420,36 @@ export class OrderController {
     @Param("RAZNAR2_KEY") RAZNAR2_KEY: number
   ): Promise<boolean> {
     return this.commandBus.execute(new DeleteBookingDataCommand(RAZNAR2_KEY));
+  }
+
+  @Get("/raznar/raznar-week")
+  @ApiOperation({ summary: "Разнарядка -> Недельный план +" })
+  async getRaznarWeek(@Body() body: GetRaznarWeekDto) {
+    return this.orderQueryRepository.getRaznarWeek(body);
+  }
+
+  @Delete("/raznar/:OLD_RAZN_KEY")
+  @ApiOperation({ summary: "Разнарядка -> Недельный план +" })
+  async deleteOldRaznKey(@Param("OLD_RAZN_KEY") OLD_RAZN_KEY: number) {
+    return this.commandBus.execute(new DeleteOldRaznKeyCommand(OLD_RAZN_KEY));
+  }
+
+  @Put("/raznar/:OLD_RAZN_KEY")
+  @ApiOperation({ summary: "Разнарядка -> Недельный план +" })
+  async updateRaznarForWeekPlan(
+    @Param("OLD_RAZN_KEY") OLD_RAZN_KEY: number,
+    @Body() body: UpdateRaznarWeekPlanDto
+  ) {
+    return this.commandBus.execute(new UpdateRaznarCommand(OLD_RAZN_KEY, body));
+  }
+
+  @Post("/raznar/order-data-entry")
+  @ApiOperation({ summary: "Разнарядка -> Недельный план +" })
+  async createOrderDataForWeekPlan(
+    @Body() body: CreateOrderDataEntryDto
+  ): Promise<CreateOrderView> {
+    return await this.commandBus.execute(
+      new CreateOrderDataForWeekPlanCommand(body)
+    );
   }
 }
