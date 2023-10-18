@@ -38,6 +38,9 @@ import { UpdateCarInfoUseCase } from "./use-cases/data-editing/updateCarInfo.use
 import { DeleteCarInfoUseCase } from "./use-cases/data-editing/deleteCarInfo.useCase";
 import { FirebirdService } from "../../common/helpers/firebird-orm/firebird";
 import { CreateOrderUseCase } from "./use-cases/order/createOrder.useCase";
+import { DeleteOldRaznKeyUseCase } from "./use-cases/order/deleteOldRaznKey.useCase";
+import { UpdateRaznarUseCase } from "./use-cases/order/updateRaznar.useCase";
+import { CreateOrderDataForWeekPlanUseCase } from "./use-cases/order/createOrderDataForWeekPlan.useCase";
 
 const useCases = [
   CreateCarInfoUseCase,
@@ -64,6 +67,9 @@ const useCases = [
   UpdateImageUseCase,
   DeleteImageUseCase,
   CreateOrderUseCase,
+  DeleteOldRaznKeyUseCase,
+  UpdateRaznarUseCase,
+  CreateOrderDataForWeekPlanUseCase,
 ];
 const repositories = [
   OrderQueryRepository,

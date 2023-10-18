@@ -16,6 +16,7 @@ import { FirebirdService } from "../../../common/helpers/firebird-orm/firebird";
 import { CarNameForPrepareOutputDataView } from "../models/order.views/carNameForPrepareOutputDataView";
 import { ProductSectionView } from "../models/order.views/productSectionView.model";
 import { TransportSectionView2 } from "../models/order.views/transportSectionView2.model";
+import { GetRaznarWeekDto } from "../dto/dtos/getRaznarWeek.dto";
 
 @Injectable()
 export class OrderQueryRepository {
@@ -314,6 +315,24 @@ WHERE REQ_RAZN.REQ_RAZN_KEY = ?;
       [id]
     );
 
+    return result.COUNT === 1;
+  }
+
+  async getRaznarWeek(body: GetRaznarWeekDto) {
+    const a = await this.firebird.query(`SELECT * FROM  RAZNAR_WEEK(?, ?)`, [
+      body.date,
+      body.column,
+    ]);
+    return a;
+  }
+
+  async checkRaznarId(id: number): Promise<boolean> {
+    const [result] = await this.firebird.query(
+      `
+          SELECT COUNT(*) FROM RAZNAR WHERE RAZN_KEY = ?;
+        `,
+      [id]
+    );
     return result.COUNT === 1;
   }
 }
