@@ -41,6 +41,7 @@ import { CreateOrderUseCase } from "./use-cases/order/createOrder.useCase";
 import { DeleteOldRaznKeyUseCase } from "./use-cases/order/deleteOldRaznKey.useCase";
 import { UpdateRaznarUseCase } from "./use-cases/order/updateRaznar.useCase";
 import { CreateOrderDataForWeekPlanUseCase } from "./use-cases/order/createOrderDataForWeekPlan.useCase";
+import { DeleteFlightsUseCase } from "./use-cases/data-editing/deleteFlights.useCase";
 
 const useCases = [
   CreateCarInfoUseCase,
@@ -70,6 +71,7 @@ const useCases = [
   DeleteOldRaznKeyUseCase,
   UpdateRaznarUseCase,
   CreateOrderDataForWeekPlanUseCase,
+  DeleteFlightsUseCase,
 ];
 const repositories = [
   OrderQueryRepository,
