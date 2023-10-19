@@ -563,7 +563,7 @@ export class DataEditingController {
   @ApiOperation({
     summary: "Редактирование общих данных -> Рейсы",
   })
-  async deleteFlights(@Param("RAZN_OD_KEY") id: number) {
+  async deleteFlights(@Param("RAZN_OD_KEY") id: number): Promise<boolean> {
     return this.commandBus.execute(new DeleteFlightsCommand(id));
   }
 }
