@@ -479,4 +479,18 @@ export class DataEditingRepository {
 
     return allSuccessful;
   }
+
+  async deleteFlight(id: number) {
+    try {
+      await this.firebird.query(
+        `
+          EXECUTE PROCEDURE RAZN_OD_DEL(?)
+        `,
+        [id]
+      );
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 }

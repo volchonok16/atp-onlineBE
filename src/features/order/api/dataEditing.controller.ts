@@ -84,6 +84,7 @@ import { PriceDto } from "../dto/dtos/data-editing/price.dto";
 import { CreateOrUpdatePriceCommand } from "../use-cases/data-editing/createOrUpdatePriceUseCase";
 import { DeletePriceCommand } from "../use-cases/data-editing/deletePrice.useCase";
 import { ArchiveOrNotArchiveQuery } from "../dto/query.dtos/noteQuery.dto";
+import { DeleteFlightsCommand } from "../use-cases/data-editing/deleteFlights.useCase";
 
 @ApiTags("Data-editing")
 //@UseGuards(RefreshTokenGuard)
@@ -556,5 +557,13 @@ export class DataEditingController {
   })
   async deletePrice(@Param("DATA_CENA_KEY") id: number): Promise<boolean> {
     return this.commandBus.execute(new DeletePriceCommand(id));
+  }
+
+  @Delete("flights/:RAZN_OD_KEY")
+  @ApiOperation({
+    summary: "Редактирование общих данных -> Рейсы",
+  })
+  async deleteFlights(@Param("RAZN_OD_KEY") id: number): Promise<boolean> {
+    return this.commandBus.execute(new DeleteFlightsCommand(id));
   }
 }

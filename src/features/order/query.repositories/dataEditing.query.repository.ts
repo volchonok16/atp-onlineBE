@@ -417,4 +417,12 @@ export class DataEditingQueryRepository {
       staffInfoFilter += ` and UPPER(FIO) LIKE UPPER('%${queryDto.surname}%')`;
     return staffInfoFilter;
   }
+
+  async getFlight(id: number) {
+    const [result] = await this.firebird.query(
+      `SELECT COUNT(*) FROM RAZN_OD WHERE RAZN_OD_KEY = ?`,
+      [id]
+    );
+    return result.COUNT === 1;
+  }
 }
