@@ -571,7 +571,7 @@ export class DataEditingController {
     return this.commandBus.execute(new DeleteFlightsCommand(id));
   }
 
-  @Get("other-equipments/objects-equipments/:SKLAD_OBJ_SPIS_KEY")
+  @Get("other-equipments/docs/:SKLAD_OBJ_SPIS_KEY")
   @ApiOperation({
     summary:
       "Редактирование общих данных -> Иная техника и объекты -> Таблица документы",
@@ -582,7 +582,7 @@ export class DataEditingController {
     return this.dataEditingQueryRepository.getDocs(id);
   }
 
-  @Post("other-equipments/objects-equipments")
+  @Post("other-equipments/docs")
   @ApiOperation({
     summary:
       "Редактирование общих данных -> Иная техника и объекты -> Таблица документы",
@@ -595,7 +595,7 @@ export class DataEditingController {
     );
   }
 
-  @Put("other-equipments/objects-equipments")
+  @Put("other-equipments/docs")
   @ApiOperation({
     summary:
       "Редактирование общих данных -> Иная техника и объекты -> Таблица документы",
@@ -608,7 +608,7 @@ export class DataEditingController {
     );
   }
 
-  @Delete("other-equipments/objects-equipments/:OLD_RAZN_OD_DOCS_KEY")
+  @Delete("other-equipments/docs/:OLD_RAZN_OD_DOCS_KEY")
   @ApiOperation({
     summary:
       "Редактирование общих данных -> Иная техника и объекты -> Таблица документы",
