@@ -418,9 +418,24 @@ export class DataEditingQueryRepository {
     return staffInfoFilter;
   }
 
-  async getFlight(id: number) {
+  async getFlight(id: number): Promise<boolean> {
     const [result] = await this.firebird.query(
       `SELECT COUNT(*) FROM RAZN_OD WHERE RAZN_OD_KEY = ?`,
+      [id]
+    );
+    return result.COUNT === 1;
+  }
+
+  async getDocs(id: number) {
+    return this.firebird.query(
+      `SELECT * FROM  RAZN_OD_DOCS where RAZN_OD_ID = ?`,
+      [id]
+    );
+  }
+
+  async checkDocsKey(id: number): Promise<boolean> {
+    const [result] = await this.firebird.query(
+      `SELECT COUNT(*) FROM RAZN_OD_DOCS WHERE RAZN_OD_DOCS_KEY = ?`,
       [id]
     );
     return result.COUNT === 1;

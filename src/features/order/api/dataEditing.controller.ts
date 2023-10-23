@@ -85,6 +85,10 @@ import { CreateOrUpdatePriceCommand } from "../use-cases/data-editing/createOrUp
 import { DeletePriceCommand } from "../use-cases/data-editing/deletePrice.useCase";
 import { ArchiveOrNotArchiveQuery } from "../dto/query.dtos/noteQuery.dto";
 import { DeleteFlightsCommand } from "../use-cases/data-editing/deleteFlights.useCase";
+import { CreateOtherEquipmentsAndObjectsDto } from "../dto/dtos/data-editing/createOtherEquipmentsAndObjects.dto";
+import { CreateOrUpdateOtherEquipmentsAndObjectsCommand } from "../use-cases/data-editing/createOrUpdateOtherEquipmentsAndObjects.useCase";
+import { CreateOtherEquipmentsAndObjectsForTableDocsDtoDto } from "../dto/dtos/data-editing/createOtherEquipmentsAndObjectsForTableDocs.dto";
+import { DeleteRaznOdDockKeyCommand } from "../use-cases/data-editing/deleteRaznOdDockKey.useCase";
 
 @ApiTags("Data-editing")
 //@UseGuards(RefreshTokenGuard)
@@ -565,5 +569,51 @@ export class DataEditingController {
   })
   async deleteFlights(@Param("RAZN_OD_KEY") id: number): Promise<boolean> {
     return this.commandBus.execute(new DeleteFlightsCommand(id));
+  }
+
+  @Get("other-equipments/other-equipments/:SKLAD_OBJ_SPIS_KEY")
+  @ApiOperation({
+    summary:
+      "Редактирование общих данных -> Иная техника и объекты -> Таблица документы",
+  })
+  async getOtherEquipments(@Param(":SKLAD_OBJ_SPIS_KEY") id: number) {
+    return this.dataEditingQueryRepository.getDocs(id);
+  }
+
+  @Post("other-equipments/objects-equipments")
+  @ApiOperation({
+    summary:
+      "Редактирование общих данных -> Иная техника и объекты -> Таблица документы",
+  })
+  async createEquipmentsAndObjects(
+    @Body() data: CreateOtherEquipmentsAndObjectsForTableDocsDtoDto
+  ): Promise<boolean> {
+    return this.commandBus.execute(
+      new CreateOrUpdateOtherEquipmentsAndObjectsCommand(data)
+    );
+  }
+
+  @Put("other-equipments/objects-equipments")
+  @ApiOperation({
+    summary:
+      "Редактирование общих данных -> Иная техника и объекты -> Таблица документы",
+  })
+  async updateEquipmentsAndObjects(
+    @Body() data: CreateOtherEquipmentsAndObjectsForTableDocsDtoDto
+  ): Promise<boolean> {
+    return this.commandBus.execute(
+      new CreateOrUpdateOtherEquipmentsAndObjectsCommand(data)
+    );
+  }
+
+  @Delete("other-equipments/objects-equipments/:OLD_RAZN_OD_DOCS_KEY")
+  @ApiOperation({
+    summary:
+      "Редактирование общих данных -> Иная техника и объекты -> Таблица документы",
+  })
+  async deleteRaznOdDockKey(
+    @Param("OLD_RAZN_OD_DOCS_KEY") id: number
+  ): Promise<boolean> {
+    return this.commandBus.execute(new DeleteRaznOdDockKeyCommand(id));
   }
 }

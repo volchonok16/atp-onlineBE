@@ -23,6 +23,7 @@ import { SubunitViewModel } from "../models/dataEditing.views/subunitView.model"
 import { FirebirdService } from "../../../common/helpers/firebird-orm/firebird";
 import { createQuery } from "../../../common/helpers/firebird-orm/create";
 import { booleanToNumber } from "../../../common/helpers/booleanToNumberTransform.helper";
+import { CreateOtherEquipmentsAndObjectsForTableDocsDtoDto } from "../dto/dtos/data-editing/createOtherEquipmentsAndObjectsForTableDocs.dto";
 
 @Injectable()
 export class DataEditingRepository {
@@ -485,6 +486,46 @@ export class DataEditingRepository {
       await this.firebird.query(
         `
           EXECUTE PROCEDURE RAZN_OD_DEL(?)
+        `,
+        [id]
+      );
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  async createOrUpdateOtherEquipmentsAndObjects(
+    dto: CreateOtherEquipmentsAndObjectsForTableDocsDtoDto
+  ) {
+    try {
+      await this.firebird.query(
+        `
+      EXECUTE PROCEDURE RAZN_OD_DOCS_IU(?,?,?,?,?,?,?,?)
+    `,
+        [
+          dto.RAZN_OD_DOCS_KEY,
+          dto.MAS_SKLAD_OBJ_SPIS_KEY,
+          dto.NAIM,
+          dto.NOMER,
+          dto.KEM_VID,
+          dto.DATE_OT,
+          dto.DATE_DO,
+          dto.D_PREDUPR,
+        ]
+      );
+
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  async deleteOldDocs(id: number) {
+    try {
+      await this.firebird.query(
+        `
+         EXECUTE PROCEDURE RAZN_OD_DOCS_DEL(?)
         `,
         [id]
       );
