@@ -85,10 +85,10 @@ import { CreateOrUpdatePriceCommand } from "../use-cases/data-editing/createOrUp
 import { DeletePriceCommand } from "../use-cases/data-editing/deletePrice.useCase";
 import { ArchiveOrNotArchiveQuery } from "../dto/query.dtos/noteQuery.dto";
 import { DeleteFlightsCommand } from "../use-cases/data-editing/deleteFlights.useCase";
-import { CreateOtherEquipmentsAndObjectsDto } from "../dto/dtos/data-editing/createOtherEquipmentsAndObjects.dto";
 import { CreateOrUpdateOtherEquipmentsAndObjectsCommand } from "../use-cases/data-editing/createOrUpdateOtherEquipmentsAndObjects.useCase";
 import { CreateOtherEquipmentsAndObjectsForTableDocsDtoDto } from "../dto/dtos/data-editing/createOtherEquipmentsAndObjectsForTableDocs.dto";
 import { DeleteRaznOdDockKeyCommand } from "../use-cases/data-editing/deleteRaznOdDockKey.useCase";
+import { RaznOdDocsModel } from "../models/dataEditing.views/raznOdDocs.model";
 
 @ApiTags("Data-editing")
 //@UseGuards(RefreshTokenGuard)
@@ -571,12 +571,14 @@ export class DataEditingController {
     return this.commandBus.execute(new DeleteFlightsCommand(id));
   }
 
-  @Get("other-equipments/other-equipments/:SKLAD_OBJ_SPIS_KEY")
+  @Get("other-equipments/objects-equipments/:SKLAD_OBJ_SPIS_KEY")
   @ApiOperation({
     summary:
       "Редактирование общих данных -> Иная техника и объекты -> Таблица документы",
   })
-  async getOtherEquipments(@Param(":SKLAD_OBJ_SPIS_KEY") id: number) {
+  async getOtherEquipments(
+    @Param("SKLAD_OBJ_SPIS_KEY") id: number
+  ): Promise<RaznOdDocsModel> {
     return this.dataEditingQueryRepository.getDocs(id);
   }
 

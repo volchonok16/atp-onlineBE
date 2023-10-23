@@ -427,6 +427,7 @@ export class DataEditingQueryRepository {
   }
 
   async getDocs(id: number) {
+    console.log(id);
     return this.firebird.query(
       `SELECT * FROM  RAZN_OD_DOCS where RAZN_OD_ID = ?`,
       [id]
