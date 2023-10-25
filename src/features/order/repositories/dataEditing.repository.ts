@@ -24,6 +24,8 @@ import { FirebirdService } from "../../../common/helpers/firebird-orm/firebird";
 import { createQuery } from "../../../common/helpers/firebird-orm/create";
 import { booleanToNumber } from "../../../common/helpers/booleanToNumberTransform.helper";
 import { CreateOtherEquipmentsAndObjectsForTableDocsDtoDto } from "../dto/dtos/data-editing/createOtherEquipmentsAndObjectsForTableDocs.dto";
+import { CreateOtherEquipmentsAndObjectsDto } from "../dto/dtos/data-editing/createOtherEquipmentsAndObjects.dto";
+import { SkladObjSpisKeyViewModel } from "../models/dataEditing.views/skladObjSpisKeyView.model";
 
 @Injectable()
 export class DataEditingRepository {
@@ -521,11 +523,52 @@ export class DataEditingRepository {
     }
   }
 
-  async deleteOldDocs(id: number) {
+  async deleteOldDocs(id: number): Promise<boolean> {
     try {
       await this.firebird.query(
         `
          EXECUTE PROCEDURE RAZN_OD_DOCS_DEL(?)
+        `,
+        [id]
+      );
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  async createObjectsAndOtherEquipments(
+    dto: CreateOtherEquipmentsAndObjectsDto
+  ): Promise<SkladObjSpisKeyViewModel> {
+    const { query, parameters } = createQuery(
+      "SKLAD_OBJ_SPIS",
+      dto,
+      "SKLAD_OBJ_SPIS_KEY"
+    );
+    return this.firebird.query(query, parameters);
+  }
+
+  async updateObjectsAndOtherEquipments(
+    id: number,
+    dto: CreateOtherEquipmentsAndObjectsDto
+  ): Promise<boolean> {
+    try {
+      const data = getDataAccumulater(dto);
+      await this.firebird.query(
+        `UPDATE SKLAD_OBJ_SPIS SET ${data} WHERE SKLAD_OBJ_SPIS_KEY = ?`,
+        [id]
+      );
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  async deleteObjectsAndOtherEquipments(id: number): Promise<boolean> {
+    try {
+      await this.firebird.query(
+        `
+         DELETE FROM  SKLAD_OBJ_SPIS WHERE SKLAD_OBJ_SPIS_KEY = ?
         `,
         [id]
       );

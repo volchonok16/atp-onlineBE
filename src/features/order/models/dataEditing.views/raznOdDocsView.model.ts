@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 
-export class RaznOdDocsModel {
+export class RaznOdDocsViewModel {
   @ApiProperty()
   RAZN_OD_DOCS_KEY: number;
   @ApiProperty()

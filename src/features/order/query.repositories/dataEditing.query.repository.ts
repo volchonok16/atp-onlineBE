@@ -23,6 +23,7 @@ import { ArchiveOrNotArchiveQuery } from "../dto/query.dtos/noteQuery.dto";
 import { booleanToShortString } from "../../../common/helpers/booleanToShortStringTransform";
 import { FirebirdService } from "../../../common/helpers/firebird-orm/firebird";
 import { rawDbResponseTransform } from "../../../common/helpers/rawDbResponseTransform.helper";
+import { SkladObjSpisViewModel } from "../models/dataEditing.views/skladObjSpisView.model";
 
 @Injectable()
 export class DataEditingQueryRepository {
@@ -427,7 +428,6 @@ export class DataEditingQueryRepository {
   }
 
   async getDocs(id: number) {
-    console.log(id);
     return this.firebird.query(
       `SELECT * FROM  RAZN_OD_DOCS where RAZN_OD_ID = ?`,
       [id]
@@ -437,6 +437,18 @@ export class DataEditingQueryRepository {
   async checkDocsKey(id: number): Promise<boolean> {
     const [result] = await this.firebird.query(
       `SELECT COUNT(*) FROM RAZN_OD_DOCS WHERE RAZN_OD_DOCS_KEY = ?`,
+      [id]
+    );
+    return result.COUNT === 1;
+  }
+
+  async getObjectsAndOtherEquipments(): Promise<SkladObjSpisViewModel> {
+    return this.firebird.query(`SELECT * FROM SKLAD_OBJ_SPIS_SEL`);
+  }
+
+  async checkSkladObjSpisKey(id: number): Promise<boolean> {
+    const [result] = await this.firebird.query(
+      `SELECT COUNT(*) FROM SKLAD_OBJ_SPIS WHERE SKLAD_OBJ_SPIS_KEY = ?`,
       [id]
     );
     return result.COUNT === 1;

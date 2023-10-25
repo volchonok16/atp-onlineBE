@@ -16,7 +16,7 @@ export class DeleteRaznOdDockKeyUseCase
     private readonly dataEditingRepository: DataEditingRepository
   ) {}
 
-  async execute(command: DeleteRaznOdDockKeyCommand): Promise<any> {
+  async execute(command: DeleteRaznOdDockKeyCommand): Promise<boolean> {
     const isExists = await this.dataEditingQueryRepository.checkDocsKey(
       command.id
     );
