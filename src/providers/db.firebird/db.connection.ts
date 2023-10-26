@@ -1,5 +1,5 @@
 import { Logger } from "@nestjs/common";
-import { nodeFirebirdOptions } from "../../firebird.config";
+import { nodeFirebirdOptions } from "../../../firebird.config";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Firebird = require("node-firebird");
 
