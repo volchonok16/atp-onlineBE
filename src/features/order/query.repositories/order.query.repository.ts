@@ -318,12 +318,11 @@ WHERE REQ_RAZN.REQ_RAZN_KEY = ?;
     return result.COUNT === 1;
   }
 
-  async getRaznarWeek(body: GetRaznarWeekDto) {
-    const a = await this.firebird.query(`SELECT * FROM  RAZNAR_WEEK(?, ?)`, [
-      body.date,
-      body.column,
+  async getRaznarWeek(param: GetRaznarWeekDto) {
+    return await this.firebird.query(`SELECT * FROM  RAZNAR_WEEK(?, ?)`, [
+      param.date,
+      param.column,
     ]);
-    return a;
   }
 
   async checkRaznarId(id: number): Promise<boolean> {
