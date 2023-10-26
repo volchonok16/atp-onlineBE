@@ -85,6 +85,16 @@ import { CreateOrUpdatePriceCommand } from "../use-cases/data-editing/createOrUp
 import { DeletePriceCommand } from "../use-cases/data-editing/deletePrice.useCase";
 import { ArchiveOrNotArchiveQuery } from "../dto/query.dtos/noteQuery.dto";
 import { DeleteFlightsCommand } from "../use-cases/data-editing/deleteFlights.useCase";
+import { CreateOrUpdateOtherEquipmentsAndObjectsCommand } from "../use-cases/data-editing/createOrUpdateOtherEquipmentsAndObjects.useCase";
+import { CreateOtherEquipmentsAndObjectsForTableDocsDtoDto } from "../dto/dtos/data-editing/createOtherEquipmentsAndObjectsForTableDocs.dto";
+import { DeleteRaznOdDockKeyCommand } from "../use-cases/data-editing/deleteRaznOdDockKey.useCase";
+import { RaznOdDocsViewModel } from "../models/dataEditing.views/raznOdDocsView.model";
+import { SkladObjSpisViewModel } from "../models/dataEditing.views/skladObjSpisView.model";
+import { CreateObjectsAndOtherEquipmentsCommand } from "../use-cases/data-editing/createObjectsAndOtherEquipments.useCase";
+import { CreateOtherEquipmentsAndObjectsDto } from "../dto/dtos/data-editing/createOtherEquipmentsAndObjects.dto";
+import { SkladObjSpisKeyViewModel } from "../models/dataEditing.views/skladObjSpisKeyView.model";
+import { UpdateObjectsAndOtherEquipmentsCommand } from "../use-cases/data-editing/updateObjectsAndOtherEquipments.UseCase";
+import { DeleteObjectsAndOtherEquipmentsCommand } from "../use-cases/data-editing/deleteObjectsAndOtherEquipments.useCase";
 
 @ApiTags("Data-editing")
 //@UseGuards(RefreshTokenGuard)
@@ -565,5 +575,102 @@ export class DataEditingController {
   })
   async deleteFlights(@Param("RAZN_OD_KEY") id: number): Promise<boolean> {
     return this.commandBus.execute(new DeleteFlightsCommand(id));
+  }
+
+  @Get("other-equipments/docs/:SKLAD_OBJ_SPIS_KEY")
+  @ApiOperation({
+    summary:
+      "Редактирование общих данных -> Иная техника и объекты -> Таблица документы",
+  })
+  async getOtherEquipments(
+    @Param("SKLAD_OBJ_SPIS_KEY") id: number
+  ): Promise<RaznOdDocsViewModel> {
+    return this.dataEditingQueryRepository.getDocs(id);
+  }
+
+  @Post("other-equipments/docs")
+  @ApiOperation({
+    summary:
+      "Редактирование общих данных -> Иная техника и объекты -> Таблица документы",
+  })
+  async createEquipmentsAndObjects(
+    @Body() data: CreateOtherEquipmentsAndObjectsForTableDocsDtoDto
+  ): Promise<boolean> {
+    return this.commandBus.execute(
+      new CreateOrUpdateOtherEquipmentsAndObjectsCommand(data)
+    );
+  }
+
+  @Put("other-equipments/docs")
+  @ApiOperation({
+    summary:
+      "Редактирование общих данных -> Иная техника и объекты -> Таблица документы",
+  })
+  async updateEquipmentsAndObjects(
+    @Body() data: CreateOtherEquipmentsAndObjectsForTableDocsDtoDto
+  ): Promise<boolean> {
+    return this.commandBus.execute(
+      new CreateOrUpdateOtherEquipmentsAndObjectsCommand(data)
+    );
+  }
+
+  @Delete("other-equipments/docs/:OLD_RAZN_OD_DOCS_KEY")
+  @ApiOperation({
+    summary:
+      "Редактирование общих данных -> Иная техника и объекты -> Таблица документы",
+  })
+  async deleteRaznOdDockKey(
+    @Param("OLD_RAZN_OD_DOCS_KEY") id: number
+  ): Promise<boolean> {
+    return this.commandBus.execute(new DeleteRaznOdDockKeyCommand(id));
+  }
+
+  @Get("other-equipments/objects-equipments")
+  @ApiOperation({
+    summary:
+      "Редактирование общих данных -> Иная техника и объекты -> Объекты и иная техника",
+  })
+  async getObjectsAndOtherEquipments(): Promise<SkladObjSpisViewModel> {
+    return this.dataEditingQueryRepository.getObjectsAndOtherEquipments();
+  }
+
+  @Post("other-equipments/objects-equipments")
+  @ApiOperation({
+    summary:
+      "Редактирование общих данных -> Иная техника и объекты -> Объекты и иная техника",
+  })
+  async createObjectsAndOtherEquipments(
+    @Body() dto: CreateOtherEquipmentsAndObjectsDto
+  ): Promise<SkladObjSpisKeyViewModel> {
+    return this.commandBus.execute(
+      new CreateObjectsAndOtherEquipmentsCommand(dto)
+    );
+  }
+
+  @Put("other-equipments/objects-equipments/:SKLAD_OBJ_SPIS_KEY")
+  @ApiOperation({
+    summary:
+      "Редактирование общих данных -> Иная техника и объекты -> Объекты и иная техника",
+  })
+  async updateObjectsAndOtherEquipments(
+    @Param("SKLAD_OBJ_SPIS_KEY") id: number,
+    @Body() body: CreateOtherEquipmentsAndObjectsDto
+  ): Promise<boolean> {
+    return this.commandBus.execute(
+      new UpdateObjectsAndOtherEquipmentsCommand(id, body)
+    );
+  }
+
+  @Delete("other-equipments/objects-equipments/:SKLAD_OBJ_SPIS_KEY")
+  @ApiOperation({
+    summary:
+      "Редактирование общих данных -> Иная техника и объекты -> Объекты и иная техника",
+  })
+  async deleteObjectsAndOtherEquipments(
+    @Param("SKLAD_OBJ_SPIS_KEY") id: number
+  ): Promise<boolean> {
+    return this.commandBus.execute(
+      new DeleteObjectsAndOtherEquipmentsCommand(id)
+    );
   }
 }

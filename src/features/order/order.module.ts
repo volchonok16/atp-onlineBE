@@ -42,6 +42,11 @@ import { DeleteOldRaznKeyUseCase } from "./use-cases/order/deleteOldRaznKey.useC
 import { UpdateRaznarUseCase } from "./use-cases/order/updateRaznar.useCase";
 import { CreateOrderDataForWeekPlanUseCase } from "./use-cases/order/createOrderDataForWeekPlan.useCase";
 import { DeleteFlightsUseCase } from "./use-cases/data-editing/deleteFlights.useCase";
+import { CreateOrUpdateOtherEquipmentsAndObjectsUseCase } from "./use-cases/data-editing/createOrUpdateOtherEquipmentsAndObjects.useCase";
+import { DeleteRaznOdDockKeyUseCase } from "./use-cases/data-editing/deleteRaznOdDockKey.useCase";
+import { CreateObjectsAndOtherEquipmentsUseCase } from "./use-cases/data-editing/createObjectsAndOtherEquipments.useCase";
+import { UpdateObjectsAndOtherEquipmentsUseCase } from "./use-cases/data-editing/updateObjectsAndOtherEquipments.UseCase";
+import { DeleteObjectsAndOtherEquipmentsUseCase } from "./use-cases/data-editing/deleteObjectsAndOtherEquipments.useCase";
 
 const useCases = [
   CreateCarInfoUseCase,
@@ -72,6 +77,11 @@ const useCases = [
   UpdateRaznarUseCase,
   CreateOrderDataForWeekPlanUseCase,
   DeleteFlightsUseCase,
+  CreateOrUpdateOtherEquipmentsAndObjectsUseCase,
+  DeleteRaznOdDockKeyUseCase,
+  CreateObjectsAndOtherEquipmentsUseCase,
+  UpdateObjectsAndOtherEquipmentsUseCase,
+  DeleteObjectsAndOtherEquipmentsUseCase,
 ];
 const repositories = [
   OrderQueryRepository,

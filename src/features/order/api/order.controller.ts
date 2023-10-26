@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  InternalServerErrorException,
   Param,
   Post,
   Put,
@@ -68,6 +69,7 @@ import { UpdateRaznarWeekPlanDto } from "../dto/dtos/updateRaznarWeekPlan.dto";
 import { GetRaznarWeekDto } from "../dto/dtos/getRaznarWeek.dto";
 import { CreateOrderDataEntryDto } from "../dto/dtos/createOrderDataEntry.dto";
 import { CreateOrderDataForWeekPlanCommand } from "../use-cases/order/createOrderDataForWeekPlan.useCase";
+import { WeekPlanViewModel } from "../models/order.views/weekPlanViewModel";
 
 @ApiTags("Order")
 @Controller("api/order")
@@ -424,8 +426,10 @@ export class OrderController {
 
   @Get("/raznar/raznar-week")
   @ApiOperation({ summary: "Разнарядка -> Недельный план +" })
-  async getRaznarWeek(@Body() body: GetRaznarWeekDto) {
-    return this.orderQueryRepository.getRaznarWeek(body);
+  async getRaznarWeek(
+    @Query() param: GetRaznarWeekDto
+  ): Promise<WeekPlanViewModel[]> {
+    return this.orderQueryRepository.getRaznarWeek(param);
   }
 
   @Delete("/raznar/:OLD_RAZN_KEY")

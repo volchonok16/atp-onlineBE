@@ -7,7 +7,7 @@ export class GetRaznarWeekDto {
   @Matches("^\\d{2}.\\d{2}.\\d{4}$")
   date: string;
   @IsString()
-  @ApiProperty({ example: "0 or 1 or 2" })
+  @ApiProperty()
   @IsIn(["0", "1", "2"])
   column: string;
 }
