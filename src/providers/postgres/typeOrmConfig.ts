@@ -16,7 +16,6 @@ export class TypeOrmConfig implements TypeOrmOptionsFactory {
       database: dbSettings.dbName,
       entities: [...entities],
       synchronize: true,
-      ssl: true,
     };
   }
 }
