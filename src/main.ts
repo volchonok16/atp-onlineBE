@@ -10,9 +10,10 @@ async function bootstrap() {
 
   const configService = app.get(ConfigService);
   const port = configService.get<number>("PORT");
+  const clientPort = configService.get<number>("CLIENT_PORT");
 
   //turn on cookieParser, GlobalPipes, GlobalFilters
-  appInitSettings(app, port);
+  appInitSettings(app, clientPort);
   // turn on swagger
   swaggerInitSettings(app);
 

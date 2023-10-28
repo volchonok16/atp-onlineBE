@@ -5,15 +5,15 @@ import { AppModule } from "../app.module";
 import { useContainer } from "class-validator";
 import { ErrorRepository } from "../features/administration/error.repository";
 
-export const appInitSettings = (app: INestApplication, port: number) => {
+export const appInitSettings = (app: INestApplication, clientPort: number) => {
   const options = {
     origin: [
-      `http://localhost:${port}`,
-      `http://adjnatec.ru:${port}`,
-      `http://adjnatec.ru:${port}/auth`,
-      `https://adjnatec.ru:${port}`,
-      `https://adjnatec.ru:${port}/auth`,
-      `www.adjnatec.ru:${port}`,
+      `http://localhost:${clientPort}`,
+      `http://adjnatec.ru:${clientPort}`,
+      `http://adjnatec.ru:${clientPort}/auth`,
+      `https://adjnatec.ru:${clientPort}`,
+      `https://adjnatec.ru:${clientPort}/auth`,
+      `www.adjnatec.ru:${clientPort}`,
     ],
     methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
     credentials: true,
