@@ -7,13 +7,15 @@ import { ConfigService } from "@nestjs/config";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  //turn on cookieParser, GlobalPipes, GlobalFilters
-  appInitSettings(app);
-  // turn on swagger
-  swaggerInitSettings(app);
 
   const configService = app.get(ConfigService);
   const port = configService.get<number>("PORT");
+
+  //turn on cookieParser, GlobalPipes, GlobalFilters
+  appInitSettings(app, port);
+  // turn on swagger
+  swaggerInitSettings(app);
+
   await app.listen(port, () => {
     Logger.log(`Swagger: http://localhost:${port}/swagger/order`);
   });
