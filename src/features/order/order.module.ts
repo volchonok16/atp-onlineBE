@@ -7,8 +7,6 @@ import { OrderRepository } from "./repositories/order.repository";
 import { CreateCarInfoUseCase } from "./use-cases/data-editing/createCarInfo.useCase";
 import { CqrsModule } from "@nestjs/cqrs";
 import { CreateBillOfLandingUseCase } from "./use-cases/order/createBillOfLanding.useCase";
-import { CreateReferralForRepairsUseCase } from "./use-cases/order/referralForRepairs.useCase";
-import { UpdatePrepareOutputDataUseCase } from "./use-cases/order/updatePrepareOutputData.useCase";
 import { DataEditingQueryRepository } from "./query.repositories/dataEditing.query.repository";
 import { DataEditingController } from "./api/dataEditing.controller";
 import { DeleteBillOfLandingUseCase } from "./use-cases/order/deleteBillOfLanding.useCase";
@@ -47,6 +45,10 @@ import { DeleteRaznOdDockKeyUseCase } from "./use-cases/data-editing/deleteRaznO
 import { CreateObjectsAndOtherEquipmentsUseCase } from "./use-cases/data-editing/createObjectsAndOtherEquipments.useCase";
 import { UpdateObjectsAndOtherEquipmentsUseCase } from "./use-cases/data-editing/updateObjectsAndOtherEquipments.UseCase";
 import { DeleteObjectsAndOtherEquipmentsUseCase } from "./use-cases/data-editing/deleteObjectsAndOtherEquipments.useCase";
+import { FlightsRepository } from "./repositories/flights.repository";
+import { FlightsController } from "./api/flights.controller";
+import { FlightsQueryRepository } from "./query.repositories/flights.query.repository";
+import { CreateEquipmentUseCase } from "./use-cases/flights/createEquipment.useCase";
 
 const useCases = [
   CreateCarInfoUseCase,
@@ -82,6 +84,7 @@ const useCases = [
   CreateObjectsAndOtherEquipmentsUseCase,
   UpdateObjectsAndOtherEquipmentsUseCase,
   DeleteObjectsAndOtherEquipmentsUseCase,
+  CreateEquipmentUseCase,
 ];
 const repositories = [
   OrderQueryRepository,
@@ -90,6 +93,8 @@ const repositories = [
   DataEditingQueryRepository,
   PopUpWindowQueryRepository,
   DataEditingRepository,
+  FlightsRepository,
+  FlightsQueryRepository,
 ];
 
 @Module({
@@ -99,6 +104,7 @@ const repositories = [
     CatalogsController,
     DataEditingController,
     PopUpWindowController,
+    FlightsController,
   ],
   providers: [...useCases, ...repositories, FirebirdService],
 })
