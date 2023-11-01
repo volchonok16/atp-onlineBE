@@ -13,4 +13,14 @@ export class FlightsQueryRepository {
       dto.id,
     ]);
   }
+
+  async checkRaznOdKeyInRaznOd(id: number): Promise<boolean> {
+    const [result] = await this.firebird.query(
+      `
+          SELECT COUNT(*) FROM RAZN_OD WHERE RAZN_OD_KEY = ?;
+        `,
+      [id]
+    );
+    return result.COUNT === 1;
+  }
 }

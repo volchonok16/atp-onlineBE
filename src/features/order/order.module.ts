@@ -49,6 +49,8 @@ import { FlightsRepository } from "./repositories/flights.repository";
 import { FlightsController } from "./api/flights.controller";
 import { FlightsQueryRepository } from "./query.repositories/flights.query.repository";
 import { CreateEquipmentUseCase } from "./use-cases/flights/createEquipment.useCase";
+import { UpdateEquipmentUseCase } from "./use-cases/flights/updateEquipment.useCase";
+import { DeleteEquipmentUseCase } from "./use-cases/flights/deleteEquipment.useCase";
 
 const useCases = [
   CreateCarInfoUseCase,
@@ -85,6 +87,8 @@ const useCases = [
   UpdateObjectsAndOtherEquipmentsUseCase,
   DeleteObjectsAndOtherEquipmentsUseCase,
   CreateEquipmentUseCase,
+  UpdateEquipmentUseCase,
+  DeleteEquipmentUseCase,
 ];
 const repositories = [
   OrderQueryRepository,
