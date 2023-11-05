@@ -1,7 +1,7 @@
 export const nodeFirebirdOptions = {
   host: "127.0.0.1",
   port: 3050,
-  database: "C:\\ATP-online\\DB\\ATP.FDB",
+  database: "/opt/atp-online_db/atp.fdb",
   user: "SYSDBA",
   password: "masterkey",
   lowercase_keys: false,
