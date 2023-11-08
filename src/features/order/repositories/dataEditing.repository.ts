@@ -23,9 +23,9 @@ import { SubunitViewModel } from "../models/dataEditing.views/subunitView.model"
 import { FirebirdService } from "../../../common/helpers/firebird-orm/firebird";
 import { createQuery } from "../../../common/helpers/firebird-orm/create";
 import { booleanToNumber } from "../../../common/helpers/booleanToNumberTransform.helper";
-import { CreateOtherEquipmentsAndObjectsForTableDocsDtoDto } from "../dto/dtos/data-editing/createOtherEquipmentsAndObjectsForTableDocs.dto";
 import { CreateOtherEquipmentsAndObjectsDto } from "../dto/dtos/data-editing/createOtherEquipmentsAndObjects.dto";
 import { SkladObjSpisKeyViewModel } from "../models/dataEditing.views/skladObjSpisKeyView.model";
+import { UpdateOtherEquipmentsAndObjectsForTableDocsDto } from "../dto/dtos/data-editing/updateOtherEquipmentsAndObjectsForTableDocs.dto";
 
 @Injectable()
 export class DataEditingRepository {
@@ -498,8 +498,8 @@ export class DataEditingRepository {
   }
 
   async createOrUpdateOtherEquipmentsAndObjects(
-    dto: CreateOtherEquipmentsAndObjectsForTableDocsDtoDto
-  ) {
+    dto: UpdateOtherEquipmentsAndObjectsForTableDocsDto
+  ): Promise<boolean> {
     try {
       await this.firebird.query(
         `
@@ -507,7 +507,7 @@ export class DataEditingRepository {
     `,
         [
           dto.RAZN_OD_DOCS_KEY,
-          dto.MAS_SKLAD_OBJ_SPIS_KEY,
+          dto.RAZN_OD_ID,
           dto.NAIM,
           dto.NOMER,
           dto.KEM_VID,

@@ -1,4 +1,4 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { objectFieldFilter } from "../../../../../common/helpers/objectFieldFilter";
 import {
   IsNotEmpty,
   IsNumber,
@@ -7,9 +7,13 @@ import {
   Matches,
   MaxLength,
 } from "class-validator";
-import { objectFieldFilter } from "../../../../../common/helpers/objectFieldFilter";
+import { ApiProperty } from "@nestjs/swagger";
 
-export class CreateOtherEquipmentsAndObjectsForTableDocsDto {
+export class UpdateOtherEquipmentsAndObjectsForTableDocsDto {
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsNumber()
+  RAZN_OD_DOCS_KEY: number;
   @ApiProperty()
   @IsNotEmpty()
   @IsNumber()
@@ -38,12 +42,12 @@ export class CreateOtherEquipmentsAndObjectsForTableDocsDto {
   @IsOptional()
   D_PREDUPR: number;
 
-  static dto(data: any): CreateOtherEquipmentsAndObjectsForTableDocsDto {
-    const createOtherEquipmentsAndObjectsForTableDocsDtoDto =
-      new CreateOtherEquipmentsAndObjectsForTableDocsDto();
-    return objectFieldFilter<CreateOtherEquipmentsAndObjectsForTableDocsDto>(
+  static dto(data: any): UpdateOtherEquipmentsAndObjectsForTableDocsDto {
+    const updateOtherEquipmentsAndObjectsForTableDocsDtoDto =
+      new UpdateOtherEquipmentsAndObjectsForTableDocsDto();
+    return objectFieldFilter<UpdateOtherEquipmentsAndObjectsForTableDocsDto>(
       data,
-      createOtherEquipmentsAndObjectsForTableDocsDtoDto
+      updateOtherEquipmentsAndObjectsForTableDocsDtoDto
     );
   }
 }

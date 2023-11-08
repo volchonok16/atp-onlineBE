@@ -7,8 +7,6 @@ import { OrderRepository } from "./repositories/order.repository";
 import { CreateCarInfoUseCase } from "./use-cases/data-editing/createCarInfo.useCase";
 import { CqrsModule } from "@nestjs/cqrs";
 import { CreateBillOfLandingUseCase } from "./use-cases/order/createBillOfLanding.useCase";
-import { CreateReferralForRepairsUseCase } from "./use-cases/order/referralForRepairs.useCase";
-import { UpdatePrepareOutputDataUseCase } from "./use-cases/order/updatePrepareOutputData.useCase";
 import { DataEditingQueryRepository } from "./query.repositories/dataEditing.query.repository";
 import { DataEditingController } from "./api/dataEditing.controller";
 import { DeleteBillOfLandingUseCase } from "./use-cases/order/deleteBillOfLanding.useCase";
@@ -42,11 +40,18 @@ import { DeleteOldRaznKeyUseCase } from "./use-cases/order/deleteOldRaznKey.useC
 import { UpdateRaznarUseCase } from "./use-cases/order/updateRaznar.useCase";
 import { CreateOrderDataForWeekPlanUseCase } from "./use-cases/order/createOrderDataForWeekPlan.useCase";
 import { DeleteFlightsUseCase } from "./use-cases/data-editing/deleteFlights.useCase";
-import { CreateOrUpdateOtherEquipmentsAndObjectsUseCase } from "./use-cases/data-editing/createOrUpdateOtherEquipmentsAndObjects.useCase";
 import { DeleteRaznOdDockKeyUseCase } from "./use-cases/data-editing/deleteRaznOdDockKey.useCase";
 import { CreateObjectsAndOtherEquipmentsUseCase } from "./use-cases/data-editing/createObjectsAndOtherEquipments.useCase";
 import { UpdateObjectsAndOtherEquipmentsUseCase } from "./use-cases/data-editing/updateObjectsAndOtherEquipments.UseCase";
 import { DeleteObjectsAndOtherEquipmentsUseCase } from "./use-cases/data-editing/deleteObjectsAndOtherEquipments.useCase";
+import { FlightsRepository } from "./repositories/flights.repository";
+import { FlightsController } from "./api/flights.controller";
+import { FlightsQueryRepository } from "./query.repositories/flights.query.repository";
+import { CreateEquipmentUseCase } from "./use-cases/flights/createEquipment.useCase";
+import { UpdateEquipmentUseCase } from "./use-cases/flights/updateEquipment.useCase";
+import { DeleteEquipmentUseCase } from "./use-cases/flights/deleteEquipment.useCase";
+import { CreateOtherEquipmentsAndObjectsUseCase } from "./use-cases/data-editing/createOtherEquipmentsAndObjectsUseCase";
+import { UpdateOtherEquipmentsAndObjectsUseCase } from "./use-cases/data-editing/updateOtherEquipmentsAndObjects.useCase";
 
 const useCases = [
   CreateCarInfoUseCase,
@@ -76,12 +81,16 @@ const useCases = [
   DeleteOldRaznKeyUseCase,
   UpdateRaznarUseCase,
   CreateOrderDataForWeekPlanUseCase,
+  CreateOtherEquipmentsAndObjectsUseCase,
+  UpdateOtherEquipmentsAndObjectsUseCase,
   DeleteFlightsUseCase,
-  CreateOrUpdateOtherEquipmentsAndObjectsUseCase,
   DeleteRaznOdDockKeyUseCase,
   CreateObjectsAndOtherEquipmentsUseCase,
   UpdateObjectsAndOtherEquipmentsUseCase,
   DeleteObjectsAndOtherEquipmentsUseCase,
+  CreateEquipmentUseCase,
+  UpdateEquipmentUseCase,
+  DeleteEquipmentUseCase,
 ];
 const repositories = [
   OrderQueryRepository,
@@ -90,6 +99,8 @@ const repositories = [
   DataEditingQueryRepository,
   PopUpWindowQueryRepository,
   DataEditingRepository,
+  FlightsRepository,
+  FlightsQueryRepository,
 ];
 
 @Module({
@@ -99,6 +110,7 @@ const repositories = [
     CatalogsController,
     DataEditingController,
     PopUpWindowController,
+    FlightsController,
   ],
   providers: [...useCases, ...repositories, FirebirdService],
 })
