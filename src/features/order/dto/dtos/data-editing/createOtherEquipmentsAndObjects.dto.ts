@@ -22,7 +22,7 @@ export class CreateOtherEquipmentsAndObjectsDto {
   @IsOptional()
   @MaxLength(50)
   DESCR: string;
-  @ApiProperty({ example: "01-06-2017" })
+  @ApiProperty({ example: "2017-06-02" })
   @IsOptional()
   @Matches("^\\d{4}-\\d{2}-\\d{2}$")
   DATE_VVODA: Date;
