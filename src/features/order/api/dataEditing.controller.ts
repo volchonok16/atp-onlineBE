@@ -85,8 +85,7 @@ import { CreateOrUpdatePriceCommand } from "../use-cases/data-editing/createOrUp
 import { DeletePriceCommand } from "../use-cases/data-editing/deletePrice.useCase";
 import { ArchiveOrNotArchiveQuery } from "../dto/query.dtos/noteQuery.dto";
 import { DeleteFlightsCommand } from "../use-cases/data-editing/deleteFlights.useCase";
-import { CreateOrUpdateOtherEquipmentsAndObjectsCommand } from "../use-cases/data-editing/createOrUpdateOtherEquipmentsAndObjects.useCase";
-import { CreateOtherEquipmentsAndObjectsForTableDocsDtoDto } from "../dto/dtos/data-editing/createOtherEquipmentsAndObjectsForTableDocs.dto";
+import { CreateOtherEquipmentsAndObjectsForTableDocsDto } from "../dto/dtos/data-editing/createOtherEquipmentsAndObjectsForTableDocs.dto";
 import { DeleteRaznOdDockKeyCommand } from "../use-cases/data-editing/deleteRaznOdDockKey.useCase";
 import { RaznOdDocsViewModel } from "../models/dataEditing.views/raznOdDocsView.model";
 import { SkladObjSpisViewModel } from "../models/dataEditing.views/skladObjSpisView.model";
@@ -95,6 +94,9 @@ import { CreateOtherEquipmentsAndObjectsDto } from "../dto/dtos/data-editing/cre
 import { SkladObjSpisKeyViewModel } from "../models/dataEditing.views/skladObjSpisKeyView.model";
 import { UpdateObjectsAndOtherEquipmentsCommand } from "../use-cases/data-editing/updateObjectsAndOtherEquipments.UseCase";
 import { DeleteObjectsAndOtherEquipmentsCommand } from "../use-cases/data-editing/deleteObjectsAndOtherEquipments.useCase";
+import { CreateOtherEquipmentsAndObjectsCommand } from "../use-cases/data-editing/createOtherEquipmentsAndObjectsUseCase";
+import { UpdateOtherEquipmentsAndObjectsCommand } from "../use-cases/data-editing/updateOtherEquipmentsAndObjects.useCase";
+import { UpdateOtherEquipmentsAndObjectsForTableDocsDto } from "../dto/dtos/data-editing/updateOtherEquipmentsAndObjectsForTableDocs.dto";
 
 @ApiTags("Data-editing")
 //@UseGuards(RefreshTokenGuard)
@@ -594,10 +596,10 @@ export class DataEditingController {
       "Редактирование общих данных -> Иная техника и объекты -> Таблица документы",
   })
   async createEquipmentsAndObjects(
-    @Body() data: CreateOtherEquipmentsAndObjectsForTableDocsDtoDto
+    @Body() data: CreateOtherEquipmentsAndObjectsForTableDocsDto
   ): Promise<boolean> {
     return this.commandBus.execute(
-      new CreateOrUpdateOtherEquipmentsAndObjectsCommand(data)
+      new CreateOtherEquipmentsAndObjectsCommand(data)
     );
   }
 
@@ -607,10 +609,10 @@ export class DataEditingController {
       "Редактирование общих данных -> Иная техника и объекты -> Таблица документы",
   })
   async updateEquipmentsAndObjects(
-    @Body() data: CreateOtherEquipmentsAndObjectsForTableDocsDtoDto
+    @Body() data: UpdateOtherEquipmentsAndObjectsForTableDocsDto
   ): Promise<boolean> {
     return this.commandBus.execute(
-      new CreateOrUpdateOtherEquipmentsAndObjectsCommand(data)
+      new UpdateOtherEquipmentsAndObjectsCommand(data)
     );
   }
 
