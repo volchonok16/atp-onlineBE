@@ -4,6 +4,7 @@ import { AllExceptionsFilter } from "../common/exeptions/exeption.filter";
 import { AppModule } from "../app.module";
 import { useContainer } from "class-validator";
 import { ErrorRepository } from "../features/administration/error.repository";
+import { ConfigService } from "@nestjs/config";
 
 export const appInitSettings = (app: INestApplication, port: number) => {
   const options = {
@@ -33,6 +34,7 @@ export const appInitSettings = (app: INestApplication, port: number) => {
     })
   );
   const errorRepository = app.get(ErrorRepository);
-  app.useGlobalFilters(new AllExceptionsFilter(errorRepository));
+  const configService = app.get(ConfigService);
+  app.useGlobalFilters(new AllExceptionsFilter(errorRepository, configService));
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 };
