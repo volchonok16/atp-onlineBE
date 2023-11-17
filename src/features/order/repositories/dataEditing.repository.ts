@@ -17,7 +17,7 @@ import { PriceDto } from "../dto/dtos/data-editing/price.dto";
 import { PriceViewModel } from "../models/dataEditing.views/priceViewModel";
 import { OrganizationDto } from "../dto/dtos/data-editing/organizationDto";
 import { OrganizationViewModel } from "../models/dataEditing.views/organizationView.model";
-import { WithId } from "../../../common/types/withId.type";
+import { WithId } from "../../../common/shared/types/withId.type";
 import { SubunitDto } from "../dto/dtos/data-editing/subunit.dto";
 import { SubunitViewModel } from "../models/dataEditing.views/subunitView.model";
 import { FirebirdService } from "../../../common/helpers/firebird-orm/firebird";

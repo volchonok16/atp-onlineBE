@@ -4,7 +4,7 @@ import { ReferralForRepairsViewModel } from "../models/order.views/referralforre
 import { format } from "date-fns";
 import { CountType } from "../types/countType";
 import { UpdateCarForOrderDto } from "../dto/dtos/updateCarForOrderDto";
-import { WithId } from "../../../common/./types/withId.type";
+import { WithId } from "../../../common/shared/types/withId.type";
 import { UpdateBookingDataDto } from "../dto/dtos/order/updateBookingData.dto";
 import { CreateOrderDto } from "../dto/dtos/order/createOrder.dto";
 import { OrderViewModel } from "../models/order.views/orderView.model";

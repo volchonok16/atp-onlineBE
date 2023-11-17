@@ -2,7 +2,7 @@ import { ReferralForRepairsDto } from "../../dto/dtos/order/referralForRepairs.d
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { OrderRepository } from "../../repositories/order.repository";
 import { OrderQueryRepository } from "../../query.repositories/order.query.repository";
-import { WithId } from "../../../../common/types/withId.type";
+import { WithId } from "../../../../common/shared/types/withId.type";
 import { NotFoundException } from "@nestjs/common";
 
 export class UpdateReferralForRepairsCommand {

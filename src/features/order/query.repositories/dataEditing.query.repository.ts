@@ -18,7 +18,7 @@ import { FlightsDto } from "../dto/query.dtos/flights.dto";
 import { FlightsViewModel } from "../models/order.views/flightsView.model";
 import { NoteViewModel } from "../models/dataEditing.views/noteView.model";
 import { PriceViewModel } from "../models/dataEditing.views/priceViewModel";
-import { WithId } from "../../../common/types/withId.type";
+import { WithId } from "../../../common/shared/types/withId.type";
 import { ArchiveOrNotArchiveQuery } from "../dto/query.dtos/noteQuery.dto";
 import { booleanToShortString } from "../../../common/helpers/booleanToShortStringTransform";
 import { FirebirdService } from "../../../common/helpers/firebird-orm/firebird";

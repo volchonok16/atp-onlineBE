@@ -151,6 +151,62 @@ export class OrderController {
     );
   }
 
+  @Get("bill-of-landing-and-waybill/product-section/:TTN_KEY")
+  @ApiOperation({ summary: "Разнарядка -> ТТН -> Товарный раздел" })
+  async getProductSection(
+    @Param("TTN_KEY") id: number
+  ): Promise<ProductSectionView[]> {
+    return this.queryBus.execute(new GetProductSectionDataQuery(id));
+  }
+
+  @Post("bill-of-landing-and-waybill/product-section")
+  @ApiOperation({ summary: "Разнарядка -> ТТН -> Товарный раздел" })
+  @ApiBody({ type: ProductSectionDto })
+  async insertOrUpdateProductSection(
+    @Body() data: any
+  ): Promise<ProductSectionView> {
+    const dto = ProductSectionDto.dto(data);
+    return this.commandBus.execute(
+      new InsertOrUpdateProductSectionCommand(dto)
+    );
+  }
+
+  @Delete("bill-of-landing-and-waybill/product-section/:TTN_EXT_KEY")
+  @ApiOperation({ summary: "Разнарядка -> ТТН -> Товарный раздел" })
+  async deleteProductSection(
+    @Param("TTN_EXT_KEY") id: number
+  ): Promise<boolean> {
+    return this.commandBus.execute(new DeleteProductSectionCommand(id));
+  }
+
+  @Get("bill-of-landing-and-waybill/transport-section/:TTN_KEY")
+  @ApiOperation({ summary: "Разнарядка -> ТТН -> Транспортный раздел" })
+  async getTransportSectionData(
+    @Param("TTN_KEY") id: number
+  ): Promise<TransportSectionView2[]> {
+    return this.queryBus.execute(new GetTransportSectionDataQuery(id));
+  }
+
+  @Post("bill-of-landing-and-waybill/transport-section")
+  @ApiOperation({ summary: "Разнарядка -> ТТН -> Транспортный раздел" })
+  @ApiBody({ type: TransportSectionDto })
+  async insertOrUpdateTransportSection(
+    @Body() data: any
+  ): Promise<TransportSectionView2> {
+    const dto = TransportSectionDto.dto(data);
+    return this.commandBus.execute(
+      new InsertOrUpdateTransportSectionCommand(dto)
+    );
+  }
+
+  @Delete("bill-of-landing-and-waybill/transport-section/:TTN_TRANSP_KEY")
+  @ApiOperation({ summary: "Разнарядка -> ТТН -> Транспортный раздел" })
+  async deleteTransportSection(
+    @Param("TTN_TRANSP_KEY") id: number
+  ): Promise<boolean> {
+    return this.commandBus.execute(new DeleteTransportSectionCommand(id));
+  }
+
   @Get("output-data/car-name")
   @ApiOperation({
     summary: "Разнарядка -> Выходная информация -> Таблица с машинами +",

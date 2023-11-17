@@ -1,4 +1,4 @@
-import { WithId } from "../../../../common/./types/withId.type";
+import { WithId } from "../../../../common/shared/types/withId.type";
 import { SubunitDto } from "../../dto/dtos/data-editing/subunit.dto";
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { SubunitViewModel } from "../../models/dataEditing.views/subunitView.model";

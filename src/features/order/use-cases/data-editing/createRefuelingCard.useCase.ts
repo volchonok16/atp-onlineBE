@@ -1,7 +1,7 @@
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { CreateRefuelingCardDto } from "../../dto/dtos/createRefuelingCard.dto";
 import { DataEditingRepository } from "../../repositories/dataEditing.repository";
-import { WithId } from "../../../../common/types/withId.type";
+import { WithId } from "../../../../common/shared/types/withId.type";
 import { NotFoundException } from "@nestjs/common";
 import { DataEditingQueryRepository } from "../../query.repositories/dataEditing.query.repository";
 

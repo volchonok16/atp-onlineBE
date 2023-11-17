@@ -13,6 +13,7 @@ async function bootstrap() {
   swaggerInitSettings(app);
   await app.listen(port, () => {
     Logger.log(`Swagger: http://localhost:${port}/swagger/order`);
+    Logger.log(`GraphQl: http://localhost:${port}/graphql`);
   });
 }
 

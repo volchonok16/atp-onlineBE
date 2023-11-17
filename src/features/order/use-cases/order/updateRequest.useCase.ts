@@ -1,7 +1,7 @@
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { OrderRepository } from "../../repositories/order.repository";
 import { UpdateRequestDto } from "../../dto/dtos/updateRequest.dto";
-import { WithId } from "../../../../common/types/withId.type";
+import { WithId } from "../../../../common/shared/types/withId.type";
 import { OrderQueryRepository } from "../../query.repositories/order.query.repository";
 import { NotFoundException } from "@nestjs/common";
 
