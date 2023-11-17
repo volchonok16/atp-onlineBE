@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  InternalServerErrorException,
   Param,
   Post,
   Put,
@@ -18,7 +19,6 @@ import { ReferralForRepairsDto } from "../dto/dtos/order/referralForRepairs.dto"
 import { CreateReferralForRepairsCommand } from "../use-cases/order/referralForRepairs.useCase";
 import { BillOfLandingDeleteDto } from "../dto/dtos/billOfLandingDelete.dto";
 import { DeleteBillOfLandingCommand } from "../use-cases/order/deleteBillOfLanding.useCase";
-import { OutputDataViewModel } from "../models/order.views/outputdataView.model";
 import { ReferralForRepairsViewModel } from "../models/order.views/referralforrepairsView.Model";
 import { OrderDataInputDto } from "../dto/dtos/orderDataInput.dto";
 import { CreateOrderDataCommand } from "../use-cases/order/createOrderData.useCase";
@@ -44,7 +44,6 @@ import { DeleteBookingDataCommand } from "../use-cases/order/deleteBookingData.u
 import { CreateOrderCommand } from "../use-cases/order/createOrder.useCase";
 import * as fs from "fs";
 import { UpdatePrepareOutputDataCommand } from "../use-cases/order/updatePrepareOutputData.useCase";
-import { CreateBillOfLandingReportDto } from "../dto/dtos/createBillOfLandingReport.dto";
 import { CreateOrderView } from "../models/order.views/createOrderView.model";
 import { deleteOrderCommand } from "../use-cases/order/deleteOrder.useCase";
 import { UpdateRequestCommand } from "../use-cases/order/updateRequest.useCase";
@@ -53,11 +52,24 @@ import { DeleteReferralForRepairsCommand } from "../use-cases/order/deleteReferr
 import { CarNameForPrepareOutputDataView } from "../models/order.views/carNameForPrepareOutputDataView";
 import { CarInfoForPrepareOutputDataView } from "../models/order.views/carInfoForPrepareOutputDataView.model";
 import { OrderDataQueryDto } from "../dto/query.dtos/orderData.query.dto";
-import { PrepareOutputDataDto } from "../dto/dtos/order/prepareOutputData.dto";
-import { GetBookingViewModel } from "../models/order.views/getBookingView.model";
 import { GetBookingQuery } from "../use-cases/order/query-bus/getBooking.query-handler";
-import { CreatePrepareOutputDataCommand } from "../use-cases/order/createPrepareOutputData.useCase";
-import { PreparedOutputDataView } from "../models/order.views/PreparedOutputDataView.model";
+import { ProductSectionView } from "../models/order.views/productSectionView.model";
+import { ProductSectionDto } from "../dto/dtos/order/productSection.dto";
+import { GetProductSectionDataQuery } from "../use-cases/order/query-bus/getProductSectionData.query-handler";
+import { InsertOrUpdateProductSectionCommand } from "../use-cases/order/insertOrUpdateProductSection.useCase";
+import { DeleteProductSectionCommand } from "../use-cases/order/DeleteProductSection.useCase";
+import { TransportSectionView2 } from "../models/order.views/transportSectionView2.model";
+import { GetTransportSectionDataQuery } from "../use-cases/order/query-bus/getTransportSectionData.query-handler";
+import { TransportSectionDto } from "../dto/dtos/order/transportSection.dto";
+import { InsertOrUpdateTransportSectionCommand } from "../use-cases/order/insertOrUpdateTransportSection.useCase";
+import { DeleteTransportSectionCommand } from "../use-cases/order/deleteTransportSection.useCase";
+import { DeleteOldRaznKeyCommand } from "../use-cases/order/deleteOldRaznKey.useCase";
+import { UpdateRaznarCommand } from "../use-cases/order/updateRaznar.useCase";
+import { UpdateRaznarWeekPlanDto } from "../dto/dtos/updateRaznarWeekPlan.dto";
+import { GetRaznarWeekDto } from "../dto/dtos/getRaznarWeek.dto";
+import { CreateOrderDataEntryDto } from "../dto/dtos/createOrderDataEntry.dto";
+import { CreateOrderDataForWeekPlanCommand } from "../use-cases/order/createOrderDataForWeekPlan.useCase";
+import { WeekPlanViewModel } from "../models/order.views/weekPlanViewModel";
 
 @ApiTags("Order")
 @Controller("api/order")
@@ -410,5 +422,38 @@ export class OrderController {
     @Param("RAZNAR2_KEY") RAZNAR2_KEY: number
   ): Promise<boolean> {
     return this.commandBus.execute(new DeleteBookingDataCommand(RAZNAR2_KEY));
+  }
+
+  @Get("/raznar/raznar-week")
+  @ApiOperation({ summary: "Разнарядка -> Недельный план +" })
+  async getRaznarWeek(
+    @Query() param: GetRaznarWeekDto
+  ): Promise<WeekPlanViewModel[]> {
+    return this.orderQueryRepository.getRaznarWeek(param);
+  }
+
+  @Delete("/raznar/:OLD_RAZN_KEY")
+  @ApiOperation({ summary: "Разнарядка -> Недельный план +" })
+  async deleteOldRaznKey(@Param("OLD_RAZN_KEY") OLD_RAZN_KEY: number) {
+    return this.commandBus.execute(new DeleteOldRaznKeyCommand(OLD_RAZN_KEY));
+  }
+
+  @Put("/raznar/:OLD_RAZN_KEY")
+  @ApiOperation({ summary: "Разнарядка -> Недельный план +" })
+  async updateRaznarForWeekPlan(
+    @Param("OLD_RAZN_KEY") OLD_RAZN_KEY: number,
+    @Body() body: UpdateRaznarWeekPlanDto
+  ) {
+    return this.commandBus.execute(new UpdateRaznarCommand(OLD_RAZN_KEY, body));
+  }
+
+  @Post("/raznar/order-data-entry")
+  @ApiOperation({ summary: "Разнарядка -> Недельный план +" })
+  async createOrderDataForWeekPlan(
+    @Body() body: CreateOrderDataEntryDto
+  ): Promise<CreateOrderView> {
+    return await this.commandBus.execute(
+      new CreateOrderDataForWeekPlanCommand(body)
+    );
   }
 }

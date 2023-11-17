@@ -23,6 +23,9 @@ import { SubunitViewModel } from "../models/dataEditing.views/subunitView.model"
 import { FirebirdService } from "../../../common/helpers/firebird-orm/firebird";
 import { createQuery } from "../../../common/helpers/firebird-orm/create";
 import { booleanToNumber } from "../../../common/helpers/booleanToNumberTransform.helper";
+import { CreateOtherEquipmentsAndObjectsDto } from "../dto/dtos/data-editing/createOtherEquipmentsAndObjects.dto";
+import { SkladObjSpisKeyViewModel } from "../models/dataEditing.views/skladObjSpisKeyView.model";
+import { UpdateOtherEquipmentsAndObjectsForTableDocsDto } from "../dto/dtos/data-editing/updateOtherEquipmentsAndObjectsForTableDocs.dto";
 
 @Injectable()
 export class DataEditingRepository {
@@ -35,7 +38,6 @@ export class DataEditingRepository {
       OrganizationDto,
       OrganizationViewModel
     >("DATA", "DATA_KEY", dto, new OrganizationViewModel());
-    //console.log(query, parameters);
     const result = await this.firebird.query(query, parameters);
 
     return OrganizationViewModel.toView(result);
@@ -479,5 +481,100 @@ export class DataEditingRepository {
     }
 
     return allSuccessful;
+  }
+
+  async deleteFlight(id: number) {
+    try {
+      await this.firebird.query(
+        `
+          EXECUTE PROCEDURE RAZN_OD_DEL(?)
+        `,
+        [id]
+      );
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  async createOrUpdateOtherEquipmentsAndObjects(
+    dto: UpdateOtherEquipmentsAndObjectsForTableDocsDto
+  ): Promise<boolean> {
+    try {
+      await this.firebird.query(
+        `
+      EXECUTE PROCEDURE RAZN_OD_DOCS_IU(?,?,?,?,?,?,?,?)
+    `,
+        [
+          dto.RAZN_OD_DOCS_KEY,
+          dto.RAZN_OD_ID,
+          dto.NAIM,
+          dto.NOMER,
+          dto.KEM_VID,
+          dto.DATE_OT,
+          dto.DATE_DO,
+          dto.D_PREDUPR,
+        ]
+      );
+
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  async deleteOldDocs(id: number): Promise<boolean> {
+    try {
+      await this.firebird.query(
+        `
+         EXECUTE PROCEDURE RAZN_OD_DOCS_DEL(?)
+        `,
+        [id]
+      );
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  async createObjectsAndOtherEquipments(
+    dto: CreateOtherEquipmentsAndObjectsDto
+  ): Promise<SkladObjSpisKeyViewModel> {
+    const { query, parameters } = createQuery(
+      "SKLAD_OBJ_SPIS",
+      dto,
+      "SKLAD_OBJ_SPIS_KEY"
+    );
+    return this.firebird.query(query, parameters);
+  }
+
+  async updateObjectsAndOtherEquipments(
+    id: number,
+    dto: CreateOtherEquipmentsAndObjectsDto
+  ): Promise<boolean> {
+    try {
+      const data = getDataAccumulater(dto);
+      await this.firebird.query(
+        `UPDATE SKLAD_OBJ_SPIS SET ${data} WHERE SKLAD_OBJ_SPIS_KEY = ?`,
+        [id]
+      );
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  async deleteObjectsAndOtherEquipments(id: number): Promise<boolean> {
+    try {
+      await this.firebird.query(
+        `
+         DELETE FROM  SKLAD_OBJ_SPIS WHERE SKLAD_OBJ_SPIS_KEY = ?
+        `,
+        [id]
+      );
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 }

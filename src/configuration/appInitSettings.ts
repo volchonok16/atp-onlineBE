@@ -3,13 +3,17 @@ import { INestApplication, ValidationPipe } from "@nestjs/common";
 import { AllExceptionsFilter } from "../common/exeptions/exeption.filter";
 import { AppModule } from "../app.module";
 import { useContainer } from "class-validator";
+import { ErrorRepository } from "../features/administration/error.repository";
 
-export const appInitSettings = (app: INestApplication) => {
+export const appInitSettings = (app: INestApplication, clientPort: number) => {
   const options = {
     origin: [
-      "http://localhost:3000",
-      "http://adjnatech.ru:3000",
-      "http://adjnatech.ru:3000/auth",
+      `http://localhost:${clientPort}`,
+      `http://adjnatec.ru:${clientPort}`,
+      `http://adjnatec.ru:${clientPort}/auth`,
+      `https://adjnatec.ru:${clientPort}`,
+      `https://adjnatec.ru:${clientPort}/auth`,
+      `www.adjnatec.ru:${clientPort}`,
     ],
     methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
     credentials: true,
@@ -25,12 +29,10 @@ export const appInitSettings = (app: INestApplication) => {
     new ValidationPipe({
       transform: true,
       stopAtFirstError: true,
-      // This is a list of fields that are allowed to be left or used when validating
-      // and filtering input. It specifies which fields can be "safely" included in
-      // the data object and which should be excluded or ignored.
       whitelist: false,
     })
   );
-  app.useGlobalFilters(new AllExceptionsFilter());
+  const errorRepository = app.get(ErrorRepository);
+  app.useGlobalFilters(new AllExceptionsFilter(errorRepository));
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 };

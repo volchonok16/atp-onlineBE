@@ -2,6 +2,7 @@ import { INestApplication } from "@nestjs/common";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { AuthModule } from "../../features/authorization/auth.module";
 import { OrderModule } from "../../features/order/order.module";
+import { AdministrationModule } from "../../features/administration/administration.module";
 
 export const swaggerInitSettings = (app: INestApplication) => {
   //swagger for auth part
@@ -29,4 +30,16 @@ export const swaggerInitSettings = (app: INestApplication) => {
     include: [OrderModule],
   });
   SwaggerModule.setup("swagger/order", app, orderDocument);
+
+  const adminOptions = new DocumentBuilder()
+    .addCookieAuth("refreshToken")
+    .setTitle("Admin")
+    .setDescription("Order API")
+    .setVersion("1.0")
+    .build();
+
+  const adminDocument = SwaggerModule.createDocument(app, adminOptions, {
+    include: [AdministrationModule],
+  });
+  SwaggerModule.setup("swagger/admin", app, adminDocument);
 };

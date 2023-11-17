@@ -20,6 +20,13 @@ import { ReferralForRepairsDto } from "../dto/dtos/order/referralForRepairs.dto"
 import { PrepareOutputDataDto } from "../dto/dtos/order/prepareOutputData.dto";
 import { PreparedOutputDataView } from "../models/order.views/PreparedOutputDataView.model";
 import { OutputDataDto } from "../dto/dtos/outputData.dto";
+import { ProductSectionDto } from "../dto/dtos/order/productSection.dto";
+import { ProductSectionView } from "../models/order.views/productSectionView.model";
+import { upsertQuery } from "../../../common/helpers/firebird-orm/upsert";
+import { TransportSectionView2 } from "../models/order.views/transportSectionView2.model";
+import { TransportSectionDto } from "../dto/dtos/order/transportSection.dto";
+import { UpdateRaznarWeekPlanDto } from "../dto/dtos/updateRaznarWeekPlan.dto";
+import { CreateOrderDataForRaznarModel } from "../models/order.views/createOrderDataForRaznar.model";
 
 @Injectable()
 export class OrderRepository {
@@ -117,6 +124,53 @@ export class OrderRepository {
         );
         return true;
       }); // каскадное удаление работает не полностью, необходима транзакция
+    } catch (e) {
+      return false;
+    }
+  }
+
+  async inserOrUpdateProductSection(
+    dto: ProductSectionDto
+  ): Promise<ProductSectionView> {
+    const { query, parameters } = upsertQuery<
+      ProductSectionDto,
+      ProductSectionView
+    >("TTN_EXT", "TTN_EXT_KEY", dto, new ProductSectionView());
+
+    return await this.firebird.query(query, parameters);
+  }
+
+  async deleteProductSection(id: number): Promise<boolean> {
+    try {
+      await this.firebird.query("DELETE FROM TTN_EXT WHERE TTN_EXT_KEY = ?;", [
+        id,
+      ]);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  async insertOrUpdateTransportSection(
+    dto: TransportSectionDto
+  ): Promise<TransportSectionView2> {
+    const { query, parameters } = upsertQuery<
+      TransportSectionDto,
+      TransportSectionView2
+    >("TTN_TRANSP", "TTN_TRANSP_KEY", dto, new TransportSectionView2());
+
+    return this.firebird.query(query, parameters);
+  }
+
+  async deleteTransportSection(id: number): Promise<boolean> {
+    try {
+      await this.firebird.query(
+        `
+        DELETE FROM TTN_TRANSP WHERE TTN_TRANSP_KEY = ?; 
+      `,
+        [id]
+      );
+      return true;
     } catch (e) {
       return false;
     }
@@ -330,5 +384,48 @@ export class OrderRepository {
     } catch (e) {
       return false;
     }
+  }
+
+  async deleteOldRaznKey(OLD_RAZN_KEY: number) {
+    try {
+      await this.firebird.query(
+        `
+      DELETE FROM RAZNAR
+       WHERE RAZN_KEY = ?;
+    `,
+        [OLD_RAZN_KEY]
+      );
+
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  async updateRaznarWeekPlan(
+    id: number,
+    dto: UpdateRaznarWeekPlanDto
+  ): Promise<boolean> {
+    try {
+      const data = getDataAccumulater(dto);
+      await this.firebird.query(
+        `
+      UPDATE RAZNAR
+         SET ${data}
+       WHERE RAZN_KEY = ?;
+    `,
+        [id]
+      );
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  async insertIntoRaznar(
+    dto: CreateOrderDataForRaznarModel
+  ): Promise<CreateOrderView> {
+    const { query, parameters } = createQuery("RAZNAR", dto, "RAZN_KEY");
+    return this.firebird.query(query, parameters);
   }
 }

@@ -1,6 +1,4 @@
-import { Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { dbConnect_const } from "../../../common/constants/global.constants";
-import { Connection } from "odbc";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { OutputDataViewModel } from "../models/order.views/outputdataView.model";
 import { format } from "date-fns";
 import { OrderDataQueryDtoType } from "../types/orderDataQueryDtoType";
@@ -15,11 +13,10 @@ import { OneOrderDataViewModel } from "../models/order.views/oneOrderDataView.mo
 import { RequestLogDto } from "../dto/query.dtos/requestLog.dto";
 import { RequestViewModel } from "../models/order.views/requestView.model";
 import { FirebirdService } from "../../../common/helpers/firebird-orm/firebird";
-import { rawDbResponseTransform } from "../../../common/helpers/rawDbResponseTransform.helper";
-import { GetCarForOrderDto } from "../dto/query.dtos/getCarForOrder.dto";
-import { CarForOrderViewModel } from "../models/order.views/carForOrderView.model";
 import { CarNameForPrepareOutputDataView } from "../models/order.views/carNameForPrepareOutputDataView";
-import { CarInfoForPrepareOutputDataView } from "../models/order.views/carInfoForPrepareOutputDataView.model";
+import { ProductSectionView } from "../models/order.views/productSectionView.model";
+import { TransportSectionView2 } from "../models/order.views/transportSectionView2.model";
+import { GetRaznarWeekDto } from "../dto/dtos/getRaznarWeek.dto";
 
 @Injectable()
 export class OrderQueryRepository {
@@ -198,6 +195,28 @@ WHERE REQ_RAZN.REQ_RAZN_KEY = ?;
     return result[0];
   }
 
+  async getProductSectionData(id: number): Promise<ProductSectionView[]> {
+    return this.firebird.query(
+      `
+      SELECT TTN_EXT_KEY, TTN_ID,NOM_PRICE, ARTICUL, KOL, CENA, NAIM, ED_IZM, UPAKOVKA, MEST, MASSA 
+      FROM TTN_EXT
+      WHERE TTN_ID = ?;
+    `,
+      [id]
+    );
+  }
+
+  async getTransportSectionData(id: number): Promise<TransportSectionView2[]> {
+    return this.firebird.query(
+      `
+      SELECT NAIM, VID_UPAK, DOCS, MEST, SPOSOB, CODE, N_KONT, KLASS, MASSA
+      FROM TTN_TRANSP
+      WHERE TTN_ID = ?;
+    `,
+      [id]
+    );
+  }
+
   async getCarsNamesForPrepareOutputData(): Promise<
     CarNameForPrepareOutputDataView[]
   > {
@@ -274,6 +293,45 @@ WHERE REQ_RAZN.REQ_RAZN_KEY = ?;
       [id]
     );
 
+    return result.COUNT === 1;
+  }
+
+  async productSectionExists(id: number): Promise<boolean> {
+    const [result] = await this.firebird.query(
+      `
+      SELECT COUNT(*) FROM TTN_EXT WHERE TTN_EXT_KEY = ?;
+    `,
+      [id]
+    );
+
+    return result.COUNT === 1;
+  }
+
+  async transportSectionExists(id: number): Promise<boolean> {
+    const [result] = await this.firebird.query(
+      `
+      SELECT COUNT(*) FROM TTN_TRANSP WHERE TTN_TRANSP_KEY = ?;
+    `,
+      [id]
+    );
+
+    return result.COUNT === 1;
+  }
+
+  async getRaznarWeek(param: GetRaznarWeekDto) {
+    return await this.firebird.query(`SELECT * FROM  RAZNAR_WEEK(?, ?)`, [
+      param.date,
+      param.column,
+    ]);
+  }
+
+  async checkRaznarId(id: number): Promise<boolean> {
+    const [result] = await this.firebird.query(
+      `
+          SELECT COUNT(*) FROM RAZNAR WHERE RAZN_KEY = ?;
+        `,
+      [id]
+    );
     return result.COUNT === 1;
   }
 }

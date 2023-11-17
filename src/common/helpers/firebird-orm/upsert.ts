@@ -2,7 +2,7 @@ import { booleanToShortString } from "../booleanToShortStringTransform";
 import { val } from "cheerio/lib/api/attributes";
 
 /**
- * Creates or updates an entry in the database and returns the created/updated entry
+ * [Creates or updates an entry in the database and returns the created/updated entry]
  * @param tableName The name of the table in which the changes will be made
  * @param idFieldName Record ID field
  * @param dto Data to create or update a record
