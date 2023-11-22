@@ -5,16 +5,17 @@ import { AUTH_MICROSERVICE } from "../../../common/constants/microservise-name.c
 import { ClientProxy } from "@nestjs/microservices";
 import { LoginResponse } from "../responses/login.response";
 import { TCreateToken } from "../../../common/shared/types/create-token.type";
-import { authCommand } from "../../../common/constants/command-name.constant";
 import { lastValueFrom, map } from "rxjs";
+import { messagePattern } from "../../../common/constants/message-pattern.constant";
+import { LoginInput } from "../input/login.input";
 
 export class LoginCommand {
-  constructor(public readonly input: WithClientMeta<TCurrentUser>) {}
+  constructor(public readonly input: LoginInput) {}
 }
 
 @CommandHandler(LoginCommand)
 export class LoginCommandHandler
-  extends BaseNotificationUseCase<LoginCommand, LoginResponse>
+  extends BaseNotificationUseCase<LoginCommand, TCreateToken>
   implements ICommandHandler<LoginCommand>
 {
   constructor(
@@ -24,7 +25,7 @@ export class LoginCommandHandler
     super();
   }
   async executeUseCase({ input }: LoginCommand): Promise<TCreateToken> {
-    const pattern = { cmd: authCommand.registration };
+    const pattern = { cmd: messagePattern.login };
     return await lastValueFrom(
       this.authProxyClient.send(pattern, input).pipe(map((result) => result))
     );

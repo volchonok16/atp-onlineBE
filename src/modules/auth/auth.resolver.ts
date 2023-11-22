@@ -1,8 +1,10 @@
 import { Args, Mutation, Resolver } from "@nestjs/graphql";
 import { RegistrationInput } from "./input";
 import { CommandBus } from "@nestjs/cqrs";
-import { RegistrationCommand } from "./commands";
+import { LoginCommand, RegistrationCommand } from "./commands";
 import { LoginInput } from "./input/login.input";
+import { TCreateToken } from "../../common/shared/types/create-token.type";
+import { LoginResponse } from "./responses/login.response";
 
 @Resolver()
 export class AuthResolver {
@@ -15,8 +17,11 @@ export class AuthResolver {
     );
   }
 
-  @Mutation()
-  async login(@Args() input: LoginInput): Promise<void> {
-    return await this.commandBus.execute<LoginCommand>(new LoginCommand(input));
+  @Mutation(() => LoginResponse)
+  async login(@Args() input: LoginInput): Promise<TCreateToken> {
+    console.log(input);
+    return await this.commandBus.execute<LoginCommand, TCreateToken>(
+      new LoginCommand(input)
+    );
   }
 }

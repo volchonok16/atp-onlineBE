@@ -6,6 +6,7 @@ import { AUTH_MICROSERVICE } from "../../../common/constants/microservise-name.c
 import { ClientProxy } from "@nestjs/microservices";
 import { lastValueFrom, map } from "rxjs";
 import { authCommand } from "../../../common/constants/command-name.constant";
+import { messagePattern } from "../../../common/constants/message-pattern.constant";
 
 export class RegistrationCommand {
   constructor(public readonly input: RegistrationInput) {}
@@ -24,7 +25,7 @@ export class RegistrationCommandHandler
   }
 
   async executeUseCase({ input }: RegistrationCommand): Promise<void> {
-    const pattern = { cmd: authCommand.registration };
+    const pattern = { cmd: messagePattern.registration };
     return await lastValueFrom(
       this.authProxyClient.send(pattern, input).pipe(map((result) => result))
     );
