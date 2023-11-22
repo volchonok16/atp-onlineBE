@@ -7,7 +7,7 @@ import { TypeOrmConfig } from "./postgres/typeOrmConfig";
 const dbProvider = {
   provide: dbConnect_const,
   useFactory: async () => {
-    return await runDb();
+    //return await runDb();
   },
 };
 

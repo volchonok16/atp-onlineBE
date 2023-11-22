@@ -3,7 +3,6 @@ import { BaseNotificationUseCase } from "../../../common/shared/classes/base-not
 import { Inject } from "@nestjs/common";
 import { AUTH_MICROSERVICE } from "../../../common/constants/microservise-name.constant";
 import { ClientProxy } from "@nestjs/microservices";
-import { LoginResponse } from "../responses/login.response";
 import { TCreateToken } from "../../../common/shared/types/create-token.type";
 import { lastValueFrom, map } from "rxjs";
 import { messagePattern } from "../../../common/constants/message-pattern.constant";

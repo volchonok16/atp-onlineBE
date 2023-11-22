@@ -3,16 +3,11 @@ import { DbModule } from "./providers/db.module";
 import { OrderModule } from "./features/order/order.module";
 import { AuthModule } from "./features/authorization/auth.module";
 import { IsValidDateConstraint } from "./common/decorators/isValidDate.decorator";
-import { join } from "path";
-import { ConfigModule } from "@nestjs/config";
 import { AdministrationModule } from "./features/administration/administration.module";
 import { ApiModule } from "./modules/api.module";
-import { join } from "path";
-import { ConfigModule } from "@nestjs/config";
 import { LoggerModule } from "./common/logger/logger.module";
-import { GraphQLModule } from "@nestjs/graphql";
-import { ApolloDriverConfig } from "@nestjs/apollo";
-import { apolloDriverConfig } from "./common/providers/graphql/apollo-driver.config";
+import { SharedModule } from "./common/shared/shared.module";
+import { ProvidersModule } from "./common/providers/providers.module";
 
 @Module({
   imports: [
@@ -20,21 +15,9 @@ import { apolloDriverConfig } from "./common/providers/graphql/apollo-driver.con
     OrderModule,
     AuthModule,
     AdministrationModule,
-    ConfigModule.forRoot({
-      isGlobal: true,
-      envFilePath: join(process.cwd(), ".env"),
-    }),
-  ],
-  imports: [
-    DbModule,
-    OrderModule,
-    AuthModule,
     // new
-    ConfigModule.forRoot({
-      isGlobal: true,
-      envFilePath: join(process.cwd(), ".env"),
-    }),
-    GraphQLModule.forRoot<ApolloDriverConfig>(apolloDriverConfig),
+    ProvidersModule,
+    SharedModule,
     ApiModule,
     LoggerModule,
   ],

@@ -5,7 +5,6 @@ import { Inject } from "@nestjs/common";
 import { AUTH_MICROSERVICE } from "../../../common/constants/microservise-name.constant";
 import { ClientProxy } from "@nestjs/microservices";
 import { lastValueFrom, map } from "rxjs";
-import { authCommand } from "../../../common/constants/command-name.constant";
 import { messagePattern } from "../../../common/constants/message-pattern.constant";
 
 export class RegistrationCommand {

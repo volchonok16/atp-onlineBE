@@ -1,8 +1,8 @@
-import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
-import { ConfigService } from '@nestjs/config';
-import { Injectable } from '@nestjs/common';
-import { entities } from './entities';
-import { environmentConstant } from '../../constants/environment.constant';
+import { Injectable } from "@nestjs/common";
+import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from "@nestjs/typeorm";
+import { ConfigService } from "@nestjs/config";
+import { environmentConstant } from "../../constants/environment.constant";
+import { entities } from "./entities";
 
 @Injectable()
 export class TypeOrmConfig implements TypeOrmOptionsFactory {
@@ -12,7 +12,7 @@ export class TypeOrmConfig implements TypeOrmOptionsFactory {
     const { configService } = this;
 
     return {
-      type: 'postgres',
+      type: "postgres",
       host: configService.get(environmentConstant.db.host),
       port: Number(configService.get(environmentConstant.db.port)),
       username: configService.get(environmentConstant.db.user),
@@ -20,7 +20,6 @@ export class TypeOrmConfig implements TypeOrmOptionsFactory {
       database: configService.get(environmentConstant.db.name),
       entities: [...entities],
       synchronize: true,
-      ssl: true,
     };
   }
 }

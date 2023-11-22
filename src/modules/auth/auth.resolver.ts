@@ -10,18 +10,22 @@ import { LoginResponse } from "./responses/login.response";
 export class AuthResolver {
   constructor(private readonly commandBus: CommandBus) {}
 
-  @Mutation()
-  async registration(@Args() input: RegistrationInput): Promise<void> {
+  @Mutation(() => Boolean)
+  async registration(
+    @Args("registrationInput") registrationInput: RegistrationInput
+  ): Promise<void> {
     return await this.commandBus.execute<RegistrationCommand, void>(
-      new RegistrationCommand(input)
+      new RegistrationCommand(registrationInput)
     );
   }
 
   @Mutation(() => LoginResponse)
-  async login(@Args() input: LoginInput): Promise<TCreateToken> {
-    console.log(input);
+  async login(
+    @Args("loginInput") loginInput: LoginInput
+  ): Promise<TCreateToken> {
+    console.log(loginInput);
     return await this.commandBus.execute<LoginCommand, TCreateToken>(
-      new LoginCommand(input)
+      new LoginCommand(loginInput)
     );
   }
 }

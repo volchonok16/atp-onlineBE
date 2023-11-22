@@ -1,12 +1,12 @@
 import { Module } from "@nestjs/common";
 import { CustomLogger } from "./customLogger";
 import LogsService from "./application/logs.service";
-import { DatabaseModule } from "../providers/postgres/database.module";
+import { TypeormModule } from "../providers/postgres/typeorm.module";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { LogEntity } from "../providers/postgres/entities";
 
 @Module({
-  imports: [DatabaseModule, TypeOrmModule.forFeature([LogEntity])],
+  imports: [TypeormModule, TypeOrmModule.forFeature([LogEntity])],
   providers: [CustomLogger, LogsService],
   exports: [CustomLogger],
 })
