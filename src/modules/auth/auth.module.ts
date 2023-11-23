@@ -6,6 +6,7 @@ import { AUTH_MICROSERVICE } from "../../common/constants/microservise-name.cons
 import { GraphQLModule } from "@nestjs/graphql";
 import { ApolloDriverConfig } from "@nestjs/apollo";
 import { apolloDriverConfig } from "../../common/providers/graphql/apollo-driver.config";
+import { setCookiesInterceptorProvider } from "../../common/interceptos/set-cookie-interceptor/set-cookies-interceptor.provider";
 
 @Module({
   imports: [
@@ -22,6 +23,10 @@ import { apolloDriverConfig } from "../../common/providers/graphql/apollo-driver
     ]),
   ],
   controllers: [],
-  providers: [AuthResolver, ...AUTH_COMMANDS_HANDLERS],
+  providers: [
+    AuthResolver,
+    setCookiesInterceptorProvider,
+    ...AUTH_COMMANDS_HANDLERS,
+  ],
 })
 export class AuthModule {}

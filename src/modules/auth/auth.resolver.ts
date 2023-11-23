@@ -5,6 +5,7 @@ import { LoginCommand, RegistrationCommand } from "./commands";
 import { LoginInput } from "./input/login.input";
 import { TCreateToken } from "../../common/shared/types/create-token.type";
 import { LoginResponse } from "./responses/login.response";
+import { ResultNotificationFactory } from "../../common/shared/classes/result-notification.factory";
 
 @Resolver()
 export class AuthResolver {
@@ -23,12 +24,14 @@ export class AuthResolver {
   async login(
     @Args("loginInput") loginInput: LoginInput
   ): Promise<TCreateToken> {
-    console.log(loginInput);
-    return await this.commandBus.execute<LoginCommand, TCreateToken>(
-      new LoginCommand(loginInput)
-    );
+    const notification = await this.commandBus.execute<
+      LoginCommand,
+      ResultNotificationFactory<TCreateToken>
+    >(new LoginCommand(loginInput));
+    return notification.getData();
   }
 
+  // Без этого не работает :)
   @Query(() => LoginResponse)
   async me() {}
 }
