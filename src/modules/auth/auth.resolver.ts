@@ -1,4 +1,4 @@
-import { Args, Mutation, Resolver } from "@nestjs/graphql";
+import { Args, Mutation, Resolver, Query } from "@nestjs/graphql";
 import { RegistrationInput } from "./input";
 import { CommandBus } from "@nestjs/cqrs";
 import { LoginCommand, RegistrationCommand } from "./commands";
@@ -28,4 +28,7 @@ export class AuthResolver {
       new LoginCommand(loginInput)
     );
   }
+
+  @Query(() => LoginResponse)
+  async me() {}
 }
